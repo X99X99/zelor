@@ -31,6 +31,9 @@ export async function openPage(
   await page.addInitScript(
     ([key, value]) => {
       try {
+        // Le consentement est déjà donné : le bandeau ne doit pas décaler
+        // la mise en page pendant les captures.
+        localStorage.setItem("zelor.consent.v1", "all");
         // Amorce unique : le thème est imposé avant le premier rendu, mais un
         // rechargement doit lire ce que l'application a réellement mémorisé.
         if (sessionStorage.getItem("zelor-test-seeded")) return;
