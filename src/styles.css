@@ -264,15 +264,92 @@
   font-weight: 500;
 }
 
+/* ————— Signature de lien ZELOR —————
+ * Un filet se déploie depuis la gauche, se replie vers la droite à la sortie.
+ * Même grammaire pour la navigation, le footer et les liens éditoriaux.
+ */
 @utility link-underline {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 100% 1px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  padding-bottom: 2px;
-  transition: background-size 0.35s ease;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 3px;
+  transition: opacity var(--dur-2) var(--ease-lux);
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    opacity: 0.65;
+    transition:
+      transform var(--dur-2) var(--ease-lux),
+      opacity var(--dur-2) var(--ease-lux);
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+    opacity: 1;
+  }
+}
+
+/* Élément de marque : le mot ZELOR respire à l'approche */
+@utility wordmark-z {
+  position: relative;
+  display: inline-block;
+  transition:
+    letter-spacing var(--dur-4) var(--ease-lux),
+    text-shadow var(--dur-4) var(--ease-lux),
+    opacity var(--dur-3) var(--ease-lux);
   &:hover {
-    background-size: 0% 1px;
+    text-shadow:
+      0 0 18px color-mix(in oklab, currentColor 32%, transparent),
+      0 0 42px color-mix(in oklab, currentColor 14%, transparent);
+  }
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+/* Éléments utilitaires : halo de matière au survol et au focus */
+@utility utility-z {
+  position: relative;
+  border-radius: 999px;
+  transition:
+    background-color var(--dur-2) var(--ease-lux),
+    transform var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux),
+    opacity var(--dur-2) var(--ease-lux);
+  &:hover {
+    background-color: color-mix(in oklab, currentColor 9%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 12%, transparent);
+    transform: translateY(-1px);
+    opacity: 1;
+  }
+  &:focus-visible {
+    background-color: color-mix(in oklab, currentColor 9%, transparent);
+  }
+  &:active {
+    transform: translateY(0) scale(0.96);
+  }
+}
+
+/* Champs de saisie : matière calme, réponse progressive */
+@utility field-z {
+  transition:
+    border-color var(--dur-2) var(--ease-lux),
+    background-color var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:hover {
+    border-color: color-mix(in oklab, currentColor 45%, transparent);
+  }
+  &:focus,
+  &:focus-visible {
+    border-color: currentColor;
+    box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 10%, transparent);
+    outline: none;
   }
 }
 
