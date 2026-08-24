@@ -223,6 +223,9 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* Le header couvre les ancres : on réserve sa hauteur. */
+    scroll-padding-top: 7.5rem;
   }
 
   body {
@@ -231,8 +234,11 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.65;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-wrap: break-word;
   }
 
   h1,
@@ -240,21 +246,44 @@
   h3 {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.01em;
-    line-height: 1.12;
+    letter-spacing: -0.012em;
+    line-height: 1.1;
     text-wrap: balance;
+    font-variant-ligatures: common-ligatures;
   }
 
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Focus : un filet marine net, jamais un rectangle système */
   :focus-visible {
-    outline: 2px solid var(--color-forest);
+    outline: 1.5px solid color-mix(in oklab, var(--navy) 75%, transparent);
     outline-offset: 3px;
+    border-radius: 1px;
+    transition: outline-offset var(--dur-1) var(--ease-lux);
   }
 
   ::selection {
-    background: var(--color-sand);
+    background: color-mix(in oklab, var(--navy) 16%, transparent);
     color: var(--color-foreground);
   }
+
+  /* Barre de défilement discrète, dans le ton de la maison */
+  @media (pointer: fine) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in oklab, var(--navy) 28%, transparent)
+        transparent;
+    }
+  }
+
+  img,
+  video {
+    -webkit-user-drag: none;
+  }
 }
+
 
 @utility container-z {
   width: 100%;
