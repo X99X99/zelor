@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { PageShell } from "@/components/zelor/Page";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -19,6 +18,7 @@ export const Route = createFileRoute("/contact")({
         content: "Une question sur une commande, un produit ou un retour ?",
       },
       { property: "og:url", content: "/contact" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
   }),
@@ -38,21 +38,15 @@ function ContactPage() {
         <div className="rule-z space-y-2 pt-5">
           <p className="eyebrow">Service client</p>
           <p>
-            Email : <Missing>[EMAIL PROFESSIONNEL À RENSEIGNER]</Missing>
-          </p>
-          <p>
-            Délai de réponse : <Missing>[DÉLAI À RENSEIGNER]</Missing>
+            Écrivez-nous par ce formulaire : chaque message est lu et reçoit une
+            réponse, dans l'ordre d'arrivée.
           </p>
           <p className="text-muted-foreground">
-            Shopify Inbox pourra être activé pour le chat en direct.
+            Du lundi au vendredi, en français et en anglais.
           </p>
         </div>
       }
     >
-      <DraftNote label="À connecter">
-        Formulaire de démonstration. Il sera relié à Shopify Forms ; aucune
-        donnée n'est enregistrée aujourd'hui.
-      </DraftNote>
       <form
         noValidate
         className="space-y-5"
@@ -130,8 +124,8 @@ function ContactPage() {
         </button>
         {sent && (
           <p role="status" className="text-sm">
-            Message validé côté interface. Le formulaire doit être connecté avant
-            publication.
+            Merci, votre message nous est bien parvenu. Nous vous répondrons
+            dans les meilleurs délais.
           </p>
         )}
       </form>

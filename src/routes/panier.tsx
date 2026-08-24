@@ -12,15 +12,16 @@ export const Route = createFileRoute("/panier")({
       {
         name: "description",
         content:
-          "Votre panier ZELOR. Le paiement est traité par Shopify Checkout.",
+          "Votre panier ZELOR. Paiement sécurisé, livraison en France et dans l'Union européenne.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Panier — ZELOR" },
       {
         property: "og:description",
-        content: "Votre panier ZELOR, paiement sécurisé par Shopify Checkout.",
+        content: "Votre panier ZELOR, paiement sécurisé.",
       },
       { property: "og:url", content: "/panier" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/panier" }],
   }),
