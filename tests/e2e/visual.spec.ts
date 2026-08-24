@@ -34,18 +34,25 @@ for (const theme of themes) {
     test("footer et fin de page", async ({ page }) => {
       await openPage(page, "/", theme);
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      // Le défilement doit être posé : on attend une position stable avant capture.
+      // Le défilement doit être posé **en butée** : sous charge, une capture
+      // prise avant la fin du calcul de hauteur décalait tout le pied de page.
       await page.waitForFunction(
         () => {
-          const w = window as unknown as { __y?: number };
-          const settled = w.__y === window.scrollY;
-          w.__y = window.scrollY;
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          if (Math.abs(window.scrollY - max) > 1) {
+            window.scrollTo(0, max);
+            return false;
+          }
+          const w = window as unknown as { __h?: number };
+          const settled = w.__h === document.documentElement.scrollHeight;
+          w.__h = document.documentElement.scrollHeight;
           return settled;
         },
         undefined,
         { polling: 150 },
       );
       await page.waitForTimeout(400);
+
       await expect(page.locator("footer")).toHaveScreenshot(`footer-${theme}.png`);
     });
 

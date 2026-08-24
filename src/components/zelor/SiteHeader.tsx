@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { BrandLink, NavLink } from "@/components/zelor/NavLink";
 import { NavySurface, NAVY_SURFACE_EXIT_MS } from "@/components/zelor/NavySurface";
-import { ThemeToggle } from "@/components/zelor/ThemeToggle";
+import { AppearanceControl } from "@/components/zelor/AppearanceControl";
 import { BRAND, LANGUAGES, MAIN_NAV } from "@/lib/zelor/content";
 import { useCart } from "@/lib/zelor/cart";
 
@@ -386,7 +386,7 @@ export function SiteHeader() {
                 aria-hidden="true"
               />
             </button>
-            <ThemeToggle />
+            <AppearanceControl />
             <div className="hidden md:block">
               <LanguageMenu />
             </div>

@@ -34,7 +34,8 @@ test.describe("parcours critiques", () => {
 
   test("le thème persiste entre deux visites", async ({ page }) => {
     await openPage(page, "/", "light");
-    await page.getByRole("button", { name: /mode jour et le mode nuit/ }).click();
+    await page.getByRole("button", { name: "Apparence" }).click();
+    await page.getByRole("option", { name: "Profondeur marine" }).click();
     await expect(page.locator("html")).toHaveClass(/dark/);
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.locator("html")).toHaveClass(/dark/);
@@ -43,8 +44,8 @@ test.describe("parcours critiques", () => {
   test("le réglage « Système » est accessible et rend la main à l'appareil", async ({ page }) => {
     await openPage(page, "/", "dark");
     await page.emulateMedia({ colorScheme: "light" });
-    await page.getByRole("button", { name: "Réglages d'apparence" }).click();
-    await page.getByRole("option", { name: /Système/ }).click();
+    await page.getByRole("button", { name: "Apparence" }).click();
+    await page.getByRole("option", { name: "Suivre le système" }).click();
     await expect(page.locator("html")).toHaveClass(/light/);
   });
 
