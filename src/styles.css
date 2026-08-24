@@ -385,22 +385,27 @@
 @utility utility-z {
   position: relative;
   border-radius: 999px;
+  /* translate / scale plutôt que transform : ces propriétés se composent avec
+   * une rotation portée ailleurs, donc aucune animation n'en écrase une autre. */
   transition:
     background-color var(--dur-2) var(--ease-lux),
-    transform var(--dur-2) var(--ease-lux),
+    translate var(--dur-2) var(--ease-lux),
+    scale var(--dur-2) var(--ease-lux),
     box-shadow var(--dur-2) var(--ease-lux),
     opacity var(--dur-2) var(--ease-lux);
   &:hover {
     background-color: color-mix(in oklab, currentColor 9%, transparent);
     box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 12%, transparent);
-    transform: translateY(-1px);
+    translate: 0 var(--lift-1);
     opacity: 1;
   }
   &:focus-visible {
     background-color: color-mix(in oklab, currentColor 9%, transparent);
   }
   &:active {
-    transform: translateY(0) scale(0.96);
+    translate: 0 0;
+    scale: 0.96;
+    transition-duration: var(--dur-1);
   }
 }
 
@@ -579,7 +584,6 @@
  * la densité descend vers le bas. Aucune teinte étrangère au header. */
 @utility surface-search {
   color: var(--navy-foreground);
-  background-color: color-mix(in oklab, var(--navy) 88%, transparent);
   background-image:
     /* lumière rasante haute, comme sous le header */
     radial-gradient(
@@ -603,8 +607,9 @@
       color-mix(in oklab, var(--navy-deep) 82%, transparent) 100%
     ),
     var(--gradient-header);
-  backdrop-filter: blur(var(--blur-veil)) saturate(140%);
-  border-top: 1px solid color-mix(in oklab, var(--navy-foreground) 8%, transparent);
+  /* Exactement la matière du header : même flou, même saturation. */
+  backdrop-filter: blur(var(--blur-veil)) saturate(135%);
+  border-top: 0;
   box-shadow:
     inset 0 1px 0 color-mix(in oklab, var(--navy-foreground) 10%, transparent),
     0 30px 70px -46px color-mix(in oklab, var(--navy-deep) 85%, transparent);
@@ -1008,11 +1013,11 @@
 /* Réponse tactile commune à tous les boutons de matière claire */
 @utility press-z {
   transition:
-    transform var(--dur-1) var(--ease-lux),
+    scale var(--dur-1) var(--ease-lux),
     opacity var(--dur-2) var(--ease-lux),
     box-shadow var(--dur-2) var(--ease-lux);
   &:active {
-    transform: scale(0.985);
+    scale: 0.985;
   }
 }
 
@@ -1333,33 +1338,36 @@
 @utility tactile-z {
   position: relative;
   transition:
-    transform var(--dur-2) var(--ease-lux),
+    translate var(--dur-2) var(--ease-lux),
+    scale var(--dur-2) var(--ease-lux),
     box-shadow var(--dur-2) var(--ease-lux),
     background-color var(--dur-2) var(--ease-lux),
     border-color var(--dur-2) var(--ease-lux),
     color var(--dur-2) var(--ease-lux),
     opacity var(--dur-2) var(--ease-lux);
   &:hover {
-    transform: translateY(var(--lift-1));
+    translate: 0 var(--lift-1);
   }
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 16%, transparent);
   }
   &:active {
-    transform: translateY(0) scale(0.972);
+    translate: 0 0;
+    scale: 0.972;
     transition-duration: var(--dur-1);
   }
   &:disabled,
   &[aria-disabled="true"] {
-    transform: none;
+    translate: none;
+    scale: none;
   }
 }
 
 /* Variante plus affirmée : la pièce existe nettement au-dessus du fond. */
 @utility tactile-lift-z {
   &:hover {
-    transform: translateY(var(--lift-2));
+    translate: 0 var(--lift-2);
     box-shadow: var(--shadow-float);
   }
 }
@@ -1375,16 +1383,32 @@
     bottom: 0;
     height: 1px;
     pointer-events: none;
+    /* Presque rien aux extrémités, une présence nette au centre :
+     * une césure de lumière, jamais une barre. */
     background-image: linear-gradient(
       90deg,
       transparent 0%,
-      color-mix(in oklab, var(--navy-foreground) 16%, transparent) 22%,
-      color-mix(in oklab, white 42%, transparent) 50%,
-      color-mix(in oklab, var(--navy-foreground) 16%, transparent) 78%,
+      color-mix(in oklab, var(--navy-foreground) 6%, transparent) 30%,
+      color-mix(in oklab, white 30%, transparent) 50%,
+      color-mix(in oklab, var(--navy-foreground) 6%, transparent) 70%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 34%,
+      black 66%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 34%,
+      black 66%,
       transparent 100%
     );
     background-size: 220% 100%;
-    opacity: 0.55;
+    opacity: 0.42;
     animation: zelor-seam-drift 14s linear infinite;
   }
 }
@@ -1401,15 +1425,22 @@
 /* Utilitaires du header : l'icône elle-même répond, pas seulement le fond. */
 @utility utility-icon-z {
   & > svg {
+    /* translate / scale / rotate indépendants : une rotation d'état (loupe
+     * ouverte) et la micro-réponse au survol coexistent sans se supprimer. */
     transition:
-      transform var(--dur-2) var(--ease-lux),
+      translate var(--dur-3) var(--ease-lux),
+      scale var(--dur-3) var(--ease-lux),
+      rotate var(--dur-3) var(--ease-lux),
       opacity var(--dur-2) var(--ease-lux);
   }
   &:hover > svg {
-    transform: translateY(-1px) scale(1.06);
+    translate: 0 -1px;
+    scale: 1.06;
   }
   &:active > svg {
-    transform: translateY(0) scale(0.94);
+    translate: 0 0;
+    scale: 0.94;
+    transition-duration: var(--dur-1);
   }
 }
 
