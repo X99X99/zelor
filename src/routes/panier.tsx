@@ -4,6 +4,7 @@ import { useCart } from "@/lib/zelor/cart";
 import { DEMO_PRODUCTS, PRICING } from "@/lib/zelor/content";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
+import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({
