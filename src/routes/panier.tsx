@@ -37,17 +37,17 @@ function CartPage() {
   return (
     <>
       <Breadcrumbs items={[{ label: "Panier" }]} />
-      <header className="container-z pt-10 pb-8">
+      <Reveal as="header" className="container-z pt-10 pb-8">
         <h1 className="font-display text-4xl md:text-5xl">Panier</h1>
-      </header>
+      </Reveal>
 
       {!ready ? (
         <div className="container-z pb-24" aria-live="polite">
-          <div className="skeleton-lux h-24" />
+          <div className="skeleton-lux h-24 rounded-2xl" />
         </div>
       ) : lines.length === 0 ? (
         <div className="container-z pb-24">
-          <div className="surface-light border border-border/70 px-6 py-24 text-center">
+          <Reveal className="surface-light aura-z rounded-3xl border border-border/70 px-6 py-24 text-center">
             <h2 className="font-display text-2xl">Votre panier est vide.</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Parcourez la collection pour y ajouter une pièce.
@@ -58,11 +58,11 @@ function CartPage() {
             >
               Voir la collection
             </Link>
-          </div>
+          </Reveal>
         </div>
       ) : (
         <div className="container-z grid gap-12 pb-24 lg:grid-cols-[1fr_22rem]">
-          <ul className="divide-y divide-border border-y border-border">
+          <Reveal as="ul" className="stagger-z divide-y divide-border border-y border-border">
             {lines.map((line) => (
               <li
                 key={`${line.slug}-${line.variant}`}
@@ -75,7 +75,7 @@ function CartPage() {
                   <Link
                     to="/produit/$slug"
                     params={{ slug: line.slug }}
-                    className="text-sm font-medium underline-offset-4 hover:underline"
+                    className="link-underline text-sm font-medium"
                   >
                     {line.name}
                   </Link>
@@ -86,7 +86,7 @@ function CartPage() {
                     {PRICING.label}
                   </p>
                   <div className="mt-3 flex items-center gap-4">
-                    <div className="flex items-center border border-input">
+                    <div className="stepper-z">
                       <button
                         type="button"
                         aria-label={`Diminuer la quantité de ${line.name}`}
@@ -122,19 +122,23 @@ function CartPage() {
                 </div>
               </li>
             ))}
-          </ul>
+          </Reveal>
 
-          <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
-            <div className="rule-z pt-5">
+          <Reveal
+            as="aside"
+            delay={120}
+            className="space-y-5 lg:sticky lg:top-28 lg:self-start"
+          >
+            <div className="surface-panel space-y-2 p-6">
               <div className="flex justify-between text-sm">
                 <span>Sous-total</span>
                 <span className="text-muted-foreground">{PRICING.short}</span>
               </div>
-              <div className="mt-2 flex justify-between text-sm text-muted-foreground">
+              <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Livraison</span>
                 <span>Calculée au paiement</span>
               </div>
-              <div className="mt-2 flex justify-between text-sm text-muted-foreground">
+              <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Taxes</span>
                 <span>Incluses pour l'Union européenne</span>
               </div>
@@ -160,7 +164,7 @@ function CartPage() {
                 <Link
                   to="/produit/$slug"
                   params={{ slug: suggestion.slug }}
-                  className="mt-3 flex items-center gap-3"
+                  className="press-z mt-3 flex items-center gap-3 rounded-2xl p-2 transition-colors duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-accent/60"
                 >
                   <span className="w-16 shrink-0">
                     <ImageSlot
@@ -169,13 +173,13 @@ function CartPage() {
                       caption=" "
                     />
                   </span>
-                  <span className="text-sm underline-offset-4 hover:underline">
+                  <span className="text-sm">
                     {suggestion.name}
                   </span>
                 </Link>
               </div>
             )}
-          </aside>
+          </Reveal>
         </div>
       )}
     </>
