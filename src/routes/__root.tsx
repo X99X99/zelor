@@ -16,6 +16,8 @@ import { CartProvider } from "@/lib/zelor/cart";
 import { SiteHeader } from "@/components/zelor/SiteHeader";
 import { SiteFooter } from "@/components/zelor/SiteFooter";
 import { CookieConsent } from "@/components/zelor/CookieConsent";
+import { THEME_INIT_SCRIPT } from "@/lib/zelor/theme";
+
 
 function NotFoundComponent() {
   return (
