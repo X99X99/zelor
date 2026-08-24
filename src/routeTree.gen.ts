@@ -12,11 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AideRouteImport } from './routes/aide'
+import { Route as CgvRouteImport } from './routes/cgv'
 import { Route as CollectionRouteImport } from './routes/collection'
 import { Route as CompteRouteImport } from './routes/compte'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as LivraisonRouteImport } from './routes/livraison'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as NouveautesRouteImport } from './routes/nouveautes'
 import { Route as PaiementsRouteImport } from './routes/paiements'
 import { Route as PanierRouteImport } from './routes/panier'
@@ -41,6 +45,11 @@ const AideRoute = AideRouteImport.update({
   path: '/aide',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CgvRoute = CgvRouteImport.update({
+  id: '/cgv',
+  path: '/cgv',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CollectionRoute = CollectionRouteImport.update({
   id: '/collection',
   path: '/collection',
@@ -51,9 +60,19 @@ const CompteRoute = CompteRouteImport.update({
   path: '/compte',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JournalRoute = JournalRouteImport.update({
@@ -64,6 +83,11 @@ const JournalRoute = JournalRouteImport.update({
 const LivraisonRoute = LivraisonRouteImport.update({
   id: '/livraison',
   path: '/livraison',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NouveautesRoute = NouveautesRouteImport.update({
@@ -111,11 +135,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/aide': typeof AideRoute
+  '/cgv': typeof CgvRoute
   '/collection': typeof CollectionRoute
   '/compte': typeof CompteRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/journal': typeof JournalRoute
   '/livraison': typeof LivraisonRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/nouveautes': typeof NouveautesRoute
   '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
@@ -129,11 +157,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/aide': typeof AideRoute
+  '/cgv': typeof CgvRoute
   '/collection': typeof CollectionRoute
   '/compte': typeof CompteRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/journal': typeof JournalRoute
   '/livraison': typeof LivraisonRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/nouveautes': typeof NouveautesRoute
   '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
@@ -148,11 +180,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
   '/aide': typeof AideRoute
+  '/cgv': typeof CgvRoute
   '/collection': typeof CollectionRoute
   '/compte': typeof CompteRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/journal': typeof JournalRoute
   '/livraison': typeof LivraisonRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/nouveautes': typeof NouveautesRoute
   '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
@@ -168,11 +204,15 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/aide'
+    | '/cgv'
     | '/collection'
     | '/compte'
+    | '/confidentialite'
     | '/contact'
+    | '/cookies'
     | '/journal'
     | '/livraison'
+    | '/mentions-legales'
     | '/nouveautes'
     | '/paiements'
     | '/panier'
@@ -186,11 +226,15 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/aide'
+    | '/cgv'
     | '/collection'
     | '/compte'
+    | '/confidentialite'
     | '/contact'
+    | '/cookies'
     | '/journal'
     | '/livraison'
+    | '/mentions-legales'
     | '/nouveautes'
     | '/paiements'
     | '/panier'
@@ -204,11 +248,15 @@ export interface FileRouteTypes {
     | '/'
     | '/a-propos'
     | '/aide'
+    | '/cgv'
     | '/collection'
     | '/compte'
+    | '/confidentialite'
     | '/contact'
+    | '/cookies'
     | '/journal'
     | '/livraison'
+    | '/mentions-legales'
     | '/nouveautes'
     | '/paiements'
     | '/panier'
@@ -223,11 +271,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AProposRoute: typeof AProposRoute
   AideRoute: typeof AideRoute
+  CgvRoute: typeof CgvRoute
   CollectionRoute: typeof CollectionRoute
   CompteRoute: typeof CompteRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
   ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
   JournalRoute: typeof JournalRoute
   LivraisonRoute: typeof LivraisonRoute
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
   NouveautesRoute: typeof NouveautesRoute
   PaiementsRoute: typeof PaiementsRoute
   PanierRoute: typeof PanierRoute
@@ -261,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AideRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cgv': {
+      id: '/cgv'
+      path: '/cgv'
+      fullPath: '/cgv'
+      preLoaderRoute: typeof CgvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/collection': {
       id: '/collection'
       path: '/collection'
@@ -275,11 +334,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journal': {
@@ -294,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/livraison'
       fullPath: '/livraison'
       preLoaderRoute: typeof LivraisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nouveautes': {
@@ -359,11 +439,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AProposRoute: AProposRoute,
   AideRoute: AideRoute,
+  CgvRoute: CgvRoute,
   CollectionRoute: CollectionRoute,
   CompteRoute: CompteRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
   ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
   JournalRoute: JournalRoute,
   LivraisonRoute: LivraisonRoute,
+  MentionsLegalesRoute: MentionsLegalesRoute,
   NouveautesRoute: NouveautesRoute,
   PaiementsRoute: PaiementsRoute,
   PanierRoute: PanierRoute,
