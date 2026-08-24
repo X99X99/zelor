@@ -12,17 +12,14 @@ export function ProductCard({ product }: { product: DemoProduct }) {
         className="block focus-visible:outline-offset-4"
       >
         <div className="lift-z sheen-z relative overflow-hidden rounded-[var(--radius-media)]">
-          <div className="transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]">
+          <div className="transition-[scale] duration-[var(--dur-5)] ease-[var(--ease-lux)] group-hover:scale-[1.04]">
             <ImageSlot tone={product.tone} caption={product.name} />
           </div>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-navy/0 transition-colors duration-700 group-hover:bg-navy/8"
           />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-navy/85 py-3 text-center text-[0.6875rem] tracking-[0.2em] text-navy-foreground uppercase backdrop-blur-md transition-transform duration-600 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-y-0"
-          >
+          <span aria-hidden="true" className="discover-bar-z">
             Découvrir
           </span>
         </div>

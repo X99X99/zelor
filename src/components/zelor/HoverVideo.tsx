@@ -54,7 +54,7 @@ export function HoverVideo({
   // Mobile / tactile : lecture lorsque la zone est visible.
   useEffect(() => {
     if (!enabled || typeof window === "undefined") return;
-    const isCoarse = window.matchMedia("(hover: none)").matches;
+    const isCoarse = window.matchMedia("(hover: none), (pointer: coarse)").matches;
     const node = wrapRef.current;
     if (!isCoarse || !node) return;
     const io = new IntersectionObserver(
@@ -83,7 +83,7 @@ export function HoverVideo({
           src={poster}
           alt={alt}
           loading="lazy"
-          className={`absolute inset-0 size-full object-cover transition-opacity duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
+          className={`absolute inset-0 size-full object-cover transition-opacity duration-[var(--dur-4)] ease-[var(--ease-lux)] ${
             playing ? "opacity-0" : "opacity-100"
           }`}
         />
@@ -98,7 +98,7 @@ export function HoverVideo({
             preload="metadata"
             aria-hidden="true"
             tabIndex={-1}
-            className="absolute inset-0 size-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.02]"
+            className="absolute inset-0 size-full object-cover transition-[scale] duration-[var(--dur-5)] ease-[var(--ease-lux)] group-hover:scale-[1.02]"
           />
         )}
         <div
