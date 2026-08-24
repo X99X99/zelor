@@ -803,6 +803,7 @@
   );
   backdrop-filter: blur(var(--blur-panel)) saturate(140%);
   border: 1px solid color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+  border-radius: var(--radius-panel);
   box-shadow: var(--shadow-float);
   color: var(--navy-foreground);
 }
