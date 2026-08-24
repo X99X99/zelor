@@ -305,9 +305,11 @@
   --sidebar-primary-foreground: oklch(0.968 0.005 88);
   --sidebar-accent: oklch(0.288 0.032 259);
   --sidebar-accent-foreground: var(--foreground);
-  --sidebar-border: oklch(0.332 0.028 258);
-  --sidebar-ring: oklch(0.72 0.03 256);
+    --sidebar-border: oklch(0.332 0.028 258);
+    --sidebar-ring: oklch(0.72 0.03 256);
+  }
 }
+
 
 
 
