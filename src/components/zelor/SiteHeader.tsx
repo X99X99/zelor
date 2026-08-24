@@ -343,7 +343,7 @@ export function SiteHeader() {
     <>
       <header
         data-hidden={hidden}
-        className={`surface-navy grain-z sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
+        className={`surface-navy grain-z sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[var(--dur-4)] ease-[var(--ease-lux)] ${
           hidden
             ? "pointer-events-none -translate-y-full opacity-0"
             : "translate-y-0 opacity-100"
@@ -398,7 +398,7 @@ export function SiteHeader() {
               className={`utility-z utility-icon-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
               <Search
-                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen && !searchClosing ? "rotate-90 scale-90" : ""}`}
+                className={`size-4.5 ${searchOpen && !searchClosing ? "rotate-90" : "rotate-0"}`}
                 aria-hidden="true"
               />
             </button>
@@ -513,7 +513,7 @@ export function SiteHeader() {
               <span>Aide et contact</span>
             </Link>
 
-            <div className="menu-row text-sm tracking-[0.08em]">
+            <div data-focal="" className="menu-row text-sm tracking-[0.08em]">
               <span>Langue</span>
               <LanguageMenu />
             </div>
