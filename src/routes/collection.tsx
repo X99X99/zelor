@@ -9,9 +9,10 @@ import { DraftNote } from "@/components/zelor/Placeholder";
 type CollectionSearch = { q?: string };
 
 export const Route = createFileRoute("/collection")({
-  validateSearch: (search: Record<string, unknown>): CollectionSearch => ({
-    q: typeof search.q === "string" && search.q ? search.q : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): CollectionSearch => {
+    const raw = search["q"];
+    return typeof raw === "string" && raw ? { q: raw } : {};
+  },
   head: () => ({
     meta: [
       { title: "Collection — ZELOR" },

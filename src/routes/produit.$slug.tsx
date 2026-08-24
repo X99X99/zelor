@@ -66,7 +66,7 @@ function ProductNotFound() {
 function ProductPage() {
   const { product } = Route.useLoaderData() as { product: DemoProduct };
   const { add } = useCart();
-  const [variant, setVariant] = useState(product.variants[0]);
+  const [variant, setVariant] = useState(product.variants[0] ?? "Unique");
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const related = DEMO_PRODUCTS.filter((p) => p.slug !== product.slug).slice(0, 3);

@@ -56,10 +56,10 @@ export function ImageSlot({
     <div
       role="img"
       aria-label={`Emplacement d'image : ${caption}`}
-      className={`${ratio} ${toneClass[tone] ?? toneClass.sand} flex items-center justify-center overflow-hidden`}
+      className={`${ratio} ${toneClass[tone] ?? "bg-sand"} flex items-center justify-center overflow-hidden`}
     >
       <span
-        className={`eyebrow ${toneText[tone] ?? toneText.sand} px-4 text-center`}
+        className={`eyebrow ${toneText[tone] ?? "text-foreground/70"} px-4 text-center`}
       >
         {caption}
       </span>

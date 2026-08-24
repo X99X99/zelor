@@ -61,15 +61,15 @@ function ContactPage() {
           const data = new FormData(event.currentTarget);
           const next: Record<string, string> = {};
           if (!String(data.get("nom") ?? "").trim())
-            next.nom = "Indiquez votre nom.";
+            next["nom"] = "Indiquez votre nom.";
           if (
             !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(
               String(data.get("email") ?? "").trim(),
             )
           )
-            next.email = "Indiquez une adresse email valide.";
+            next["email"] = "Indiquez une adresse email valide.";
           if (String(data.get("message") ?? "").trim().length < 10)
-            next.message = "Votre message doit contenir au moins 10 caractères.";
+            next["message"] = "Votre message doit contenir au moins 10 caractères.";
           setErrors(next);
           setSent(Object.keys(next).length === 0);
         }}
@@ -112,13 +112,13 @@ function ContactPage() {
             id="message"
             name="message"
             rows={6}
-            aria-invalid={errors.message ? true : undefined}
-            aria-describedby={errors.message ? "message-error" : undefined}
+            aria-invalid={errors["message"] ? true : undefined}
+            aria-describedby={errors["message"] ? "message-error" : undefined}
             className="mt-2 w-full border border-input bg-transparent px-3 py-2 text-base outline-none"
           />
-          {errors.message && (
+          {errors["message"] && (
             <p id="message-error" role="alert" className="mt-1 text-sm text-destructive">
-              ⚠ {errors.message}
+              ⚠ {errors["message"]}
             </p>
           )}
         </div>

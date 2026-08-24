@@ -63,12 +63,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         (l) => l.slug === line.slug && l.variant === line.variant,
       );
       if (index === -1) return [...current, line];
-      const next = [...current];
-      next[index] = {
-        ...next[index],
-        quantity: next[index].quantity + line.quantity,
-      };
-      return next;
+      return current.map((existing, i) =>
+        i === index
+          ? { ...existing, quantity: existing.quantity + line.quantity }
+          : existing,
+      );
     });
   }, []);
 
