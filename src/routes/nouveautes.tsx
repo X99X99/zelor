@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { DEMO_PRODUCTS } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
+import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/nouveautes")({
   head: () => ({
