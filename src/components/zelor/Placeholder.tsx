@@ -54,7 +54,7 @@ export function ImageSlot({
       {/* Filet intérieur : la surface a une arête */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-navy/8"
+        className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-navy/8"
       />
       <span
         className={`eyebrow relative ${toneText[tone] ?? "text-foreground/40"} px-4 text-center`}
