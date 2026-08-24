@@ -678,7 +678,7 @@
   position: absolute;
   left: 50%;
   bottom: 0.85rem;
-  translate: -50% 0.6rem;
+  translate: -50% 0.7rem;
   padding: 0.5rem 1.15rem;
   border-radius: var(--radius-pill);
   border: 1px solid color-mix(in oklab, var(--navy-foreground) 22%, transparent);
@@ -691,16 +691,27 @@
   backdrop-filter: blur(12px) saturate(135%);
   box-shadow: 0 18px 40px -26px color-mix(in oklab, var(--navy-deep) 90%, transparent);
   opacity: 0;
-  scale: 0.94;
+  /* Rétractation : la bulle se dégonfle et se dissout dans la même respiration
+   * que son ouverture — jamais un état qui s'éteint d'un coup. */
+  scale: 0.9;
+  filter: blur(7px);
   transition:
-    translate var(--dur-3) var(--ease-breathe),
-    scale var(--dur-3) var(--ease-back),
+    translate var(--dur-4) var(--ease-breathe),
+    scale var(--dur-4) var(--ease-breathe),
+    filter var(--dur-3) var(--ease-breathe),
     opacity var(--dur-3) var(--ease-breathe);
   .group:hover &,
   .group:focus-within & {
     translate: -50% 0;
     scale: 1;
+    filter: blur(0);
     opacity: 1;
+    /* Ouverture : même famille, avec un amorti final très léger. */
+    transition:
+      translate var(--dur-3) var(--ease-back),
+      scale var(--dur-3) var(--ease-back),
+      filter var(--dur-2) var(--ease-breathe),
+      opacity var(--dur-2) var(--ease-breathe);
   }
 }
 
