@@ -31,7 +31,10 @@ export default defineConfig({
 
   expect: {
     // Tolérance étroite : seules les différences de rendu inévitables passent.
-    toHaveScreenshot: { maxDiffPixelRatio: 0.012, animations: "disabled" },
+    // `scale: "css"` : la capture est exprimée en pixels CSS, donc indépendante
+    // du DPR de l'appareil émulé — un DPR différent ne peut plus décaler une
+    // baseline.
+    toHaveScreenshot: { maxDiffPixelRatio: 0.012, animations: "disabled", scale: "css" },
   },
   use: {
     baseURL: "http://localhost:8080",
@@ -39,7 +42,6 @@ export default defineConfig({
     reducedMotion: "reduce",
     locale: "fr-FR",
     timezoneId: "Europe/Paris",
-    deviceScaleFactor: 1,
   },
   projects: [
     {
@@ -47,13 +49,12 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1280, height: 900 },
-        deviceScaleFactor: 1,
         launchOptions,
       },
     },
     {
       name: "mobile",
-      use: { ...devices["Pixel 7"], deviceScaleFactor: 1, isMobile: true, launchOptions },
+      use: { ...devices["Pixel 7"], launchOptions },
     },
   ],
   webServer: {
