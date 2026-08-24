@@ -7,16 +7,26 @@ import { useCart } from "@/lib/zelor/cart";
 
 function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
+  const [closing, setClosing] = useState(false);
+
+  const close = () => {
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(() => setVisible(false), 420);
+  };
+
   if (!visible) return null;
   return (
-    <div className="veil-top relative text-navy-foreground">
+    <div
+      className={`veil-top relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
+    >
       <div className="container-z flex items-center justify-center gap-4 py-2.5">
         <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/85 uppercase">
           {BRAND.announcement}
         </p>
         <button
           type="button"
-          onClick={() => setVisible(false)}
+          onClick={close}
           aria-label="Masquer le message d'information"
           className="utility-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
         >
@@ -34,12 +44,27 @@ function AnnouncementBar() {
 
 function LanguageMenu() {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Fermeture animée : le panneau se retire, puis se démonte.
+  const close = () => {
+    setClosing(true);
+    window.setTimeout(() => {
+      setClosing(false);
+      setOpen(false);
+    }, 260);
+  };
+
+  const toggle = () => (open && !closing ? close() : setOpen(true));
 
   useEffect(() => {
     function onClick(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
+        setOpen((v) => {
+          if (v) close();
+          return v;
+        });
       }
     }
     document.addEventListener("mousedown", onClick);
@@ -50,8 +75,8 @@ function LanguageMenu() {
     <div className="relative" ref={ref}>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
+        onClick={toggle}
+        aria-expanded={open && !closing}
         aria-haspopup="listbox"
         className={`utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
       >
@@ -62,7 +87,7 @@ function LanguageMenu() {
         <ul
           role="listbox"
           aria-label="Langues"
-          className="panel-navy panel-in absolute right-0 z-50 mt-2 w-52 overflow-hidden py-1"
+          className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-2 w-52 overflow-hidden py-1`}
         >
           {LANGUAGES.map((lang) => (
             <li key={lang.code}>
