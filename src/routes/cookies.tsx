@@ -62,17 +62,17 @@ function CookiesPage() {
       crumbs={[{ label: "Préférences cookies" }]}
     >
       <Section title="Catégories">
-        <ul className="divide-y divide-border border-y border-border">
+        <ul className="relief-z divide-y divide-border/70 overflow-hidden px-6">
           {categories.map((category) => (
             <li
               key={category.id}
-              className="flex items-start justify-between gap-6 py-4"
+              className="flex items-start justify-between gap-6 py-5"
             >
               <div>
                 <p className="font-medium">{category.label}</p>
                 <p className="text-sm text-muted-foreground">{category.body}</p>
               </div>
-              <label className="flex shrink-0 items-center gap-2 text-sm">
+              <label className="chip-z press-z shrink-0 cursor-pointer gap-2 px-4 py-2 text-sm">
                 <input
                   type="checkbox"
                   checked={prefs[category.id]}
@@ -84,7 +84,7 @@ function CookiesPage() {
                     }));
                     setSaved(false);
                   }}
-                  className="size-5 accent-[oklch(0.286_0.014_152)]"
+                  className="size-4 rounded-full accent-[var(--navy)]"
                 />
                 <span>{prefs[category.id] ? "Activé" : "Désactivé"}</span>
               </label>
