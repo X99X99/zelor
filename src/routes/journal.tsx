@@ -53,7 +53,9 @@ export const Route = createFileRoute("/journal")({
               tone={index % 2 === 0 ? "sand" : "stone"}
               ratio="aspect-4/3"
               caption={entry.theme}
+              label={`${entry.title} — ${entry.theme}`}
             />
+
             <p className="eyebrow mt-4">{entry.theme}</p>
             <h2 className="mt-2 font-display text-xl">{entry.title}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{entry.body}</p>

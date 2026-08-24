@@ -30,15 +30,19 @@ export function ImageSlot({
   tone = "sand",
   ratio = "aspect-[4/5]",
   caption = "ZELOR",
+  label,
 }: {
   tone?: string;
   ratio?: string;
   caption?: ReactNode;
+  /** Description du visuel pour les lecteurs d'écran et les moteurs. */
+  label?: string;
 }) {
+  const described = label ?? (typeof caption === "string" ? caption.trim() : "");
   return (
     <div
       role="img"
-      aria-label="Visuel ZELOR"
+      aria-label={described ? `${described} — visuel ZELOR` : "Visuel ZELOR"}
       className={`grain-z ${ratio} ${toneClass[tone] ?? "bg-sand"} relative flex items-center justify-center overflow-hidden rounded-[var(--radius-media)]`}
     >
       {/* Lumière naturelle entrant par le haut à gauche */}

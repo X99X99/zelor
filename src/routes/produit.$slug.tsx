@@ -67,11 +67,31 @@ function ProductPage() {
       <div className="container-z grid gap-10 pt-8 pb-16 lg:grid-cols-2 lg:gap-16">
         {/* Galerie */}
         <Reveal className="space-y-3">
-          <ImageSlot tone={product.tone} ratio="aspect-4/5" caption={product.name} />
+          <ImageSlot
+            tone={product.tone}
+            ratio="aspect-4/5"
+            caption={product.name}
+            label={`${product.name}, vue principale`}
+          />
           <div className="grid grid-cols-3 gap-3">
-            <ImageSlot tone="sand" ratio="aspect-square" caption="Allure" />
-            <ImageSlot tone="stone" ratio="aspect-square" caption="Matière" />
-            <ImageSlot tone="forest" ratio="aspect-square" caption="Détail" />
+            <ImageSlot
+              tone="sand"
+              ratio="aspect-square"
+              caption="Allure"
+              label={`${product.name}, allure générale`}
+            />
+            <ImageSlot
+              tone="stone"
+              ratio="aspect-square"
+              caption="Matière"
+              label={`${product.name}, gros plan sur la matière`}
+            />
+            <ImageSlot
+              tone="forest"
+              ratio="aspect-square"
+              caption="Détail"
+              label={`${product.name}, détail de finition`}
+            />
           </div>
         </Reveal>
 

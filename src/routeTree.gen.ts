@@ -26,6 +26,7 @@ import { Route as PaiementsRouteImport } from './routes/paiements'
 import { Route as PanierRouteImport } from './routes/panier'
 import { Route as QualiteRouteImport } from './routes/qualite'
 import { Route as RetoursRouteImport } from './routes/retours'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SuiviCommandeRouteImport } from './routes/suivi-commande'
 import { Route as UniversRouteImport } from './routes/univers'
 import { Route as ProduitSlugRouteImport } from './routes/produit.$slug'
@@ -115,6 +116,11 @@ const RetoursRoute = RetoursRouteImport.update({
   path: '/retours',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuiviCommandeRoute = SuiviCommandeRouteImport.update({
   id: '/suivi-commande',
   path: '/suivi-commande',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/panier': typeof PanierRoute
   '/qualite': typeof QualiteRoute
   '/retours': typeof RetoursRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suivi-commande': typeof SuiviCommandeRoute
   '/univers': typeof UniversRoute
   '/produit/$slug': typeof ProduitSlugRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/panier': typeof PanierRoute
   '/qualite': typeof QualiteRoute
   '/retours': typeof RetoursRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suivi-commande': typeof SuiviCommandeRoute
   '/univers': typeof UniversRoute
   '/produit/$slug': typeof ProduitSlugRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/panier': typeof PanierRoute
   '/qualite': typeof QualiteRoute
   '/retours': typeof RetoursRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suivi-commande': typeof SuiviCommandeRoute
   '/univers': typeof UniversRoute
   '/produit/$slug': typeof ProduitSlugRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/panier'
     | '/qualite'
     | '/retours'
+    | '/sitemap.xml'
     | '/suivi-commande'
     | '/univers'
     | '/produit/$slug'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/panier'
     | '/qualite'
     | '/retours'
+    | '/sitemap.xml'
     | '/suivi-commande'
     | '/univers'
     | '/produit/$slug'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/panier'
     | '/qualite'
     | '/retours'
+    | '/sitemap.xml'
     | '/suivi-commande'
     | '/univers'
     | '/produit/$slug'
@@ -285,6 +297,7 @@ export interface RootRouteChildren {
   PanierRoute: typeof PanierRoute
   QualiteRoute: typeof QualiteRoute
   RetoursRoute: typeof RetoursRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuiviCommandeRoute: typeof SuiviCommandeRoute
   UniversRoute: typeof UniversRoute
   ProduitSlugRoute: typeof ProduitSlugRoute
@@ -411,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RetoursRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/suivi-commande': {
       id: '/suivi-commande'
       path: '/suivi-commande'
@@ -453,6 +473,7 @@ const rootRouteChildren: RootRouteChildren = {
   PanierRoute: PanierRoute,
   QualiteRoute: QualiteRoute,
   RetoursRoute: RetoursRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuiviCommandeRoute: SuiviCommandeRoute,
   UniversRoute: UniversRoute,
   ProduitSlugRoute: ProduitSlugRoute,
