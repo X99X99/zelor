@@ -1105,8 +1105,16 @@
   }
 }
 
-/* Ligne de menu statutaire */
+/* ————— Capsule de navigation ZELOR —————
+ * Primitive unique : menu mobile, header desktop et footer partagent
+ * littéralement cette matière, cette profondeur et cette chorégraphie.
+ * `--cap-pad` est la seule source de vérité de la géométrie interne :
+ * la respiration au survol ET le soulignement en dérivent.
+ */
 @utility menu-row {
+  --cap-pad: 0.75rem;
+  --cap-underline-bottom: 0.55rem;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1124,14 +1132,14 @@
     opacity var(--dur-4) var(--ease-breathe),
     scale var(--dur-5) var(--ease-breathe);
   &:focus-within {
-    padding-inline: 0.75rem;
+    padding-inline: var(--cap-pad);
     background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
   }
   /* Sur tactile, aucun état de survol fantôme : seul l'appui répond. */
   @media (hover: hover) {
     &:hover {
-      padding-inline: 0.75rem;
+      padding-inline: var(--cap-pad);
       background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
       box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
     }
@@ -1141,6 +1149,29 @@
     transition-duration: var(--dur-2);
   }
 }
+
+/* Même capsule, posée à l'horizontale (header) ou en colonne serrée (footer).
+ * Seules les proportions changent : la matière, le halo, la courbe et le
+ * soulignement restent ceux de `menu-row`. La largeur ne bouge pas au survol
+ * pour ne jamais faire tressaillir la ligne de navigation. */
+@utility menu-row-inline {
+  --cap-underline-bottom: 0.32rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-block: 0.5rem;
+  padding-inline: var(--cap-pad);
+  border-bottom: none;
+  &:focus-within,
+  &:hover {
+    padding-inline: var(--cap-pad);
+    translate: 0 -1px;
+  }
+  &:active {
+    translate: 0 0;
+    scale: 0.985;
+  }
+}
+
 
 @utility skeleton-lux {
   background: linear-gradient(
@@ -1870,18 +1901,19 @@
 }
 
 /* ————— Lien de navigation ZELOR —————
- * Une seule primitive pour le header, le menu et le footer. Elle n'invente
- * aucune matière : elle ajoute au filet `link-underline` l'état actif, le
- * focus visible et la réponse tactile des contrôles premium du site.
+ * Une seule primitive pour le header, le menu et le footer. Les liens de
+ * navigation portent la capsule `menu-row` (attribut `data-capsule`) :
+ * même matière, même profondeur, même halo, même retour. Le soulignement
+ * n'est jamais posé par-dessus — il vit à l'intérieur, sa largeur dérivant
+ * littéralement de la géométrie interne de la capsule (`--cap-pad`).
+ * Les liens en pleine lecture (paragraphes, mentions) restent discrets.
  */
 @utility nav-link-z {
   position: relative;
   border-radius: 2px;
-  /* Header et footer : le lien porte sa propre géométrie.
-   * En feuille mobile (`variant="sheet"`), il n'en porte aucune : la ligne
-   * hérite intégralement de `menu-row`, donc une entrée-lien bouge exactement
-   * comme l'entrée « Langue », qui reste la référence du menu. */
-  &:not([data-variant="sheet"]) {
+  /* Lien de lecture : il porte sa propre géométrie minimale.
+   * Lien-capsule : il n'en porte aucune, `menu-row` pilote tout. */
+  &:not([data-capsule]) {
     display: inline-block;
     padding-bottom: 3px;
     transition:
@@ -1902,18 +1934,29 @@
       scale var(--dur-2) var(--ease-lux),
       opacity var(--dur-2) var(--ease-lux);
   }
-  /* Le filet reste contenu dans la capsule : marge nette à gauche et à
-   * droite, aucun débordement à l'entrée, à l'état actif ni au retour. */
-  &[data-variant="sheet"]::after {
-    inset-inline: 0.9rem;
-    bottom: 0.55rem;
+  /* Le filet épouse la largeur utile interne de la bulle : même marge que
+   * la respiration de la capsule, même coins, même rythme. */
+  &[data-capsule]::after {
+    inset-inline: var(--cap-pad);
+    bottom: var(--cap-underline-bottom);
+    height: 1px;
+    border-radius: 1px;
     opacity: 0.5;
+    transition:
+      scale var(--dur-4) var(--ease-breathe),
+      opacity var(--dur-4) var(--ease-breathe),
+      inset-inline var(--dur-5) var(--ease-breathe);
   }
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 45%, transparent);
   }
-  &:not([data-variant="sheet"]):active {
+  &[data-capsule]:focus-visible {
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 8%, transparent),
+      0 0 0 1px color-mix(in oklab, currentColor 30%, transparent);
+  }
+  &:not([data-capsule]):active {
     opacity: 0.75;
   }
   /* Page consultée : le filet reste posé, la présence est plus dense. */
@@ -1925,10 +1968,14 @@
     transform-origin: left center;
     opacity: 0.9;
   }
-  &[data-variant="sheet"][aria-current="page"]::after {
+  &[data-capsule][aria-current="page"]::after {
     opacity: 0.6;
   }
+  &[data-capsule][aria-current="page"] {
+    background-color: color-mix(in oklab, var(--navy-foreground) 5%, transparent);
+  }
 }
+
 
 @media (hover: hover) and (pointer: fine) {
   .nav-link-z:hover::after,

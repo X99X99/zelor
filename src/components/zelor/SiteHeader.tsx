@@ -352,7 +352,7 @@ export function SiteHeader() {
 
           <nav
             aria-label="Navigation principale"
-            className="hidden flex-1 items-center gap-7 md:flex"
+            className="-ml-3 hidden flex-1 items-center gap-1 md:flex"
           >
             {MAIN_NAV.map((item) => (
               <NavLink
@@ -365,6 +365,7 @@ export function SiteHeader() {
               </NavLink>
             ))}
           </nav>
+
 
           <BrandLink
             onNavigate={closeMenu}
@@ -470,7 +471,7 @@ export function SiteHeader() {
                 variant="sheet"
                 onNavigate={closeMenu}
                 data-focal=""
-                className="menu-row font-display text-3xl"
+                className="font-display text-3xl"
               >
                 {/* L'entrée en cascade porte sur le contenu, jamais sur la
                  * ligne : la ligne conserve sa transformation focale, donc
@@ -491,7 +492,7 @@ export function SiteHeader() {
               variant="sheet"
               onNavigate={closeMenu}
               data-focal=""
-              className="menu-row text-sm tracking-[0.08em]"
+              className="text-sm tracking-[0.08em]"
             >
               <span>Compte client</span>
             </NavLink>
@@ -500,7 +501,7 @@ export function SiteHeader() {
               variant="sheet"
               onNavigate={closeMenu}
               data-focal=""
-              className="menu-row text-sm tracking-[0.08em]"
+              className="text-sm tracking-[0.08em]"
             >
               <span>Aide et contact</span>
             </NavLink>
