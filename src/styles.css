@@ -1319,3 +1319,107 @@
       0 34px 70px -44px color-mix(in oklab, var(--navy) 78%, transparent);
   }
 }
+
+/* ————— Physique premium unifiée —————
+ * Une seule grammaire tactile : le composant s'élève au contact, se tasse
+ * à l'appui, et reçoit une lumière plus nette quand il devient actif.
+ * À réutiliser partout plutôt que de redéfinir un hover local.
+ */
+@utility tactile-z {
+  position: relative;
+  transition:
+    transform var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux),
+    background-color var(--dur-2) var(--ease-lux),
+    border-color var(--dur-2) var(--ease-lux),
+    color var(--dur-2) var(--ease-lux),
+    opacity var(--dur-2) var(--ease-lux);
+  &:hover {
+    transform: translateY(var(--lift-1));
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 16%, transparent);
+  }
+  &:active {
+    transform: translateY(0) scale(0.972);
+    transition-duration: var(--dur-1);
+  }
+  &:disabled,
+  &[aria-disabled="true"] {
+    transform: none;
+  }
+}
+
+/* Variante plus affirmée : la pièce existe nettement au-dessus du fond. */
+@utility tactile-lift-z {
+  &:hover {
+    transform: translateY(var(--lift-2));
+    box-shadow: var(--shadow-float);
+  }
+}
+
+/* Césure lumineuse : sépare deux couches marine sans les rompre.
+ * Un filet fin traversé, très lentement, par une lueur mobile. */
+@utility seam-z {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    pointer-events: none;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in oklab, var(--navy-foreground) 16%, transparent) 22%,
+      color-mix(in oklab, white 42%, transparent) 50%,
+      color-mix(in oklab, var(--navy-foreground) 16%, transparent) 78%,
+      transparent 100%
+    );
+    background-size: 220% 100%;
+    opacity: 0.55;
+    animation: zelor-seam-drift 14s linear infinite;
+  }
+}
+
+@keyframes zelor-seam-drift {
+  from {
+    background-position: -60% 50%;
+  }
+  to {
+    background-position: 160% 50%;
+  }
+}
+
+/* Utilitaires du header : l'icône elle-même répond, pas seulement le fond. */
+@utility utility-icon-z {
+  & > svg {
+    transition:
+      transform var(--dur-2) var(--ease-lux),
+      opacity var(--dur-2) var(--ease-lux);
+  }
+  &:hover > svg {
+    transform: translateY(-1px) scale(1.06);
+  }
+  &:active > svg {
+    transform: translateY(0) scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seam-z::after {
+    animation: none;
+  }
+  .tactile-z,
+  .tactile-lift-z,
+  .utility-icon-z > svg {
+    transition-duration: 1ms !important;
+  }
+  .tactile-z:hover,
+  .tactile-lift-z:hover,
+  .utility-icon-z:hover > svg {
+    transform: none !important;
+  }
+}
