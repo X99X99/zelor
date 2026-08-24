@@ -118,6 +118,11 @@
   --ease-back: cubic-bezier(0.34, 1.42, 0.64, 1);
   /* Respiration : entrée et sortie d'une même famille, jamais mécanique. */
   --ease-breathe: cubic-bezier(0.32, 0.72, 0.24, 1);
+  /* Glisse : strictement symétrique, l'aller vaut le retour. Aucune cassure,
+   * aucun rebond — la seule courbe autorisée pour le menu et la lumière. */
+  --ease-glide: cubic-bezier(0.45, 0.05, 0.25, 1);
+  /* Durée unique de la chorégraphie du menu (entrée comme retrait). */
+  --dur-menu: 760ms;
   --blur-veil: 22px;
   --blur-panel: 16px;
   --lift-1: -1px;
@@ -315,6 +320,11 @@
       color var(--dur-3) var(--ease-lux), background-color var(--dur-3) var(--ease-lux),
       border-color var(--dur-3) var(--ease-lux);
   }
+  /* Cette règle n'est pas dans une couche : elle l'emporterait sur toutes les
+   * utilities. Les entrées du menu téléphone (`[data-focal]` et leur contenu)
+   * en sont donc exclues — sinon leur chorégraphie serait écrasée par une
+   * simple transition de couleur, ce qui rendait le mouvement sec et
+   * différent d'une entrée à l'autre. */
   body,
   body
     :where(
@@ -334,7 +344,7 @@
       button,
       input,
       textarea
-    ) {
+    ):not(:where([data-focal], [data-focal] *)) {
     transition: var(--theme-fade, none);
   }
 }
@@ -1123,34 +1133,36 @@
   white-space: nowrap;
   gap: 1.5rem;
   padding-block: 1.15rem;
+  /* La géométrie interne est figée : la respiration ne passe plus par le
+   * padding (reflow, saccade) mais par une translation composée. Le retrait
+   * négatif conserve exactement l'alignement validé du texte au repos. */
+  padding-inline: var(--cap-pad);
+  margin-inline: calc(-1 * var(--cap-pad));
 
   border-radius: var(--radius-field);
   border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 14%, transparent);
-  /* Même chorégraphie, davantage d'inertie : le déplacement glisse au lieu
-   * de se translater d'un bloc. La lumière suit un peu plus vite que la masse. */
+  /* Une seule chorégraphie, une seule durée, une seule courbe symétrique :
+   * l'aller et le retour sont rigoureusement identiques (boomerang). */
   transition:
-    padding-inline var(--dur-5) var(--ease-breathe),
-    translate var(--dur-5) var(--ease-breathe),
-    background-color var(--dur-4) var(--ease-breathe),
-    box-shadow var(--dur-4) var(--ease-breathe),
-    opacity var(--dur-4) var(--ease-breathe),
-    scale var(--dur-5) var(--ease-breathe);
+    translate var(--dur-menu) var(--ease-glide),
+    scale var(--dur-menu) var(--ease-glide),
+    opacity var(--dur-menu) var(--ease-glide),
+    background-color var(--dur-menu) var(--ease-glide),
+    box-shadow var(--dur-menu) var(--ease-glide),
+    color var(--dur-menu) var(--ease-glide);
   &:focus-within {
-    padding-inline: var(--cap-pad);
     background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
   }
   /* Sur tactile, aucun état de survol fantôme : seul l'appui répond. */
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     &:hover {
-      padding-inline: var(--cap-pad);
       background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
       box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
     }
   }
   &:active {
     background-color: color-mix(in oklab, var(--navy-foreground) 9%, transparent);
-    transition-duration: var(--dur-2);
   }
 }
 
@@ -1169,7 +1181,16 @@
   gap: 0.5rem;
   padding-block: 0.5rem;
   padding-inline: var(--cap-pad);
+  /* Header et footer : géométrie validée, aucun retrait négatif. */
+  margin-inline: 0;
   border-bottom: none;
+  /* Le header reste intouché : sa chorégraphie d'origine est préservée. */
+  transition:
+    translate var(--dur-5) var(--ease-breathe),
+    scale var(--dur-5) var(--ease-breathe),
+    opacity var(--dur-4) var(--ease-breathe),
+    background-color var(--dur-4) var(--ease-breathe),
+    box-shadow var(--dur-4) var(--ease-breathe);
   &:focus-within,
   &:hover {
     padding-inline: var(--cap-pad);
@@ -1353,26 +1374,49 @@
   animation: zelor-collapse-out var(--dur-3) var(--ease-exit) both;
 }
 
-/* Lecture focale du menu : l'élément survolé prend la lumière,
- * ses voisins se retirent d'un souffle. Esprit watchOS, jamais gadget. */
+/* ————— Chorégraphie unique du menu téléphone —————
+ * Une seule primitive gouverne TOUTES les entrées (liens et ligne « Langue ») :
+ * même durée, même courbe symétrique, mêmes propriétés composées
+ * (opacity / scale / translate). Aucune propriété de layout n'est animée :
+ * ni padding, ni margin, ni letter-spacing, ni height. L'aller et le retour
+ * empruntent exactement le même chemin — glissement continu, ralenti en fin
+ * de course, fondu progressif, aucune cassure.
+ */
 @utility focal-list {
   & > [data-focal] {
+    transform-origin: left center;
+    will-change: transform, opacity;
     transition:
-      opacity var(--dur-4) var(--ease-breathe),
-      scale var(--dur-5) var(--ease-breathe),
-      letter-spacing var(--dur-5) var(--ease-breathe),
-      color var(--dur-4) var(--ease-breathe);
+      opacity var(--dur-menu) var(--ease-glide),
+      scale var(--dur-menu) var(--ease-glide),
+      translate var(--dur-menu) var(--ease-glide),
+      background-color var(--dur-menu) var(--ease-glide),
+      box-shadow var(--dur-menu) var(--ease-glide),
+      color var(--dur-menu) var(--ease-glide);
   }
+  /* Seul le libellé glisse : le filet reste ancré à la capsule, sinon il
+   * déborderait du cadre à droite. Il se révèle par échelle, pas par
+   * déplacement. */
+  & > [data-focal] > * {
+    transition: translate var(--dur-menu) var(--ease-glide);
+  }
+
+  /* Retrait des voisines : jamais un extinction sèche, un simple recul. */
   &:focus-within > [data-focal] {
     opacity: 0.42;
     scale: 0.985;
   }
-  & > [data-focal]:focus-visible,
-  & > [data-focal]:focus-within {
+  /* Mise en avant — identique au doigt, au clavier et au pointeur fin. */
+  & > [data-focal]:focus-within,
+  & > [data-focal]:active {
     opacity: 1;
     scale: 1.015;
   }
-  @media (hover: hover) {
+  & > [data-focal]:focus-within > *,
+  & > [data-focal]:active > * {
+    translate: var(--cap-pad) 0;
+  }
+  @media (hover: hover) and (pointer: fine) {
     &:hover > [data-focal] {
       opacity: 0.42;
       scale: 0.985;
@@ -1381,6 +1425,18 @@
       opacity: 1;
       scale: 1.015;
     }
+    & > [data-focal]:hover > * {
+      translate: var(--cap-pad) 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-list > [data-focal],
+  .focal-list > [data-focal] > * {
+    transition-duration: 1ms !important;
+    translate: none !important;
+    scale: none !important;
   }
 }
 
@@ -1599,17 +1655,43 @@
     color-mix(in oklab, var(--gold) 80%, transparent) 66%,
     color-mix(in oklab, var(--gold) 55%, transparent) 100%
   );
-  background-size: 240% 100%;
+  background-size: 100% 100%;
   border-radius: 999px;
+  overflow: hidden;
   box-shadow:
     0 0 8px color-mix(in oklab, var(--gold) 55%, transparent),
     0 0 20px -4px color-mix(in oklab, var(--gold) 38%, transparent);
-  animation: zelor-progress-sheen 5.5s linear infinite;
   /* Boomerang : le filet dépasse d'un souffle la valeur atteinte,
    * puis revient se poser exactement dessus. */
   transition:
     width var(--dur-3) var(--ease-back),
     opacity var(--dur-3) var(--ease-breathe);
+
+  /* Lumière voyageuse : un point doré, halo doux et traînée légère, qui
+   * parcourt le filet de gauche à droite, ralentit au bord, fait demi-tour
+   * et revient. `alternate` + courbe symétrique : aucun téléportement,
+   * aucune coupure, aucune accélération brutale. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in oklab, var(--gold) 32%, transparent) 24%,
+      color-mix(in oklab, var(--gold) 70%, transparent) 40%,
+      color-mix(in oklab, white 92%, transparent) 50%,
+      color-mix(in oklab, var(--gold) 70%, transparent) 60%,
+      color-mix(in oklab, var(--gold) 32%, transparent) 76%,
+      transparent 100%
+    );
+    background-repeat: no-repeat;
+    background-size: 58% 100%;
+    animation: zelor-progress-drift 7.2s var(--ease-glide) infinite alternate;
+  }
+
   /* Tête d'éclat : la lumière se concentre au point de lecture. */
   &::after {
     content: "";
@@ -1631,12 +1713,14 @@
   }
 }
 
-@keyframes zelor-progress-sheen {
+/* Aller-retour continu de la lumière décorative. La valeur de progression,
+ * elle, reste portée par la largeur réelle du filet. */
+@keyframes zelor-progress-drift {
   from {
     background-position: 0% 50%;
   }
   to {
-    background-position: 240% 50%;
+    background-position: 100% 50%;
   }
 }
 
@@ -1653,9 +1737,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .progress-z,
   .progress-z::after {
     animation: none !important;
+  }
+  /* Version discrète : la lumière respire au lieu de voyager. */
+  .progress-z::before {
+    animation: none !important;
+    opacity: 0.5;
   }
 }
 
@@ -1950,10 +2038,20 @@
     height: 1px;
     border-radius: 1px;
     opacity: 0.5;
+    /* Le filet ne se redessine jamais (aucune animation d'inset : reflow) :
+     * il glisse et se fond, exactement comme le libellé qu'il souligne. */
     transition:
-      scale var(--dur-4) var(--ease-breathe),
-      opacity var(--dur-4) var(--ease-breathe),
-      inset-inline var(--dur-5) var(--ease-breathe);
+      scale var(--dur-menu) var(--ease-glide),
+      opacity var(--dur-menu) var(--ease-glide),
+      translate var(--dur-menu) var(--ease-glide);
+  }
+  /* Activation au doigt et au clavier : même révélation que sur pointeur fin,
+   * même sens de lecture, même durée. Aucune entrée ne réagit autrement. */
+  &[data-capsule]:focus-within::after,
+  &[data-capsule]:active::after {
+    scale: 1 1;
+    transform-origin: left center;
+    opacity: 1;
   }
   &:focus-visible {
     outline: none;
