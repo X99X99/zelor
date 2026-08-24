@@ -64,22 +64,27 @@ describe("système de mouvement ZELOR", () => {
   });
 
   it("header et recherche partagent une source de matière unique", () => {
-    for (const utility of ["@utility surface-navy", "@utility surface-search"]) {
-      const block = css.slice(css.indexOf(utility), css.indexOf(utility) + 600);
-      expect(block, `${utility} doit réutiliser le token de fond`).toContain(
-        "var(--surface-navy-bg)",
-      );
-      expect(block, `${utility} doit réutiliser le token de voile`).toContain(
-        "var(--surface-navy-veil)",
-      );
-    }
-    // La recherche ne doit redéfinir aucune couleur propre.
-    const search = css.slice(
-      css.indexOf("@utility surface-search"),
-      css.indexOf("@utility surface-search") + 600,
+    const block = css.slice(
+      css.indexOf("@utility surface-navy"),
+      css.indexOf("@utility surface-navy") + 600,
     );
-    expect(search).not.toMatch(/radial-gradient|linear-gradient/);
+    expect(block, "surface-navy doit réutiliser le token de fond").toContain(
+      "var(--surface-navy-bg)",
+    );
+    expect(block, "surface-navy doit réutiliser le token de voile").toContain(
+      "var(--surface-navy-veil)",
+    );
+    // La recherche ne peint plus aucune matière : elle s'ouvre dans le header.
+    expect(css).not.toContain("@utility surface-search");
   });
+
+  it("garde une seule nuit, pilotée par la préférence système", () => {
+    expect(css).toContain("@media (prefers-color-scheme: dark)");
+    const night = css.slice(css.indexOf("@media (prefers-color-scheme: dark)"));
+    expect(night).toContain("--background:");
+    expect(night).toContain("--foreground:");
+  });
+
 
   it("centralise les easings boomerang et respiration", () => {
     expect(css).toContain("--ease-back:");
