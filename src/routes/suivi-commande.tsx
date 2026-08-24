@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { PageShell, Section } from "@/components/zelor/Page";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/suivi-commande")({
   head: () => ({
@@ -10,7 +9,7 @@ export const Route = createFileRoute("/suivi-commande")({
       {
         name: "description",
         content:
-          "Suivez votre commande ZELOR à partir de l'email de confirmation d'expédition.",
+          "Suivez votre commande ZELOR à partir de l'email de confirmation d'expédition ou depuis votre espace client.",
       },
       { property: "og:title", content: "Suivi de commande — ZELOR" },
       {
@@ -18,30 +17,32 @@ export const Route = createFileRoute("/suivi-commande")({
         content: "Suivez votre commande à partir de l'email d'expédition.",
       },
       { property: "og:url", content: "/suivi-commande" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/suivi-commande" }],
   }),
   component: () => (
     <PageShell
       title="Suivi de commande"
-      intro="Chaque expédition déclenche un email contenant le lien de suivi du transporteur."
+      intro="Chaque expédition déclenche un email contenant le lien de suivi du transporteur. Le même lien reste accessible depuis votre espace client."
       crumbs={[{ label: "Suivi de commande" }]}
     >
-      <DraftNote label="À connecter">
-        Le suivi sera assuré par les notifications Shopify et l'espace client.
-      </DraftNote>
-      <Section title="Étapes">
-        <ol className="list-decimal space-y-1 pl-5">
-          <li>Confirmation de commande (email immédiat)</li>
-          <li>Préparation : <Missing>[DÉLAI À RENSEIGNER]</Missing></li>
-          <li>Expédition et lien de suivi</li>
-          <li>Livraison</li>
+      <Section title="Les étapes">
+        <ol className="list-decimal space-y-2 pl-5">
+          <li>Confirmation de commande, par email, immédiatement.</li>
+          <li>Préparation et contrôle de la pièce dans nos ateliers.</li>
+          <li>Expédition, avec l'envoi du lien de suivi.</li>
+          <li>Livraison à l'adresse indiquée.</li>
         </ol>
       </Section>
-      <Section title="Un problème de livraison ?">
+      <Section title="Une livraison qui tarde ?">
         <p>
-          Écrivez-nous avec votre numéro de commande : nous contactons le
-          transporteur et vous tenons informé.
+          Écrivez-nous depuis la page{" "}
+          <Link to="/contact" className="link-underline">
+            Contact
+          </Link>{" "}
+          avec votre numéro de commande : nous contactons le transporteur et
+          vous tenons informé jusqu'à la remise du colis.
         </p>
       </Section>
     </PageShell>
