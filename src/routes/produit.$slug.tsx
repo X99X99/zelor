@@ -11,6 +11,7 @@ import { useCart } from "@/lib/zelor/cart";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/produit/$slug")({
   loader: ({ params }) => {
