@@ -886,20 +886,21 @@
  * Transition de page, matière granuleuse, lumière rasante, respiration.
  */
 
-/* Entrée de page : le contenu se pose, il n'apparaît jamais d'un coup. */
+/* Entrée de page : fondu seul.
+ * Pas de translation sur le conteneur global : elle simulerait un déplacement
+ * que le défilement réel n'effectue pas, et créerait un bloc de confinement
+ * pour les éléments en position fixed (barre d'achat mobile). */
 @keyframes zelor-page-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
 @utility page-in {
-  animation: zelor-page-in var(--dur-4) var(--ease-enter) both;
+  animation: zelor-page-in var(--dur-3) var(--ease-enter) both;
 }
 
 /* Grain imperceptible : les aplats marine cessent d'être plats. */
