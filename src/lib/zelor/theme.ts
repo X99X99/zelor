@@ -43,7 +43,7 @@ export function resolveTheme(choice: ThemeChoice, systemDark: boolean): Theme {
 /** Script bloquant injecté dans <head> : évite tout flash de mauvais thème. */
 export const THEME_INIT_SCRIPT = `(function(){try{var k=${JSON.stringify(
   THEME_STORAGE_KEY,
-)};var c=localStorage.getItem(k);if(c!=="light"&&c!=="dark")c="system";var d=c==="system"?window.matchMedia("(prefers-color-scheme: dark)").matches:c==="dark";var r=document.documentElement;r.classList.toggle("dark",d);r.classList.toggle("light",!d);r.style.colorScheme=d?"dark":"light";r.dataset.themeChoice=c;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?${JSON.stringify(
+)};var c=localStorage.getItem(k);if(c!=="light"&&c!=="dark")c="system";var d=c==="system"?window.matchMedia("(prefers-color-scheme: dark)").matches:c==="dark";var r=document.documentElement;r.classList.toggle("dark",d);r.classList.toggle("light",!d);r.style.colorScheme=d?"dark":"light";r.dataset["themeChoice"]=c;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?${JSON.stringify(
   THEME_COLORS.dark,
 )}:${JSON.stringify(THEME_COLORS.light)});}catch(e){}})();`;
 
@@ -64,7 +64,7 @@ function readChoice(): ThemeChoice {
   try {
     choice = parseChoice(localStorage.getItem(THEME_STORAGE_KEY));
   } catch {
-    choice = parseChoice(document.documentElement.dataset.themeChoice);
+    choice = parseChoice(document.documentElement.dataset["themeChoice"]);
   }
   return choice;
 }
@@ -76,7 +76,7 @@ export function applyTheme(theme: Theme, current: ThemeChoice) {
   root.classList.toggle("dark", theme === "dark");
   root.classList.toggle("light", theme === "light");
   root.style.colorScheme = theme;
-  root.dataset.themeChoice = current;
+  root.dataset["themeChoice"] = current;
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute("content", THEME_COLORS[theme]);
 }

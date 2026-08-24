@@ -54,7 +54,7 @@ beforeEach(() => {
   localStorage.clear();
   document.head.innerHTML = '<meta name="theme-color" content="#000000">';
   document.documentElement.className = "";
-  delete document.documentElement.dataset.themeChoice;
+  delete document.documentElement.dataset["themeChoice"];
   __resetThemeStore();
 });
 
@@ -81,7 +81,7 @@ describe("script bloquant : aucun flash au chargement", () => {
     mockSystem(false);
     runInitScript();
     expect(document.documentElement.classList.contains("light")).toBe(true);
-    expect(document.documentElement.dataset.themeChoice).toBe("system");
+    expect(document.documentElement.dataset["themeChoice"]).toBe("system");
   });
 
   it("première visite, système sombre", () => {
