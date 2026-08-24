@@ -159,11 +159,40 @@ pour faire taire un échec.
 Parallélisme : `playwright.config.ts` fixe `workers: 2`. Au-delà, la contention
 CPU altère le rendu du texte et rendait les captures de fin de page instables.
 
-Chromium : si le binaire téléchargé par Playwright manque de bibliothèques
-système, pointer `ZELOR_CHROMIUM_PATH` vers un Chromium compatible.
+Rendu de référence verrouillé : `tests/e2e/browser-lock.json` fixe la version
+de navigateur avec laquelle les baselines ont été produites, et
+`tests/e2e/browser.ts` refuse de lancer la suite avec un autre moteur.
+`ZELOR_CHROMIUM_PATH` peut désigner le chemin du binaire, mais sa version reste
+vérifiée. Sont également verrouillés : viewport, captures en pixels CSS,
+locale `fr-FR`, fuseau `Europe/Paris`, flags de rendu de texte, chargement
+**vérifié** des polices, header masqué pendant les captures assemblées.
+
+Garde-fous permanents (symptôme → cause → règle → test → commande) :
+voir **[QUALITY_GUARDRAILS.md](./QUALITY_GUARDRAILS.md)**, ainsi que
+`tests/e2e/guardrails.spec.ts` (thème et motion, menu mobile, soulignement,
+capsules et libellés longs, contrôle d'apparence, filet de progression) et
+`.github/workflows/quality.yml` (à activer manuellement dans GitHub).
 
 Contrôle complet avant mise en ligne : `bun run preflight`
-(lint → typecheck → tests unitaires → build → tests navigateur).
+(lint → typecheck → tests unitaires → build → tests navigateur, captures et
+garde-fous inclus).
+
+## 8 bis. Traitement d'un problème visuel signalé
+
+Un problème visuel signalé par le propriétaire du site est **un écart réel**,
+même si tous les tests sont verts. Procédure obligatoire :
+
+1. reproduire le problème dans le rendu réel (bon thème, bon viewport, bon état) ;
+2. inspecter le DOM, les styles calculés, la cascade, les wrappers, les médias
+   et les états interactifs ;
+3. identifier la cause technique réelle ;
+4. corriger au bon niveau — primitive ou token — jamais par un patch local ;
+5. ajouter ou renforcer le test qui aurait dû détecter l'erreur, et l'inscrire
+   dans QUALITY_GUARDRAILS.md ;
+6. vérifier visuellement puis exécuter `bun run preflight`.
+
+Ne jamais clore un sujet en concluant « le code est déjà conforme » tant que le
+rendu observé par le propriétaire reste incorrect.
 
 ## 9. Contrats visuels et interactions protégées
 
