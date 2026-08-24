@@ -253,7 +253,7 @@ export function SiteHeader() {
               onClick={() => setMenuOpen(true)}
               aria-label="Ouvrir le menu"
               aria-expanded={menuOpen}
-              className="-ml-2 flex size-11 items-center justify-center opacity-90 transition-opacity duration-500 hover:opacity-100"
+              className="utility-z -ml-2 flex size-11 items-center justify-center opacity-90 hover:opacity-100"
             >
               <Menu className="size-5" aria-hidden="true" />
             </button>
@@ -267,7 +267,7 @@ export function SiteHeader() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="link-underline text-[0.8125rem] tracking-[0.08em] opacity-85 transition-opacity duration-500 hover:opacity-100"
+                className="link-underline text-[0.8125rem] tracking-[0.08em] opacity-85 hover:opacity-100"
                 activeProps={{ className: "opacity-100 font-semibold" }}
               >
                 {item.label}
@@ -277,8 +277,8 @@ export function SiteHeader() {
 
           <Link
             to="/"
-            onClick={() => setMenuOpen(false)}
-            className="font-display text-2xl tracking-[0.4em] transition-opacity duration-500 hover:opacity-80 md:text-[1.75rem]"
+            onClick={closeMenu}
+            className="wordmark-z font-display text-2xl tracking-[0.4em] md:text-[1.75rem]"
             aria-label="ZELOR — accueil"
           >
             {BRAND.name}
@@ -290,9 +290,12 @@ export function SiteHeader() {
               onClick={() => setSearchOpen((v) => !v)}
               aria-expanded={searchOpen}
               aria-label="Rechercher"
-              className="flex size-11 items-center justify-center opacity-90 transition-opacity duration-500 hover:opacity-100"
+              className={`utility-z flex size-11 items-center justify-center ${searchOpen ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
-              <Search className="size-4.5" aria-hidden="true" />
+              <Search
+                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen ? "rotate-90 scale-90" : ""}`}
+                aria-hidden="true"
+              />
             </button>
             <div className="hidden md:block">
               <LanguageMenu />
@@ -300,20 +303,20 @@ export function SiteHeader() {
             <Link
               to="/compte"
               aria-label="Compte client"
-              className="hidden size-11 items-center justify-center opacity-90 transition-opacity duration-500 hover:opacity-100 md:flex"
+              className="utility-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 md:flex"
             >
               <User className="size-4.5" aria-hidden="true" />
             </Link>
             <Link
               to="/panier"
-              className="relative flex size-11 items-center justify-center opacity-90 transition-opacity duration-500 hover:opacity-100"
+              className="utility-z relative flex size-11 items-center justify-center opacity-90 hover:opacity-100"
               aria-label={`Panier${ready && count > 0 ? ` — ${count} article(s)` : " — vide"}`}
             >
               <ShoppingBag className="size-4.5" aria-hidden="true" />
               {ready && count > 0 && (
                 <span
                   aria-hidden="true"
-                  className="absolute top-1.5 right-1 min-w-4 rounded-full bg-navy-foreground px-1 text-center text-[0.625rem] leading-4 text-navy"
+                  className={`absolute top-1.5 right-1 min-w-4 rounded-full bg-navy-foreground px-1 text-center text-[0.625rem] leading-4 text-navy transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${bump ? "scale-125" : "scale-100"}`}
                 >
                   {count}
                 </span>
