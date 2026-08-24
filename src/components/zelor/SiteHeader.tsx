@@ -78,7 +78,7 @@ function LanguageMenu() {
                   <Check className="size-3.5" aria-hidden="true" />
                 ) : (
                   <span className="text-[0.65rem] tracking-wide uppercase opacity-70">
-                    à activer
+                    Prochainement
                   </span>
                 )}
               </button>
