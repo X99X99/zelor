@@ -197,7 +197,12 @@ function Home() {
       </Reveal>
 
       {/* F. Section éditoriale */}
-      <section className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28">
+      <Reveal
+        as="section"
+        replay
+        className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28"
+      >
+
         <HoverVideo
           src={editorialVideo.url}
           poster={editorialImage}
