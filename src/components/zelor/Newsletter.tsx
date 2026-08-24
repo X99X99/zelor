@@ -69,8 +69,7 @@ export function Newsletter() {
         )}
         {done && (
           <p role="status" className="mt-2 text-sm text-navy-foreground">
-            Formulaire de démonstration : à connecter à Shopify Forms / Shopify
-            Email avant publication. Aucune donnée n'est enregistrée.
+            Merci — vous recevrez la lettre de la Maison ZELOR.
           </p>
         )}
         <p className="mt-3 text-xs text-navy-foreground/60">
