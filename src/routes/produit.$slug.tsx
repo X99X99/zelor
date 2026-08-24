@@ -196,12 +196,12 @@ function ProductPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </div>
 
       {/* Informations détaillées */}
       <div className="container-z grid gap-10 pb-20 lg:grid-cols-2 lg:gap-16">
-        <div className="space-y-8">
+        <Reveal className="space-y-8">
           <section>
             <h2 className="font-display text-2xl">Description</h2>
             <p className="mt-3 text-base text-foreground/85">{product.intro}</p>
