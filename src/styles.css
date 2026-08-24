@@ -120,6 +120,13 @@
   /* #A58A5B doré discret */
   --gold: oklch(0.635 0.055 78.5);
 
+  /* Bleu marine signature — dense, feutré, jamais criard */
+  --navy: oklch(0.268 0.048 262);
+  --navy-deep: oklch(0.196 0.038 262);
+  --navy-soft: oklch(0.355 0.045 262);
+  --navy-foreground: oklch(0.962 0.006 84.6);
+
+
   --destructive: oklch(0.487 0.16 27.5);
   --destructive-foreground: oklch(0.98 0.006 84.6);
 
