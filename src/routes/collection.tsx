@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ChevronDown, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+
 
 import { DEMO_PRODUCTS } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
