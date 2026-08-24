@@ -130,7 +130,7 @@ function CartPage() {
             delay={120}
             className="space-y-5 lg:sticky lg:top-28 lg:self-start"
           >
-            <div className="surface-panel space-y-2 p-6">
+            <div className="surface-panel relief-z space-y-2 p-6">
               <div className="flex justify-between text-sm">
                 <span>Sous-total</span>
                 <span className="text-muted-foreground">{PRICING.short}</span>
