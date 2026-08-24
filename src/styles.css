@@ -1131,23 +1131,58 @@
   }
 }
 
-/* Indicateur de progression de lecture, épaisseur d'un cheveu. */
-@utility progress-z {
-  transform-origin: left center;
+/* Progression de lecture : un filet joaillier. Une piste presque invisible,
+ * un ruban d'or traversé d'une lumière mobile, et une tête d'éclat au point
+ * exact de lecture. La largeur porte la valeur (jamais un scaleX : il
+ * déformerait l'éclat). */
+@utility progress-track-z {
   background-image: linear-gradient(
     90deg,
-    color-mix(in oklab, var(--navy-foreground) 18%, transparent) 0%,
-    color-mix(in oklab, var(--gold) 70%, transparent) 38%,
-    color-mix(in oklab, white 85%, transparent) 52%,
-    color-mix(in oklab, var(--gold) 78%, transparent) 66%,
-    color-mix(in oklab, var(--navy-foreground) 45%, transparent) 100%
+    transparent,
+    color-mix(in oklab, var(--navy-foreground) 10%, transparent) 18%,
+    color-mix(in oklab, var(--navy-foreground) 10%, transparent) 82%,
+    transparent
   );
-  background-size: 260% 100%;
+}
+
+@utility progress-z {
+  position: relative;
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--gold) 30%, transparent) 0%,
+    color-mix(in oklab, var(--gold) 72%, transparent) 34%,
+    color-mix(in oklab, white 92%, transparent) 50%,
+    color-mix(in oklab, var(--gold) 80%, transparent) 66%,
+    color-mix(in oklab, var(--gold) 55%, transparent) 100%
+  );
+  background-size: 240% 100%;
+  border-radius: 999px;
   box-shadow:
-    0 0 10px color-mix(in oklab, var(--gold) 45%, transparent),
-    0 0 22px -6px color-mix(in oklab, var(--gold) 30%, transparent);
-  animation: zelor-progress-sheen 6.5s linear infinite;
-  transition: transform 140ms linear, opacity var(--dur-3) var(--ease-lux);
+    0 0 8px color-mix(in oklab, var(--gold) 55%, transparent),
+    0 0 20px -4px color-mix(in oklab, var(--gold) 38%, transparent);
+  animation: zelor-progress-sheen 5.5s linear infinite;
+  transition:
+    width 140ms linear,
+    opacity var(--dur-3) var(--ease-lux);
+  /* Tête d'éclat : la lumière se concentre au point de lecture. */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 34px;
+    height: 8px;
+    transform: translate(40%, -50%);
+    pointer-events: none;
+    border-radius: 999px;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, white 88%, transparent),
+      color-mix(in oklab, var(--gold) 45%, transparent) 55%,
+      transparent 100%
+    );
+    animation: zelor-progress-pulse 3.6s var(--ease-lux) infinite;
+  }
 }
 
 @keyframes zelor-progress-sheen {
@@ -1155,9 +1190,29 @@
     background-position: 0% 50%;
   }
   to {
-    background-position: 260% 50%;
+    background-position: 240% 50%;
   }
 }
+
+@keyframes zelor-progress-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(40%, -50%) scaleX(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(40%, -50%) scaleX(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-z,
+  .progress-z::after {
+    animation: none !important;
+  }
+}
+
 
 /* ————— Joaillerie : boutons de matière sur fond marine ————— */
 @utility btn-veil {
