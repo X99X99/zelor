@@ -63,7 +63,9 @@ export function CookieConsent() {
       role="dialog"
       aria-modal="false"
       aria-label="Préférences de confidentialité"
-      className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 bottom-4 z-60 md:inset-x-auto md:right-8 md:bottom-8 md:max-w-md`}
+      style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
+      className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 z-60 md:inset-x-auto md:right-8 md:max-w-md`}
+
     >
       <div className="panel-navy p-6 md:p-7">
         <p className="eyebrow text-navy-foreground/60">Confidentialité</p>
