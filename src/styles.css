@@ -777,6 +777,8 @@
   &[data-visible="true"] {
     opacity: 1;
     transform: none;
+    /* Une fois posé, on libère la couche GPU (mobile). */
+    will-change: auto;
   }
 }
 
