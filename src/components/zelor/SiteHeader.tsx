@@ -298,7 +298,7 @@ export function SiteHeader() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className="veil-in overlay-navy fixed inset-0 z-60 overflow-y-auto md:hidden"
+          className="veil-in overlay-navy fixed inset-0 z-70 overflow-y-auto md:hidden"
         >
           <div className="container-z flex items-center justify-between py-4">
             <Link
