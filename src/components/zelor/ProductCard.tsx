@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-import { PLACEHOLDER, type DemoProduct } from "@/lib/zelor/content";
+import { PRICING, type DemoProduct } from "@/lib/zelor/content";
 import { ImageSlot } from "./Placeholder";
 
 export function ProductCard({ product }: { product: DemoProduct }) {
@@ -13,7 +13,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
       >
         <div className="lift-z relative overflow-hidden">
           <div className="transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]">
-            <ImageSlot tone={product.tone} caption="Visuel produit à fournir" />
+            <ImageSlot tone={product.tone} caption={product.name} />
           </div>
           <div
             aria-hidden="true"
@@ -31,10 +31,8 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           {product.isNew && <span className="eyebrow">Nouveauté</span>}
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{product.line}</p>
-        <p className="mt-2 text-sm">
-          <span className="bg-draft px-1.5 py-0.5 font-mono text-xs text-draft-foreground">
-            {PLACEHOLDER.price} {PLACEHOLDER.currency}
-          </span>
+        <p className="mt-2 text-xs tracking-wide text-muted-foreground">
+          {PRICING.label}
         </p>
       </Link>
     </article>
