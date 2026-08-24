@@ -62,4 +62,3 @@ describe("capsule de navigation partagée", () => {
     expect(css).toMatch(/--cap-pad:\s*0\.75rem/);
   });
 });
-

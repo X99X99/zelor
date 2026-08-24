@@ -60,10 +60,16 @@ function Home() {
               {BRAND.heroSubtitle}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
-              <Link to="/collection" className="btn-lux ring-1 ring-navy-foreground/20">
+              <Link
+                to="/collection"
+                className="btn-lux ring-1 whitespace-nowrap ring-navy-foreground/20"
+              >
                 Découvrir la collection
               </Link>
-              <Link to="/univers" className="link-underline text-sm text-navy-foreground/90">
+              <Link
+                to="/univers"
+                className="link-underline text-sm whitespace-nowrap text-navy-foreground/90"
+              >
                 L'univers ZELOR
               </Link>
             </div>

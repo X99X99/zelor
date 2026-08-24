@@ -366,7 +366,6 @@ export function SiteHeader() {
             ))}
           </nav>
 
-
           <BrandLink
             onNavigate={closeMenu}
             className="wordmark-z font-display text-2xl tracking-[0.4em] md:text-[1.75rem]"
@@ -464,7 +463,7 @@ export function SiteHeader() {
             className="focal-list container-z flex flex-col pt-6 pb-16"
           >
             <p className="eyebrow mb-2 text-navy-foreground/50">Collection</p>
-            {MAIN_NAV.map((item, index) => (
+            {MAIN_NAV.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
@@ -473,19 +472,13 @@ export function SiteHeader() {
                 data-focal=""
                 className="font-display text-3xl"
               >
-                {/* L'entrée en cascade porte sur le contenu, jamais sur la
-                 * ligne : la ligne conserve sa transformation focale, donc
-                 * « Collection » réagit exactement comme « Services ». */}
-                <span
-                  className={menuClosing ? "" : "slide-up-lux"}
-                  style={{
-                    animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms`,
-                  }}
-                >
-                  {item.label}
-                </span>
+                {/* Aucune animation d'entrée propre : chaque entrée réagit
+                 * exactement comme « Langue », sans montée parasite ni écart
+                 * de timing au retour. */}
+                <span>{item.label}</span>
               </NavLink>
             ))}
+
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
             <NavLink
               to="/compte"
