@@ -558,22 +558,19 @@
 @utility surface-search {
   color: var(--navy-foreground);
   background-image:
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--navy-soft) 78%, transparent) 0%,
-      color-mix(in oklab, var(--navy) 84%, transparent) 46%,
-      color-mix(in oklab, var(--navy-deep) 88%, transparent) 100%
-    ),
     radial-gradient(
-      120% 130% at 50% -20%,
-      color-mix(in oklab, var(--navy-soft) 55%, transparent),
-      transparent 70%
-    );
+      120% 140% at 50% -30%,
+      color-mix(in oklab, var(--navy-soft) 38%, transparent),
+      transparent 72%
+    ),
+    var(--gradient-header);
   backdrop-filter: blur(var(--blur-veil)) saturate(140%);
   border-top: 1px solid color-mix(in oklab, var(--navy-foreground) 8%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--navy-foreground) 8%, transparent),
-    0 26px 60px -40px color-mix(in oklab, var(--navy-deep) 90%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--navy-foreground) 10%, transparent),
+    0 30px 70px -46px color-mix(in oklab, var(--navy-deep) 85%, transparent);
 }
+
 
 @keyframes zelor-unfold {
   from {
