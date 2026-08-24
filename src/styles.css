@@ -390,26 +390,32 @@
   &::after {
     content: "";
     position: absolute;
-    inset: -0.35em -0.6em;
+    /* Le halo doit respirer : il s'éteint bien avant les limites de sa zone,
+     * et de façon strictement symétrique à gauche comme à droite. */
+    inset: -0.85em -1.1em;
     z-index: -1;
     pointer-events: none;
     border-radius: var(--radius-pill);
     opacity: 0;
     background: radial-gradient(
-      60% 120% at 50% 50%,
-      color-mix(in oklab, currentColor 14%, transparent),
-      transparent 72%
+      52% 82% at 50% 50%,
+      color-mix(in oklab, currentColor 15%, transparent) 0%,
+      color-mix(in oklab, currentColor 7%, transparent) 42%,
+      transparent 78%
     );
-    transition: opacity var(--dur-1) var(--ease-breathe);
+    transition: opacity var(--dur-2) var(--ease-breathe);
   }
   &:hover {
     text-shadow:
-      0 0 6px color-mix(in oklab, currentColor 55%, transparent),
-      0 0 20px color-mix(in oklab, currentColor 34%, transparent),
-      0 0 46px color-mix(in oklab, currentColor 18%, transparent);
+      0 0 6px color-mix(in oklab, currentColor 52%, transparent),
+      0 0 20px color-mix(in oklab, currentColor 30%, transparent),
+      0 0 46px color-mix(in oklab, currentColor 15%, transparent);
+    /* Respiration lente de la lumière : jamais un clignotement. */
+    animation: zelor-wordmark-breathe 6.5s var(--ease-breathe) 0.45s infinite;
   }
   &:hover::after {
     opacity: 1;
+    animation: zelor-wordmark-halo 6.5s var(--ease-breathe) 0.45s infinite;
   }
   &:active {
     opacity: 0.85;
