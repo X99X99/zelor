@@ -267,15 +267,17 @@ export function SiteHeader() {
     }, 380);
   };
 
-  // La recherche se replie avec le même soin qu'elle se déploie.
+  // La recherche se replie exactement comme elle se déploie :
+  // même durée (--dur-4), courbe miroir. L'aller et le retour se valent.
   const closeSearch = () => {
     if (!searchOpen || searchClosing) return;
     setSearchClosing(true);
     window.setTimeout(() => {
       setSearchClosing(false);
       setSearchOpen(false);
-    }, 420);
+    }, 900);
   };
+
 
   // Le panier respire lorsqu'une pièce est ajoutée.
   const firstCount = useRef(true);
