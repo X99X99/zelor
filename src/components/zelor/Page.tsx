@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
+import { Reveal } from "./Reveal";
+
 
 /** Gabarit de page éditoriale : fil d'Ariane, H1 unique, contenu en colonne. */
 export function PageShell({
