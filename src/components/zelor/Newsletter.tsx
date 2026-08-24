@@ -48,12 +48,12 @@ export function Newsletter() {
               aria-describedby={error ? "newsletter-error" : undefined}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Votre adresse email"
-              className="min-h-12 w-full border border-navy-foreground/30 bg-transparent px-4 text-base text-navy-foreground outline-none placeholder:text-navy-foreground/50 focus-visible:border-navy-foreground"
+              className="field-z min-h-12 w-full border border-navy-foreground/30 bg-navy-foreground/[0.03] px-4 text-base text-navy-foreground outline-none placeholder:text-navy-foreground/50"
             />
           </div>
           <button
             type="submit"
-            className="min-h-12 bg-navy-foreground px-8 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-all duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-px hover:opacity-90 hover:shadow-[var(--shadow-float)]"
+            className="press-z min-h-12 bg-navy-foreground px-8 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-[transform,opacity,box-shadow] duration-[var(--dur-3)] ease-[var(--ease-lux)] hover:-translate-y-px hover:opacity-90 hover:shadow-[var(--shadow-float)]"
           >
             S'inscrire
           </button>
@@ -62,13 +62,13 @@ export function Newsletter() {
           <p
             id="newsletter-error"
             role="alert"
-            className="mt-2 text-sm text-navy-foreground"
+            className="slide-up-lux mt-2 text-sm text-navy-foreground"
           >
             ⚠ {error}
           </p>
         )}
         {done && (
-          <p role="status" className="mt-2 text-sm text-navy-foreground">
+          <p role="status" className="slide-up-lux mt-2 text-sm text-navy-foreground">
             Merci — vous recevrez la lettre de la Maison ZELOR.
           </p>
         )}
