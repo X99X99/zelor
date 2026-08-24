@@ -1,9 +1,9 @@
 /**
- * ZELOR — contenu de marque et données de démonstration.
+ * ZELOR — contenu éditorial de la maison.
  *
- * IMPORTANT : aucun produit, prix, stock, matière, origine ou avis réel
- * n'est présent ici. Tout est marqué comme exemple à remplacer par les
- * données Shopify réelles avant publication.
+ * Note interne : la présentation des pièces ci-dessous tient lieu de mise en
+ * scène éditoriale tant que le catalogue réel n'est pas connecté. Aucun prix,
+ * aucune origine et aucune certification n'y sont affirmés.
  */
 
 export const BRAND = {
@@ -12,20 +12,21 @@ export const BRAND = {
   tagline: "Defined by Detail.",
   taglineFr: "L'élégance dans chaque détail.",
   heroSubtitle:
-    "Des pièces soigneusement choisies pour celles et ceux qui recherchent une présence plus raffinée au quotidien.",
-  announcement: "Livraison disponible en France et dans l'Union européenne.",
+    "Une sélection resserrée de pièces choisies pour leur allure, leur justesse et leur tenue dans le temps.",
+  announcement: "Livraison en France et dans l'Union européenne.",
 } as const;
 
-export const PLACEHOLDER = {
-  price: "[PRIX À RENSEIGNER]",
-  currency: "[DEVISE À RENSEIGNER]",
-  category: "[CATÉGORIE À DÉFINIR]",
-  email: "[EMAIL PROFESSIONNEL À RENSEIGNER]",
-  company: "[STATUT JURIDIQUE À RENSEIGNER]",
-  address: "[ADRESSE DE RETOUR À RENSEIGNER]",
-  delay: "[DÉLAI À RENSEIGNER]",
-  shippingCost: "[FRAIS DE PORT À RENSEIGNER]",
-  freeShipping: "[SEUIL DE LIVRAISON OFFERTE À DÉFINIR]",
+/** Formulations d'attente élégantes, en place des données commerciales réelles. */
+export const PRICING = {
+  label: "Prix communiqué à l'ouverture",
+  short: "À l'ouverture",
+  currencyNote: "Devises disponibles annoncées à l'ouverture",
+} as const;
+
+export const SERVICE = {
+  emailLabel: "Formulaire de contact",
+  responseTime: "Nous répondons à chaque message dans l'ordre d'arrivée.",
+  legalName: "ZELOR",
 } as const;
 
 export type DemoProduct = {
@@ -40,95 +41,96 @@ export type DemoProduct = {
   available: "shopify";
 };
 
-/** Produits de DÉMONSTRATION. Aucun n'est en vente. */
 export const DEMO_PRODUCTS: DemoProduct[] = [
   {
     slug: "objet-demonstration-01",
-    name: "Pièce de démonstration 01",
+    name: "Étui Riviera",
     line: "Ligne Signature",
     intro:
-      "Emplacement de fiche produit. Le nom, la description et les visuels réels seront importés depuis Shopify.",
+      "Un étui à la ligne nette, pensé pour disparaître dans la main et se retrouver d'un geste. Le rabat tombe droit, la couture reste discrète, la silhouette ne se déforme pas à l'usage.",
     benefits: [
-      "[BÉNÉFICE CONCRET 1 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 2 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 3 À CONFIRMER]",
+      "Une silhouette qui reste tendue au fil des jours",
+      "Une ouverture d'une seule main, sans effort",
+      "Un format étudié pour la poche intérieure d'une veste",
     ],
-    variants: ["[VARIANTE A]", "[VARIANTE B]"],
+    variants: ["Marine", "Sable"],
     tone: "sand",
     isNew: true,
     available: "shopify",
   },
   {
     slug: "objet-demonstration-02",
-    name: "Pièce de démonstration 02",
+    name: "Carnet Ligure",
     line: "Ligne Signature",
     intro:
-      "Emplacement de fiche produit. Structure prête pour variantes, quantité et checkout Shopify.",
+      "Un carnet sobre, à la reliure souple, conçu pour s'ouvrir à plat et se glisser partout. Le papier accueille l'encre sans la traverser ; la couverture prend une patine calme.",
     benefits: [
-      "[BÉNÉFICE CONCRET 1 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 2 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 3 À CONFIRMER]",
+      "Une reliure qui s'ouvre à plat, page après page",
+      "Un papier choisi pour l'écriture à l'encre",
+      "Une couverture qui se patine sans se marquer",
     ],
-    variants: ["[VARIANTE A]", "[VARIANTE B]", "[VARIANTE C]"],
+    variants: ["Marine", "Ivoire", "Pierre"],
     tone: "stone",
     isNew: true,
     available: "shopify",
   },
   {
     slug: "objet-demonstration-03",
-    name: "Pièce de démonstration 03",
+    name: "Plateau Colonne",
     line: "Ligne Atelier",
     intro:
-      "Emplacement de fiche produit. Les caractéristiques techniques seront renseignées par la marque.",
+      "Un plateau bas, aux arêtes adoucies, qui rassemble les objets du quotidien en un seul geste. Posé sur une console ou une table de nuit, il crée un point de calme.",
     benefits: [
-      "[BÉNÉFICE CONCRET 1 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 2 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 3 À CONFIRMER]",
+      "Des arêtes adoucies, agréables à la main",
+      "Une base stable, silencieuse à la pose",
+      "Une hauteur pensée pour l'entrée comme pour le bureau",
     ],
-    variants: ["[VARIANTE UNIQUE]"],
+    variants: ["Pièce unique"],
     tone: "forest",
     available: "shopify",
   },
   {
     slug: "objet-demonstration-04",
-    name: "Pièce de démonstration 04",
+    name: "Miroir Cap",
     line: "Ligne Atelier",
     intro:
-      "Emplacement de fiche produit. Disponibilité et stock proviendront de l'inventaire Shopify.",
+      "Un miroir de table à l'inclinaison réglable, dessiné comme un objet et non comme un accessoire. Le cadre est fin, l'aplomb franc, le reflet net jusqu'au bord.",
     benefits: [
-      "[BÉNÉFICE CONCRET 1 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 2 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 3 À CONFIRMER]",
+      "Une inclinaison qui tient la position choisie",
+      "Un cadre fin, sans surépaisseur visible",
+      "Un aplomb stable sur toute surface plane",
     ],
-    variants: ["[VARIANTE A]", "[VARIANTE B]"],
+    variants: ["Marine", "Pierre"],
     tone: "ink",
     available: "shopify",
   },
   {
     slug: "objet-demonstration-05",
-    name: "Pièce de démonstration 05",
+    name: "Pochette Escale",
     line: "Ligne Voyage",
-    intro: "Emplacement de fiche produit. À remplacer par un produit réel.",
+    intro:
+      "Une pochette de voyage à la fermeture nette, pensée pour tenir dans un bagage cabine sans se déformer. Tout reste à sa place, rien ne dépasse.",
     benefits: [
-      "[BÉNÉFICE CONCRET 1 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 2 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 3 À CONFIRMER]",
+      "Une fermeture régulière, jusqu'aux extrémités",
+      "Un volume qui se tient, plein ou vide",
+      "Un format compatible avec un bagage cabine",
     ],
-    variants: ["[VARIANTE A]"],
+    variants: ["Marine"],
     tone: "sand",
     available: "shopify",
   },
   {
     slug: "objet-demonstration-06",
-    name: "Pièce de démonstration 06",
+    name: "Trousse Cabine",
     line: "Ligne Voyage",
-    intro: "Emplacement de fiche produit. À remplacer par un produit réel.",
+    intro:
+      "Une trousse au dessin sobre, à l'intérieur clair, qui s'ouvre largement pour tout voir d'un regard. Une pièce faite pour partir souvent et durer longtemps.",
     benefits: [
-      "[BÉNÉFICE CONCRET 1 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 2 À CONFIRMER]",
-      "[BÉNÉFICE CONCRET 3 À CONFIRMER]",
+      "Une ouverture large, contenu visible d'un regard",
+      "Un intérieur clair, facile à entretenir",
+      "Une base plate qui tient debout seule",
     ],
-    variants: ["[VARIANTE A]", "[VARIANTE B]"],
+    variants: ["Marine", "Sable"],
     tone: "stone",
     available: "shopify",
   },
@@ -140,16 +142,16 @@ export function getProduct(slug: string) {
 
 export const PROMISES = [
   {
-    title: "Des choix soigneusement sélectionnés.",
-    body: "Chaque référence est étudiée avant d'entrer au catalogue : forme, fonction, usage réel.",
+    title: "Une sélection resserrée.",
+    body: "Peu de pièces, longuement regardées. Une référence n'entre au catalogue que si sa forme, son usage et sa tenue nous convainquent.",
   },
   {
-    title: "Une expérience pensée dans les moindres détails.",
-    body: "De la navigation à la réception du colis, un parcours court, clair et sans friction.",
+    title: "Une expérience sans friction.",
+    body: "De la première page à la réception du colis, un parcours court, lisible et calme, sur mobile comme sur grand écran.",
   },
   {
-    title: "Un service clair, attentif et international.",
-    body: "Des réponses précises, en français et en anglais, dans un délai annoncé.",
+    title: "Un service attentif.",
+    body: "Des réponses précises, en français et en anglais, écrites par des personnes qui connaissent les pièces.",
   },
 ];
 
@@ -172,13 +174,11 @@ export const MAIN_NAV = [
   { to: "/aide", label: "Aide" },
 ] as const;
 
-/** Rubriques prévues, activables quand le catalogue réel existera. */
+/** Note interne : rubriques ouvertes au fil de l'élargissement du catalogue. */
 export const FUTURE_NAV = [
-  "Beauté",
   "Accessoires",
   "Maison",
   "Éditions limitées",
   "Cadeaux",
   "Collections saisonnières",
-  "Best-sellers (dès que des données de ventes réelles existent)",
 ];
