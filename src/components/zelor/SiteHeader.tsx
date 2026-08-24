@@ -53,7 +53,7 @@ function LanguageMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`utility-z px-3 py-2 text-xs tracking-[0.16em] uppercase ${open ? "opacity-100" : "opacity-80"} hover:opacity-100`}
+        className={`utility-z flex h-11 min-w-11 items-center justify-center rounded-full border border-navy-foreground/20 px-4 text-xs tracking-[0.16em] uppercase ${open ? "border-navy-foreground/45 bg-navy-foreground/10 opacity-100" : "opacity-85"} hover:opacity-100`}
       >
         FR
         <span className="sr-only"> — changer de langue</span>
