@@ -8,7 +8,7 @@ export function Newsletter() {
   return (
     <section
       aria-labelledby="newsletter-title"
-      className="container-z grid gap-8 py-16 lg:grid-cols-2 lg:items-end"
+      className="container-z grid gap-8 py-20 lg:grid-cols-2 lg:items-end"
     >
       <div>
         <h2 id="newsletter-title" className="font-display text-3xl md:text-4xl">
@@ -53,7 +53,7 @@ export function Newsletter() {
           </div>
           <button
             type="submit"
-            className="min-h-12 bg-background px-8 text-sm tracking-[0.14em] text-foreground uppercase transition-opacity hover:opacity-85"
+            className="min-h-12 bg-navy-foreground px-8 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-all duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-px hover:opacity-90 hover:shadow-[var(--shadow-float)]"
           >
             S'inscrire
           </button>

@@ -28,15 +28,15 @@ export function Missing({ children }: { children: ReactNode }) {
 const toneClass: Record<string, string> = {
   sand: "bg-sand",
   stone: "bg-stone",
-  forest: "bg-forest",
-  ink: "bg-primary",
+  forest: "bg-navy",
+  ink: "bg-navy-deep",
 };
 
 const toneText: Record<string, string> = {
   sand: "text-foreground/70",
   stone: "text-foreground/70",
-  forest: "text-forest-foreground/80",
-  ink: "text-primary-foreground/80",
+  forest: "text-navy-foreground/80",
+  ink: "text-navy-foreground/80",
 };
 
 /**
