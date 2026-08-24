@@ -108,17 +108,15 @@ function ProductPage() {
 
           <fieldset className="mt-8">
             <legend className="eyebrow">Variante</legend>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2.5">
               {product.variants.map((option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => setVariant(option)}
                   aria-pressed={variant === option}
-                  className={`min-h-11 border px-4 text-sm transition-colors ${
-                    variant === option
-                      ? "border-navy bg-navy text-navy-foreground"
-                      : "border-input hover:border-navy/50 hover:bg-accent"
+                  className={`chip-z min-h-11 px-5 text-sm ${
+                    variant === option ? "text-navy-foreground" : "text-foreground"
                   }`}
                 >
                   {option}
@@ -129,7 +127,7 @@ function ProductPage() {
 
           <div className="mt-6 flex items-center gap-4">
             <span className="eyebrow">Quantité</span>
-            <div className="flex items-center border border-input">
+            <div className="stepper-z">
               <button
                 type="button"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
