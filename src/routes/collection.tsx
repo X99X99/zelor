@@ -58,9 +58,16 @@ function CollectionPage() {
       list = [...list].sort(
         (a, b) => Number(Boolean(b.isNew)) - Number(Boolean(a.isNew)),
       );
+    } else if (sort === "alpha") {
+      list = [...list].sort((a, b) => a.name.localeCompare(b.name, "fr"));
+    } else if (sort === "ligne") {
+      list = [...list].sort(
+        (a, b) => a.line.localeCompare(b.line, "fr") || a.name.localeCompare(b.name, "fr"),
+      );
     }
     return list;
   }, [query, line, sort]);
+
 
   return (
     <>
