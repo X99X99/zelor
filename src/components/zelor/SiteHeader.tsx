@@ -337,9 +337,6 @@ export function SiteHeader() {
                 className="menu-row slide-up-lux font-display text-3xl"
               >
                 <span>{item.label}</span>
-                <span aria-hidden="true" className="text-xs tracking-[0.2em] opacity-40">
-                  0{index + 1}
-                </span>
               </Link>
             ))}
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
