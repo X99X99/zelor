@@ -10,33 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AideRouteImport } from './routes/aide'
+import { Route as CollectionRouteImport } from './routes/collection'
+import { Route as CompteRouteImport } from './routes/compte'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as NouveautesRouteImport } from './routes/nouveautes'
+import { Route as PanierRouteImport } from './routes/panier'
+import { Route as UniversRouteImport } from './routes/univers'
+import { Route as ProduitSlugRouteImport } from './routes/produit.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AideRoute = AideRouteImport.update({
+  id: '/aide',
+  path: '/aide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionRoute = CollectionRouteImport.update({
+  id: '/collection',
+  path: '/collection',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompteRoute = CompteRouteImport.update({
+  id: '/compte',
+  path: '/compte',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NouveautesRoute = NouveautesRouteImport.update({
+  id: '/nouveautes',
+  path: '/nouveautes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PanierRoute = PanierRouteImport.update({
+  id: '/panier',
+  path: '/panier',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversRoute = UniversRouteImport.update({
+  id: '/univers',
+  path: '/univers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProduitSlugRoute = ProduitSlugRouteImport.update({
+  id: '/produit/$slug',
+  path: '/produit/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aide': typeof AideRoute
+  '/collection': typeof CollectionRoute
+  '/compte': typeof CompteRoute
+  '/contact': typeof ContactRoute
+  '/journal': typeof JournalRoute
+  '/nouveautes': typeof NouveautesRoute
+  '/panier': typeof PanierRoute
+  '/univers': typeof UniversRoute
+  '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aide': typeof AideRoute
+  '/collection': typeof CollectionRoute
+  '/compte': typeof CompteRoute
+  '/contact': typeof ContactRoute
+  '/journal': typeof JournalRoute
+  '/nouveautes': typeof NouveautesRoute
+  '/panier': typeof PanierRoute
+  '/univers': typeof UniversRoute
+  '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aide': typeof AideRoute
+  '/collection': typeof CollectionRoute
+  '/compte': typeof CompteRoute
+  '/contact': typeof ContactRoute
+  '/journal': typeof JournalRoute
+  '/nouveautes': typeof NouveautesRoute
+  '/panier': typeof PanierRoute
+  '/univers': typeof UniversRoute
+  '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/aide'
+    | '/collection'
+    | '/compte'
+    | '/contact'
+    | '/journal'
+    | '/nouveautes'
+    | '/panier'
+    | '/univers'
+    | '/produit/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/aide'
+    | '/collection'
+    | '/compte'
+    | '/contact'
+    | '/journal'
+    | '/nouveautes'
+    | '/panier'
+    | '/univers'
+    | '/produit/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/aide'
+    | '/collection'
+    | '/compte'
+    | '/contact'
+    | '/journal'
+    | '/nouveautes'
+    | '/panier'
+    | '/univers'
+    | '/produit/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AideRoute: typeof AideRoute
+  CollectionRoute: typeof CollectionRoute
+  CompteRoute: typeof CompteRoute
+  ContactRoute: typeof ContactRoute
+  JournalRoute: typeof JournalRoute
+  NouveautesRoute: typeof NouveautesRoute
+  PanierRoute: typeof PanierRoute
+  UniversRoute: typeof UniversRoute
+  ProduitSlugRoute: typeof ProduitSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +169,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aide': {
+      id: '/aide'
+      path: '/aide'
+      fullPath: '/aide'
+      preLoaderRoute: typeof AideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collection': {
+      id: '/collection'
+      path: '/collection'
+      fullPath: '/collection'
+      preLoaderRoute: typeof CollectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compte': {
+      id: '/compte'
+      path: '/compte'
+      fullPath: '/compte'
+      preLoaderRoute: typeof CompteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nouveautes': {
+      id: '/nouveautes'
+      path: '/nouveautes'
+      fullPath: '/nouveautes'
+      preLoaderRoute: typeof NouveautesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/panier': {
+      id: '/panier'
+      path: '/panier'
+      fullPath: '/panier'
+      preLoaderRoute: typeof PanierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/univers': {
+      id: '/univers'
+      path: '/univers'
+      fullPath: '/univers'
+      preLoaderRoute: typeof UniversRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produit/$slug': {
+      id: '/produit/$slug'
+      path: '/produit/$slug'
+      fullPath: '/produit/$slug'
+      preLoaderRoute: typeof ProduitSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AideRoute: AideRoute,
+  CollectionRoute: CollectionRoute,
+  CompteRoute: CompteRoute,
+  ContactRoute: ContactRoute,
+  JournalRoute: JournalRoute,
+  NouveautesRoute: NouveautesRoute,
+  PanierRoute: PanierRoute,
+  UniversRoute: UniversRoute,
+  ProduitSlugRoute: ProduitSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
