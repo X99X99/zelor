@@ -988,9 +988,131 @@
   transform-origin: left center;
   background-image: linear-gradient(
     90deg,
-    color-mix(in oklab, var(--navy-foreground) 25%, transparent),
-    color-mix(in oklab, var(--gold) 85%, transparent),
-    color-mix(in oklab, var(--navy-foreground) 55%, transparent)
+    color-mix(in oklab, var(--navy-foreground) 18%, transparent) 0%,
+    color-mix(in oklab, var(--gold) 70%, transparent) 38%,
+    color-mix(in oklab, white 85%, transparent) 52%,
+    color-mix(in oklab, var(--gold) 78%, transparent) 66%,
+    color-mix(in oklab, var(--navy-foreground) 45%, transparent) 100%
   );
+  background-size: 260% 100%;
+  box-shadow:
+    0 0 10px color-mix(in oklab, var(--gold) 45%, transparent),
+    0 0 22px -6px color-mix(in oklab, var(--gold) 30%, transparent);
+  animation: zelor-progress-sheen 6.5s linear infinite;
   transition: transform 140ms linear, opacity var(--dur-3) var(--ease-lux);
+}
+
+@keyframes zelor-progress-sheen {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 260% 50%;
+  }
+}
+
+/* ————— Joaillerie : boutons de matière sur fond marine ————— */
+@utility btn-veil {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-inline: 1.6rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: var(--radius-pill);
+  color: var(--navy-foreground);
+  border: 1px solid color-mix(in oklab, var(--navy-foreground) 26%, transparent);
+  background-color: color-mix(in oklab, var(--navy-foreground) 10%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 16%, transparent),
+    0 14px 34px -30px color-mix(in oklab, black 80%, transparent);
+  transition:
+    background-color var(--dur-3) var(--ease-lux),
+    border-color var(--dur-3) var(--ease-lux),
+    transform var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-3) var(--ease-lux);
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      104deg,
+      transparent 38%,
+      color-mix(in oklab, white 22%, transparent) 50%,
+      transparent 62%
+    );
+    transform: translateX(-130%);
+    transition: transform 1.15s var(--ease-lux);
+  }
+  &:hover {
+    background-color: color-mix(in oklab, var(--navy-foreground) 18%, transparent);
+    border-color: color-mix(in oklab, var(--navy-foreground) 48%, transparent);
+    transform: translateY(-1.5px);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 24%, transparent),
+      0 20px 44px -30px color-mix(in oklab, black 85%, transparent);
+  }
+  &:hover::after {
+    transform: translateX(130%);
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 24%, transparent),
+      0 0 0 4px color-mix(in oklab, var(--navy-foreground) 20%, transparent);
+  }
+  &:active {
+    transform: translateY(0) scale(0.985);
+  }
+}
+
+/* Variante pleine : la même famille, plus affirmée. */
+@utility btn-veil-solid {
+  background-color: color-mix(in oklab, var(--navy-foreground) 94%, transparent);
+  color: var(--navy);
+  border-color: transparent;
+  &:hover {
+    background-color: var(--navy-foreground);
+    border-color: transparent;
+  }
+}
+
+/* Feuille enveloppante : menu mobile, panneaux plein écran. */
+@utility sheet-z {
+  border-radius: var(--radius-sheet);
+  border: 1px solid color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+    0 40px 90px -50px color-mix(in oklab, black 90%, transparent);
+  overflow: hidden;
+}
+
+/* Relief de bloc : profondeur douce pour les zones de confiance. */
+@utility relief-z {
+  border-radius: var(--radius-panel);
+  border: 1px solid color-mix(in oklab, var(--navy) 10%, transparent);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, white 70%, transparent),
+    transparent 60%
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
+    0 26px 60px -46px color-mix(in oklab, var(--navy) 70%, transparent);
+  transition:
+    box-shadow var(--dur-3) var(--ease-lux),
+    transform var(--dur-3) var(--ease-lux);
+  &:hover {
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 80%, transparent),
+      0 34px 70px -44px color-mix(in oklab, var(--navy) 78%, transparent);
+  }
 }
