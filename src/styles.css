@@ -52,6 +52,11 @@
   --color-forest-foreground: var(--forest-foreground);
   --color-gold: var(--gold);
   --color-ink: var(--ink);
+  --color-cream: var(--cream);
+  --color-ivory: var(--ivory);
+  --color-mineral: var(--mineral);
+  --color-silver: var(--silver);
+  --color-riviera: var(--riviera);
   --color-navy: var(--navy);
   --color-navy-deep: var(--navy-deep);
   --color-navy-soft: var(--navy-soft);
@@ -65,6 +70,7 @@
     0 18px 40px -28px color-mix(in oklab, var(--navy) 55%, transparent);
   --shadow-float: 0 28px 70px -34px color-mix(in oklab, var(--navy) 65%, transparent),
     0 2px 10px -6px color-mix(in oklab, var(--navy) 30%, transparent);
+
 
 
   --color-chart-1: var(--chart-1);
