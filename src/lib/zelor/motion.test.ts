@@ -122,3 +122,44 @@ describe("système de mouvement ZELOR", () => {
     expect(header).not.toContain("surface-navy");
   });
 });
+
+/**
+ * Garde-fous permanents — voir QUALITY_GUARDRAILS.md.
+ * Chaque assertion correspond à une régression réellement constatée.
+ */
+describe("garde-fous ZELOR", () => {
+  it("le fondu de thème n'atteint jamais les entrées focales", () => {
+    const fade = css.slice(css.indexOf("var(--theme-fade") - 1200, css.indexOf("var(--theme-fade"));
+    expect(fade, "la règle de fondu doit exclure [data-focal]").toContain("[data-focal]");
+    expect(fade).toContain(":not(");
+  });
+
+  it("menu et lumière partagent une seule famille de mouvement", () => {
+    expect(css).toContain("--dur-menu:");
+    expect(css).toContain("--ease-glide:");
+    for (const utility of ["@utility menu-row {", "@utility focal-list"]) {
+      const block = css.slice(css.indexOf(utility), css.indexOf(utility) + 1400);
+      expect(block, `${utility} doit utiliser la durée partagée`).toContain("var(--dur-menu)");
+      expect(block, `${utility} doit utiliser la courbe partagée`).toContain("var(--ease-glide)");
+    }
+  });
+
+  it("le filet doré garde ses trois couches et n'est jamais tronqué", () => {
+    expect(css).toContain("@utility progress-track-z");
+    const bar = css.slice(
+      css.indexOf("@utility progress-z"),
+      css.indexOf("@keyframes zelor-progress-drift"),
+    );
+    // Piste, progression réelle, lumière voyageuse, tête d'éclat.
+    expect(bar).toContain("&::before");
+    expect(bar).toContain("&::after");
+    expect(bar).toContain("overflow: visible");
+    expect(bar).not.toMatch(/^\s*overflow: hidden/m);
+    expect(bar).toContain("infinite alternate");
+    // La progression réelle reste portée par la largeur, jamais par une animation.
+    expect(bar).toContain("width var(--dur-3)");
+    const reduced = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
+    expect(css).toContain(".progress-z::before");
+    expect(reduced.length).toBeGreaterThan(0);
+  });
+});

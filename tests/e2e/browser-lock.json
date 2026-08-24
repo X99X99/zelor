@@ -1,0 +1,8 @@
+{
+  "comment": "Rendu de référence verrouillé. Les baselines de tests/e2e/baselines ont été produites avec ce build exact. Toute autre version de navigateur produit un rendu de texte différent : la suite échoue explicitement au lieu de comparer des pixels incomparables.",
+  "browserVersionPrefix": "141.",
+  "candidates": [
+    "/opt/ms-playwright/chromium-1194/chrome-linux/chrome",
+    "/root/.cache/ms-playwright/chromium-1194/chrome-linux/chrome"
+  ]
+}

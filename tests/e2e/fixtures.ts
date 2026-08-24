@@ -51,9 +51,21 @@ export async function openPage(page: Page, path: string, theme: ThemeName = "lig
     const btn = document.querySelector('header button[aria-label="Rechercher"]');
     return !!btn && Object.keys(btn).some((k) => k.startsWith("__react"));
   });
-  await page.evaluate(async () => {
+  // Les polices sont attendues **et vérifiées** : une capture prise avec la
+  // police de repli produit un diff massif qui n'a rien d'une régression.
+  const fonts = await page.evaluate(async () => {
     await document.fonts.ready;
+    return {
+      display: document.fonts.check('16px "Cormorant Garamond"'),
+      body: document.fonts.check('16px "Manrope"'),
+    };
   });
+  if (!fonts.display || !fonts.body) {
+    throw new Error(
+      `Polices non chargées avant capture (Cormorant Garamond: ${fonts.display}, Manrope: ${fonts.body}). ` +
+        "Le rendu n'est pas déterministe : réparer le chargement des polices avant de comparer des baselines.",
+    );
+  }
   // Données dynamiques neutralisées : l'année courante ne doit pas dater une
   // baseline. La retouche intervient après l'hydratation complète, sinon React
   // compare son rendu à un DOM déjà modifié et signale un faux écart.
@@ -62,6 +74,19 @@ export async function openPage(page: Page, path: string, theme: ThemeName = "lig
     document.querySelectorAll("footer p").forEach((node) => {
       if (node.textContent?.includes("©")) node.textContent = "© 2000 ZELOR. Tous droits réservés.";
     });
+  });
+}
+
+/**
+ * Masque le header collant pendant une capture assemblée (élément plus haut
+ * que le viewport). Playwright fait défiler la page pour assembler l'image :
+ * le header pouvait alors se superposer au pied de page selon l'état du
+ * masquage au défilement — source de diffs aléatoires. `visibility: hidden`
+ * retire les pixels sans toucher à la géométrie.
+ */
+export async function hideStickyChrome(page: Page) {
+  await page.addStyleTag({
+    content: "header, [data-consent-panel] { visibility: hidden !important; }",
   });
 }
 

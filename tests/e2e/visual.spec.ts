@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { openPage, structuralSignature, type ThemeName } from "./fixtures";
+import { hideStickyChrome, openPage, structuralSignature, type ThemeName } from "./fixtures";
 
 /**
  * Non-régression visuelle des zones critiques ZELOR.
@@ -52,6 +52,8 @@ for (const theme of themes) {
         { polling: 150 },
       );
       await page.waitForTimeout(400);
+      // Capture assemblée : le header collant ne doit pas s'y inviter.
+      await hideStickyChrome(page);
 
       await expect(page.locator("footer")).toHaveScreenshot(`footer-${theme}.png`);
     });

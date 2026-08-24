@@ -1657,7 +1657,11 @@
   );
   background-size: 100% 100%;
   border-radius: 999px;
-  overflow: hidden;
+  /* La tête d'éclat déborde volontairement du filet : elle marque le point de
+   * lecture. Un `overflow: hidden` la tronquait — le halo doit rester entier.
+   * Les deux couches internes sont peintes en `background`, elles ne peuvent
+   * pas déborder de la largeur réelle de progression. */
+  overflow: visible;
   box-shadow:
     0 0 8px color-mix(in oklab, var(--gold) 55%, transparent),
     0 0 20px -4px color-mix(in oklab, var(--gold) 38%, transparent);
@@ -1692,24 +1696,29 @@
     animation: zelor-progress-drift 7.2s var(--ease-glide) infinite alternate;
   }
 
-  /* Tête d'éclat : la lumière se concentre au point de lecture. */
+  /* Tête d'éclat : la position de lecture, plus intense que la ligne.
+   * Centrée sur l'extrémité réelle de la progression (translate 50%), elle
+   * suit donc exactement l'avancée du scroll. */
   &::after {
     content: "";
     position: absolute;
     top: 50%;
     right: 0;
-    width: 34px;
-    height: 8px;
-    transform: translate(40%, -50%);
+    width: 26px;
+    height: 10px;
+    transform: translate(50%, -50%);
     pointer-events: none;
     border-radius: 999px;
     background: radial-gradient(
       closest-side,
-      color-mix(in oklab, white 88%, transparent),
-      color-mix(in oklab, var(--gold) 45%, transparent) 55%,
+      color-mix(in oklab, white 96%, transparent),
+      color-mix(in oklab, var(--gold) 78%, transparent) 42%,
+      color-mix(in oklab, var(--gold) 28%, transparent) 68%,
       transparent 100%
     );
-    animation: zelor-progress-pulse 3.6s var(--ease-lux) infinite;
+    box-shadow: 0 0 12px color-mix(in oklab, var(--gold) 60%, transparent);
+    /* Respiration très courte d'amplitude : lisible, jamais clignotante. */
+    animation: zelor-progress-pulse 4.4s var(--ease-breathe) infinite alternate;
   }
 }
 
@@ -1725,14 +1734,13 @@
 }
 
 @keyframes zelor-progress-pulse {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: translate(40%, -50%) scaleX(0.9);
+  from {
+    opacity: 0.82;
+    transform: translate(50%, -50%) scale(0.94);
   }
-  50% {
+  to {
     opacity: 1;
-    transform: translate(40%, -50%) scaleX(1.15);
+    transform: translate(50%, -50%) scale(1.08);
   }
 }
 
