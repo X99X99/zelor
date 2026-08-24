@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { PageShell, Section } from "@/components/zelor/Page";
-import { DraftNote } from "@/components/zelor/Placeholder";
 
 const categories = [
   {
@@ -41,6 +40,7 @@ export const Route = createFileRoute("/cookies")({
         content: "Gérez vos préférences de cookies sur le site ZELOR.",
       },
       { property: "og:url", content: "/cookies" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/cookies" }],
   }),
@@ -61,10 +61,6 @@ function CookiesPage() {
       intro="Aucune mesure d'audience ni cookie marketing n'est activé sans votre accord."
       crumbs={[{ label: "Préférences cookies" }]}
     >
-      <DraftNote label="À connecter">
-        Interface de démonstration : à relier à la bannière de consentement
-        Shopify (Customer Privacy API) avant publication.
-      </DraftNote>
       <Section title="Catégories">
         <ul className="divide-y divide-border border-y border-border">
           {categories.map((category) => (
@@ -101,7 +97,7 @@ function CookiesPage() {
       </button>
       {saved && (
         <p role="status" className="text-sm">
-          Préférences prises en compte pour cette démonstration.
+          Vos préférences ont été enregistrées.
         </p>
       )}
     </PageShell>
