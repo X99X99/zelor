@@ -91,75 +91,112 @@
 :root {
   --radius: 0.125rem;
 
-  /* #F7F5F0 */
-  --background: oklch(0.968 0.006 84.6);
-  /* #111111 */
-  --foreground: oklch(0.181 0 0);
-  --ink: oklch(0.181 0 0);
+  /* Ivoire lumineux — lumière de Riviera sur pierre claire */
+  --background: oklch(0.975 0.005 88);
+  --ivory: oklch(0.985 0.004 88);
+  --cream: oklch(0.958 0.008 86);
+  /* Encre marine : jamais un noir pur */
+  --foreground: oklch(0.215 0.025 262);
+  --ink: oklch(0.215 0.025 262);
 
-  --card: oklch(0.985 0.004 84.6);
-  --card-foreground: oklch(0.181 0 0);
-  --popover: oklch(0.985 0.004 84.6);
-  --popover-foreground: oklch(0.181 0 0);
+  --card: oklch(0.988 0.003 88);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.988 0.003 88);
+  --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.181 0 0);
-  --primary-foreground: oklch(0.968 0.006 84.6);
+  --primary: oklch(0.268 0.048 262);
+  --primary-foreground: oklch(0.975 0.005 88);
 
-  /* #D8D0C2 beige sable */
-  --secondary: oklch(0.865 0.017 85.5);
-  --secondary-foreground: oklch(0.181 0 0);
-  --sand: oklch(0.865 0.017 85.5);
+  /* Sable clair, très légèrement refroidi par le marine */
+  --secondary: oklch(0.925 0.011 82);
+  --secondary-foreground: var(--foreground);
+  --sand: oklch(0.912 0.013 82);
 
-  --muted: oklch(0.932 0.009 85);
-  /* gris pierre lisible sur fond clair */
-  --muted-foreground: oklch(0.452 0.014 78);
-  /* #AFA99F */
-  --stone: oklch(0.723 0.012 84.4);
+  --muted: oklch(0.945 0.007 86);
+  /* Gris minéral doux, lisible sur ivoire */
+  --muted-foreground: oklch(0.505 0.019 258);
+  --stone: oklch(0.775 0.011 84);
+  --mineral: oklch(0.665 0.014 256);
+  /* Reflet argent très subtil */
+  --silver: oklch(0.885 0.006 250);
 
-  --accent: oklch(0.932 0.009 85);
-  --accent-foreground: oklch(0.181 0 0);
+  --accent: oklch(0.938 0.009 258);
+  --accent-foreground: var(--foreground);
 
-  /* #29302B vert très sombre */
-  --forest: oklch(0.286 0.014 152);
-  --forest-foreground: oklch(0.968 0.006 84.6);
+  /* Ancien vert réaligné sur le marine : cohérence totale */
+  --forest: oklch(0.238 0.042 262);
+  --forest-foreground: oklch(0.962 0.006 84.6);
 
-  /* #A58A5B doré discret */
-  --gold: oklch(0.635 0.055 78.5);
+  /* Doré discret, adouci */
+  --gold: oklch(0.665 0.048 82);
+  /* Bleu méditerranéen extrêmement contrôlé */
+  --riviera: oklch(0.548 0.058 232);
 
   /* Bleu marine signature — dense, feutré, jamais criard */
   --navy: oklch(0.268 0.048 262);
-  --navy-deep: oklch(0.196 0.038 262);
-  --navy-soft: oklch(0.355 0.045 262);
-  --navy-foreground: oklch(0.962 0.006 84.6);
+  --navy-deep: oklch(0.185 0.036 264);
+  --navy-soft: oklch(0.362 0.046 258);
+  --navy-foreground: oklch(0.966 0.005 88);
 
+  /* Dégradés signature — profondeur de l'eau, lumière de fin de journée */
+  --gradient-navy: linear-gradient(
+    168deg,
+    var(--navy-soft) 0%,
+    var(--navy) 42%,
+    var(--navy-deep) 100%
+  );
+  --gradient-header: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--navy-deep) 96%, transparent) 0%,
+    color-mix(in oklab, var(--navy) 88%, transparent) 58%,
+    color-mix(in oklab, var(--navy-soft) 78%, transparent) 100%
+  );
+  --gradient-cta: linear-gradient(
+    120deg,
+    var(--navy-deep) 0%,
+    var(--navy) 55%,
+    color-mix(in oklab, var(--navy-soft) 92%, var(--riviera)) 100%
+  );
+  --gradient-veil: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--navy-deep) 55%, transparent) 0%,
+    transparent 100%
+  );
+  --gradient-light: linear-gradient(
+    180deg,
+    var(--ivory) 0%,
+    var(--cream) 55%,
+    color-mix(in oklab, var(--navy) 5%, var(--cream)) 100%
+  );
 
   --destructive: oklch(0.487 0.16 27.5);
   --destructive-foreground: oklch(0.98 0.006 84.6);
 
-  --border: oklch(0.885 0.011 85);
-  --input: oklch(0.855 0.013 85);
-  --ring: oklch(0.286 0.014 152);
+  --border: oklch(0.898 0.007 252);
+  --input: oklch(0.872 0.009 252);
+  --ring: oklch(0.268 0.048 262);
 
   /* Placeholders / brouillons à valider */
-  --draft: oklch(0.94 0.026 92);
-  --draft-foreground: oklch(0.36 0.045 72);
-  --draft-border: oklch(0.78 0.05 82);
+  --draft: oklch(0.945 0.014 88);
+  --draft-foreground: oklch(0.42 0.032 258);
+  --draft-border: oklch(0.8 0.026 252);
 
-  --chart-1: oklch(0.286 0.014 152);
-  --chart-2: oklch(0.635 0.055 78.5);
-  --chart-3: oklch(0.723 0.012 84.4);
-  --chart-4: oklch(0.865 0.017 85.5);
-  --chart-5: oklch(0.181 0 0);
+  --chart-1: oklch(0.268 0.048 262);
+  --chart-2: oklch(0.548 0.058 232);
+  --chart-3: oklch(0.775 0.011 84);
+  --chart-4: oklch(0.912 0.013 82);
+  --chart-5: oklch(0.215 0.025 262);
 
-  --sidebar: oklch(0.968 0.006 84.6);
-  --sidebar-foreground: oklch(0.181 0 0);
-  --sidebar-primary: oklch(0.181 0 0);
-  --sidebar-primary-foreground: oklch(0.968 0.006 84.6);
-  --sidebar-accent: oklch(0.932 0.009 85);
-  --sidebar-accent-foreground: oklch(0.181 0 0);
-  --sidebar-border: oklch(0.885 0.011 85);
-  --sidebar-ring: oklch(0.286 0.014 152);
+  --sidebar: oklch(0.975 0.005 88);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: oklch(0.268 0.048 262);
+  --sidebar-primary-foreground: oklch(0.975 0.005 88);
+  --sidebar-accent: oklch(0.938 0.009 258);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: oklch(0.898 0.007 252);
+  --sidebar-ring: oklch(0.268 0.048 262);
 }
+
 
 @layer base {
   * {
