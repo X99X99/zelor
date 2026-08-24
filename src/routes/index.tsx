@@ -48,7 +48,7 @@ function Home() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-t from-navy-deep/85 via-navy/30 to-navy-deep/25 md:bg-linear-to-r md:from-navy-deep/80 md:via-navy/25 md:to-navy-deep/10"
+          className="grain-z absolute inset-0 bg-linear-to-t from-navy-deep/85 via-navy/30 to-navy-deep/25 md:bg-linear-to-r md:from-navy-deep/80 md:via-navy/25 md:to-navy-deep/10"
         />
         <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
           <div className="slide-up-lux max-w-xl text-navy-foreground">

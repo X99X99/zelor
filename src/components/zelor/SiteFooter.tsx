@@ -45,7 +45,7 @@ const columns = [
 
 export function SiteFooter() {
   return (
-    <footer className="overlay-navy mt-20 text-navy-foreground">
+    <footer className="overlay-navy grain-z mt-20 text-navy-foreground">
       <Newsletter />
       <div className="container-z grid gap-10 border-t border-navy-foreground/12 py-16 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-1">
@@ -84,7 +84,18 @@ export function SiteFooter() {
         <p>
           © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>
-        <p>Maison lifestyle premium — France et Union européenne.</p>
+        <div className="flex items-center gap-6">
+          <p>Maison lifestyle premium — France et Union européenne.</p>
+          <button
+            type="button"
+            onClick={() =>
+              window.scrollTo({ top: 0, behavior: "smooth" })
+            }
+            className="link-underline press-z text-navy-foreground/70 hover:text-navy-foreground"
+          >
+            Haut de page
+          </button>
+        </div>
       </div>
     </footer>
   );

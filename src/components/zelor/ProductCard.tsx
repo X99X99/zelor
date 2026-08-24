@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
         params={{ slug: product.slug }}
         className="block focus-visible:outline-offset-4"
       >
-        <div className="lift-z relative overflow-hidden">
+        <div className="lift-z sheen-z relative overflow-hidden">
           <div className="transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]">
             <ImageSlot tone={product.tone} caption={product.name} />
           </div>
