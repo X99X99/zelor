@@ -253,20 +253,14 @@
  * de référence — seules les valeurs claires descendent dans l'eau. Aucune
  * primitive, aucun composant, aucune animation n'est redéfini ici : seuls
  * les jetons de fond, de texte et de filet changent de niveau.
- * Le site suit la préférence système ; `.dark` reste disponible pour un
- * futur sélecteur, sans jamais créer un contrôle décoratif inutile.
+ * Le thème suit la préférence système : aucun sélecteur décoratif, aucun
+ * comportement incomplet. La classe `.dark` active la même nuit, ce qui
+ * laisse la porte ouverte à un vrai contrôle le jour où il aura un sens.
  */
-@layer base {
-  :root:where(.dark),
-  :root:where(.dark) * {
-    color-scheme: dark;
-  }
-}
+:root.dark,
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
 
-@mixin-placeholder {
-}
-
-:root.dark {
   --background: oklch(0.188 0.028 262);
   --ivory: oklch(0.228 0.03 262);
   --cream: oklch(0.206 0.029 262);
