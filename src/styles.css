@@ -195,6 +195,15 @@
     var(--navy) 55%,
     color-mix(in oklab, var(--navy-soft) 92%, var(--riviera)) 100%
   );
+  /* Même famille que --gradient-cta, mais traversée par la lumière :
+   * les grandes capsules appartiennent à la matière liquide du site. */
+  --gradient-cta-glass: linear-gradient(
+    120deg,
+    color-mix(in oklab, var(--navy-deep) 82%, transparent) 0%,
+    color-mix(in oklab, var(--navy) 76%, transparent) 55%,
+    color-mix(in oklab, color-mix(in oklab, var(--navy-soft) 92%, var(--riviera)) 74%, transparent)
+      100%
+  );
   --gradient-veil: linear-gradient(
     180deg,
     color-mix(in oklab, var(--navy-deep) 55%, transparent) 0%,
