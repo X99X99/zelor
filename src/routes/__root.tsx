@@ -38,7 +38,7 @@ function NotFoundComponent() {
           <li key={item.to}>
             <Link
               to={item.to}
-              className="lift-z press-z flex min-h-12 items-center border border-border px-4 text-sm hover:border-navy/40 hover:bg-accent"
+              className="chip-z lift-z flex min-h-12 items-center justify-center px-5 text-sm text-foreground"
             >
               {item.label}
             </Link>

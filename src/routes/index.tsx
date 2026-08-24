@@ -231,7 +231,7 @@ function Home() {
         <h2 id="avis-title" className="font-display text-3xl md:text-4xl">
           Avis clients
         </h2>
-        <div className="surface-light mt-6 border border-border/70 p-14 text-center">
+        <div className="surface-light aura-z mt-6 rounded-3xl border border-border/70 p-14 text-center">
           <p className="mx-auto max-w-md text-sm text-muted-foreground">
             Les premiers retours de nos clients paraîtront ici, tels qu'ils nous
             seront adressés, sans sélection ni retouche.
