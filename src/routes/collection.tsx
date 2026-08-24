@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { DEMO_PRODUCTS } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
-import { DraftNote } from "@/components/zelor/Placeholder";
 
 type CollectionSearch = { q?: string };
 
@@ -28,6 +27,7 @@ export const Route = createFileRoute("/collection")({
           "Des pièces choisies pour leur équilibre entre forme, fonction et présence.",
       },
       { property: "og:url", content: "/collection" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/collection" }],
   }),
@@ -73,12 +73,6 @@ function CollectionPage() {
           précision : matière, usage, entretien et livraison, sans promesse
           approximative.
         </p>
-        <div className="mt-6 max-w-2xl">
-          <DraftNote label="Démonstration">
-            Grille d'exemple. Les produits, prix, variantes et disponibilités
-            réels seront synchronisés depuis Shopify.
-          </DraftNote>
-        </div>
       </header>
 
       <div className="container-z flex flex-col gap-4 pb-8 lg:flex-row lg:items-end lg:justify-between">
