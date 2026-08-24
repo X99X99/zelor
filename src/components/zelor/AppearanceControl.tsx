@@ -66,7 +66,7 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
         aria-label={buttonLabel}
         title={mounted ? activeLabel : undefined}
         suppressHydrationWarning
-        className="utility-z utility-icon-z theme-toggle-z size-11 opacity-90 hover:opacity-100"
+        className={`utility-z utility-icon-z theme-toggle-z size-11 ${open && !closing ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
       >
         {/* Les deux astres coexistent : seul le CSS décide lequel se montre. */}
         <Sun className="theme-icon-z theme-icon-day-z size-4.5" aria-hidden="true" />
@@ -77,7 +77,7 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
         <ul
           role="listbox"
           aria-label="Apparence"
-          className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-2 w-56 overflow-hidden py-1`}
+          className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-1.5 w-56 overflow-hidden py-1`}
         >
           {OPTIONS.map((option) => (
             <li key={option.value}>

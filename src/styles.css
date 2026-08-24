@@ -123,11 +123,35 @@
   --ease-glide: cubic-bezier(0.45, 0.05, 0.25, 1);
   /* Durée unique de la chorégraphie du menu (entrée comme retrait). */
   --dur-menu: 760ms;
+  /* Retrait des petits panneaux (Langue, Apparence) : strictement aligné sur
+   * le délai de démontage côté composant (260 ms) — aucune coupure sèche. */
+  --dur-panel-out: 260ms;
   --blur-veil: 22px;
   --blur-panel: 16px;
   --lift-1: -1px;
   --lift-2: -3px;
   --glow-soft: 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+
+  /* ————— Matière des capsules ZELOR —————
+   * La géométrie ne change jamais : seule l'encre de la matière suit le fond.
+   * En Lumière claire, une capsule posée sur l'ivoire s'appuie sur l'encre
+   * marine (relief, filet, ombre très courte). Sur une surface marine — et en
+   * Profondeur marine — elle retrouve exactement la matière validée.
+   */
+  --cap-ink: var(--navy);
+  --cap-rest-bg: color-mix(in oklab, var(--cap-ink) 3.5%, transparent);
+  --cap-rest-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 8%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
+    0 1px 2px -1px color-mix(in oklab, var(--cap-ink) 16%, transparent);
+  --cap-hover-bg: color-mix(in oklab, var(--cap-ink) 7%, transparent);
+  --cap-hover-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 12%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 78%, transparent),
+    0 4px 10px -6px color-mix(in oklab, var(--cap-ink) 26%, transparent);
+  --cap-active-bg: color-mix(in oklab, var(--cap-ink) 10%, transparent);
+  --cap-current-bg: color-mix(in oklab, var(--cap-ink) 6%, transparent);
+
 
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
   --background: oklch(0.975 0.005 88);
@@ -310,6 +334,24 @@
   --sidebar-border: oklch(0.332 0.028 258);
   --sidebar-ring: oklch(0.72 0.03 256);
 }
+
+/* Sur toute surface marine — et dans l'ensemble du thème Profondeur marine —
+ * la capsule conserve rigoureusement la matière déjà validée : encre claire,
+ * aucun relief au repos, aucune ombre portée. Rien ne change de ce côté. */
+:root.dark,
+.surface-navy,
+.overlay-navy,
+.panel-navy {
+  --cap-ink: var(--navy-foreground);
+  --cap-rest-bg: transparent;
+  --cap-rest-shadow: none;
+  --cap-hover-bg: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
+  --cap-hover-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
+  --cap-active-bg: color-mix(in oklab, var(--navy-foreground) 9%, transparent);
+  --cap-current-bg: color-mix(in oklab, var(--navy-foreground) 5%, transparent);
+}
+
+
 
 /* Bascule de thème : seules les couleurs et les surfaces traversent, jamais
  * une géométrie — aucune animation du header n'est rejouée. */
@@ -524,8 +566,23 @@
 
 /* Élément de marque : signature lumineuse unique, partagée par tous les
  * logos ZELOR interactifs (header desktop, header mobile, footer).
- * Au repos : rien. À l'interaction : la lumière monte, puis se retire
- * exactement à la même vitesse. Aucune animation automatique. */
+ * Au repos : rien. À l'interaction : la lumière monte doucement, puis
+ * respire — elle oscille en boomerang entre une présence discrète et une
+ * présence moyenne, linéairement, sans jamais culminer en flash. */
+/* Respiration : la lumière est déjà montée à son niveau moyen ; elle
+ * redescend légèrement, remonte, redescend encore — linéairement, en
+ * boucle alternée. On n'anime que l'opacité du halo : c'est la seule
+ * propriété réellement interpolable ici, donc la seule qui ne saute pas. */
+@keyframes zelor-wordmark-breathe {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.62;
+  }
+}
+
+
 @utility wordmark-z {
   position: relative;
   display: inline-block;
@@ -533,7 +590,7 @@
   text-shadow: 0 0 0 transparent;
   transition:
     letter-spacing var(--dur-4) var(--ease-lux),
-    text-shadow var(--dur-3) var(--ease-breathe),
+    text-shadow var(--dur-4) var(--ease-glide),
     opacity var(--dur-2) var(--ease-lux);
   &::after {
     content: "";
@@ -550,9 +607,11 @@
       color-mix(in oklab, currentColor 4%, transparent) 45%,
       transparent 76%
     );
-    transition: opacity var(--dur-3) var(--ease-breathe);
+    transition: opacity var(--dur-4) var(--ease-glide);
   }
-  /* Montée de lumière : pointeur fin, clavier, et activation tactile. */
+  /* Montée de lumière : pointeur fin, clavier, et activation tactile.
+   * La transition porte la montée ; l'animation, différée d'exactement la
+   * même durée, prend le relais pour la respiration. */
   &:hover,
   &:focus-visible,
   &:active {
@@ -564,6 +623,7 @@
   &:focus-visible::after,
   &:active::after {
     opacity: 1;
+    animation: zelor-wordmark-breathe 5.6s linear var(--dur-4) infinite alternate;
   }
   &:focus-visible {
     outline: none;
@@ -574,8 +634,10 @@
   .wordmark-z,
   .wordmark-z::after {
     transition-duration: 1ms !important;
+    animation: none !important;
   }
 }
+
 
 /* Éléments utilitaires : halo de matière au survol et au focus */
 @utility utility-z {
@@ -1107,7 +1169,11 @@
   margin-inline: calc(-1 * var(--cap-pad));
 
   border-radius: var(--radius-field);
-  border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 14%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--cap-ink) 14%, transparent);
+  /* Matière au repos : nulle sur surface marine, légèrement en relief en
+   * Lumière claire (filet interne, arête haute, ombre très courte). */
+  background-color: var(--cap-rest-bg);
+  box-shadow: var(--cap-rest-shadow);
   /* Une seule chorégraphie, une seule durée, une seule courbe symétrique :
    * l'aller et le retour sont rigoureusement identiques (boomerang). */
   transition:
@@ -1118,19 +1184,20 @@
     box-shadow var(--dur-menu) var(--ease-glide),
     color var(--dur-menu) var(--ease-glide);
   &:focus-within {
-    background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
-    box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
+    background-color: var(--cap-hover-bg);
+    box-shadow: var(--cap-hover-shadow);
   }
   /* Sur tactile, aucun état de survol fantôme : seul l'appui répond. */
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
-      box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
+      background-color: var(--cap-hover-bg);
+      box-shadow: var(--cap-hover-shadow);
     }
   }
   &:active {
-    background-color: color-mix(in oklab, var(--navy-foreground) 9%, transparent);
+    background-color: var(--cap-active-bg);
   }
+
 }
 
 /* Même capsule, posée à l'horizontale (header) ou en colonne serrée (footer).
@@ -1286,12 +1353,19 @@
   color: var(--navy-foreground);
 }
 
-/* Apparition de panneau : voile + profondeur, jamais brutal */
+/* Émergence de panneau : la matière sort de la capsule qui l'a appelée.
+ * L'origine de la transformation est celle du déclencheur (coin haut droit
+ * par défaut) : le panneau se déplie depuis le bouton, il n'apparaît jamais
+ * à côté de lui. Entrée et retrait partagent la même courbe de glisse. */
 @keyframes zelor-panel-in {
   from {
     opacity: 0;
-    transform: translateY(-8px) scale(0.985);
-    filter: blur(6px);
+    transform: translateY(-10px) scaleY(0.72) scaleX(0.86);
+    filter: blur(9px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(2px);
   }
   to {
     opacity: 1;
@@ -1301,10 +1375,12 @@
 }
 
 @utility panel-in {
-  animation: zelor-panel-in var(--dur-3) var(--ease-enter) both;
+  transform-origin: var(--panel-origin, top right);
+  will-change: transform, opacity, filter;
+  animation: zelor-panel-in var(--dur-3) var(--ease-glide) both;
 }
 
-/* Retrait de panneau : la matière se retire, elle ne disparaît pas. */
+/* Retrait de panneau : la matière est réaspirée par la capsule. */
 @keyframes zelor-panel-out {
   from {
     opacity: 1;
@@ -1313,14 +1389,17 @@
   }
   to {
     opacity: 0;
-    transform: translateY(-6px) scale(0.99);
-    filter: blur(5px);
+    transform: translateY(-8px) scaleY(0.78) scaleX(0.9);
+    filter: blur(7px);
   }
 }
 
 @utility panel-out {
-  animation: zelor-panel-out var(--dur-2) var(--ease-exit) both;
+  transform-origin: var(--panel-origin, top right);
+  will-change: transform, opacity, filter;
+  animation: zelor-panel-out var(--dur-panel-out) var(--ease-glide) both;
 }
+
 
 /* Repli vertical d'une bande (barre d'annonce) : hauteur, voile, densité. */
 @keyframes zelor-collapse-out {
@@ -2028,7 +2107,7 @@
   }
   &:where([data-capsule], .link-underline):focus-visible {
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, white 8%, transparent),
+      var(--cap-hover-shadow),
       0 0 0 1px color-mix(in oklab, currentColor 30%, transparent);
   }
   &:not(:where([data-capsule], .link-underline)):active {
@@ -2047,7 +2126,7 @@
     opacity: 0.6;
   }
   &:where([data-capsule], .link-underline)[aria-current="page"] {
-    background-color: color-mix(in oklab, var(--navy-foreground) 5%, transparent);
+    background-color: var(--cap-current-bg);
   }
 }
 

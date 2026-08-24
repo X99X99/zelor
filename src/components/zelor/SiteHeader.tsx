@@ -85,7 +85,7 @@ function LanguageMenu() {
         <ul
           role="listbox"
           aria-label="Langues"
-          className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-2 w-52 overflow-hidden py-1`}
+          className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-1.5 w-52 overflow-hidden py-1`}
         >
           {LANGUAGES.map((lang) => (
             <li key={lang.code}>
