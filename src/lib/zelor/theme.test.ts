@@ -18,10 +18,8 @@ function mockSystem(dark: boolean) {
   const mq = {
     matches: dark,
     media: "(prefers-color-scheme: dark)",
-    addEventListener: (_: string, l: (e: MediaQueryListEvent) => void) =>
-      listeners.add(l),
-    removeEventListener: (_: string, l: (e: MediaQueryListEvent) => void) =>
-      listeners.delete(l),
+    addEventListener: (_: string, l: (e: MediaQueryListEvent) => void) => listeners.add(l),
+    removeEventListener: (_: string, l: (e: MediaQueryListEvent) => void) => listeners.delete(l),
     addListener: (l: (e: MediaQueryListEvent) => void) => listeners.add(l),
     removeListener: (l: (e: MediaQueryListEvent) => void) => listeners.delete(l),
     dispatchEvent: () => true,
@@ -30,9 +28,7 @@ function mockSystem(dark: boolean) {
   vi.stubGlobal(
     "matchMedia",
     vi.fn((query: string) =>
-      query.includes("prefers-color-scheme: dark")
-        ? mq
-        : { ...mq, matches: false },
+      query.includes("prefers-color-scheme: dark") ? mq : { ...mq, matches: false },
     ),
   );
   window.matchMedia = globalThis.matchMedia;
@@ -88,9 +84,9 @@ describe("script bloquant : aucun flash au chargement", () => {
     mockSystem(true);
     runInitScript();
     expect(document.documentElement.classList.contains("dark")).toBe(true);
-    expect(
-      document.querySelector('meta[name="theme-color"]')?.getAttribute("content"),
-    ).toBe("#101927");
+    expect(document.querySelector('meta[name="theme-color"]')?.getAttribute("content")).toBe(
+      "#101927",
+    );
   });
 
   it("applique le choix persisté avant tout rendu", () => {
@@ -143,12 +139,12 @@ describe("état partagé", () => {
   it("la couleur de barre navigateur suit le thème appliqué", () => {
     mockSystem(false);
     setThemeChoice("dark");
-    expect(
-      document.querySelector('meta[name="theme-color"]')?.getAttribute("content"),
-    ).toBe("#101927");
+    expect(document.querySelector('meta[name="theme-color"]')?.getAttribute("content")).toBe(
+      "#101927",
+    );
     setThemeChoice("light");
-    expect(
-      document.querySelector('meta[name="theme-color"]')?.getAttribute("content"),
-    ).toBe("#151F31");
+    expect(document.querySelector('meta[name="theme-color"]')?.getAttribute("content")).toBe(
+      "#151F31",
+    );
   });
 });

@@ -29,9 +29,7 @@ export const THEME_COLORS: Record<Theme, string> = {
 
 /** Normalise ce qui sort du stockage : tout le reste vaut « système ». */
 export function parseChoice(raw: string | null | undefined): ThemeChoice {
-  return raw === "light" || raw === "dark" || raw === "system"
-    ? raw
-    : "system";
+  return raw === "light" || raw === "dark" || raw === "system" ? raw : "system";
 }
 
 /** Résout le thème appliqué à partir du choix et de la préférence système. */
@@ -114,9 +112,7 @@ export function setThemeChoice(next: ThemeChoice) {
 
 /** Bascule simple jour ↔ nuit à partir du thème réellement affiché. */
 export function toggleTheme() {
-  setThemeChoice(
-    resolveTheme(readChoice(), systemDark()) === "dark" ? "light" : "dark",
-  );
+  setThemeChoice(resolveTheme(readChoice(), systemDark()) === "dark" ? "light" : "dark");
 }
 
 function subscribe(listener: () => void) {

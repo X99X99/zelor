@@ -3,17 +3,12 @@ import { expect, test } from "@playwright/test";
 import { openPage } from "./fixtures";
 
 test.describe("parcours critiques", () => {
-  test("le lien de la page active fait remonter sans changer l'URL", async ({
-    page,
-    isMobile,
-  }) => {
+  test("le lien de la page active fait remonter sans changer l'URL", async ({ page, isMobile }) => {
     test.skip(!!isMobile, "navigation principale visible sur desktop");
     await openPage(page, "/collection");
     await page.evaluate(() => window.scrollTo(0, 1200));
     await page.waitForTimeout(150);
-    const link = page
-      .locator('header nav a[aria-current="page"]')
-      .first();
+    const link = page.locator('header nav a[aria-current="page"]').first();
     await expect(link).toBeVisible();
     const historyBefore = await page.evaluate(() => history.length);
     await link.click();
@@ -29,9 +24,7 @@ test.describe("parcours critiques", () => {
     await expect(page).toHaveURL(/\/aide$/);
   });
 
-  test("la recherche s'ouvre, se soumet et mène à la collection", async ({
-    page,
-  }) => {
+  test("la recherche s'ouvre, se soumet et mène à la collection", async ({ page }) => {
     await openPage(page, "/");
     await page.getByRole("button", { name: "Rechercher" }).first().click();
     await page.locator("#site-search").fill("riviera");
@@ -41,17 +34,13 @@ test.describe("parcours critiques", () => {
 
   test("le thème persiste entre deux visites", async ({ page }) => {
     await openPage(page, "/", "light");
-    await page
-      .getByRole("button", { name: /mode jour et le mode nuit/ })
-      .click();
+    await page.getByRole("button", { name: /mode jour et le mode nuit/ }).click();
     await expect(page.locator("html")).toHaveClass(/dark/);
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.locator("html")).toHaveClass(/dark/);
   });
 
-  test("le réglage « Système » est accessible et rend la main à l'appareil", async ({
-    page,
-  }) => {
+  test("le réglage « Système » est accessible et rend la main à l'appareil", async ({ page }) => {
     await openPage(page, "/", "dark");
     await page.emulateMedia({ colorScheme: "light" });
     await page.getByRole("button", { name: "Réglages d'apparence" }).click();
@@ -59,17 +48,11 @@ test.describe("parcours critiques", () => {
     await expect(page.locator("html")).toHaveClass(/light/);
   });
 
-  test("le menu mobile s'ouvre, navigue et rend le scroll", async ({
-    page,
-    isMobile,
-  }) => {
+  test("le menu mobile s'ouvre, navigue et rend le scroll", async ({ page, isMobile }) => {
     test.skip(!isMobile, "menu plein écran réservé au mobile");
     await openPage(page, "/");
     await page.getByRole("button", { name: "Ouvrir le menu" }).click();
-    await page
-      .getByRole("dialog")
-      .getByRole("link", { name: "Collection", exact: true })
-      .click();
+    await page.getByRole("dialog").getByRole("link", { name: "Collection", exact: true }).click();
     await expect(page).toHaveURL(/\/collection$/);
     await expect(page.locator("body")).not.toHaveCSS("position", "fixed");
   });
@@ -90,10 +73,7 @@ test.describe("parcours critiques", () => {
     expect(errors).toEqual([]);
   });
 
-  test("la navigation clavier atteint le contenu et les liens", async ({
-    page,
-    isMobile,
-  }) => {
+  test("la navigation clavier atteint le contenu et les liens", async ({ page, isMobile }) => {
     test.skip(!!isMobile, "clavier vérifié sur desktop");
     await openPage(page, "/");
     await page.keyboard.press("Tab");

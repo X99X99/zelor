@@ -23,11 +23,7 @@ const FREEZE_CSS = `
  * le choix de thème est écrit avant le premier rendu, l'année du footer est
  * neutralisée, et l'on attend les polices avant toute capture.
  */
-export async function openPage(
-  page: Page,
-  path: string,
-  theme: ThemeName = "light",
-) {
+export async function openPage(page: Page, path: string, theme: ThemeName = "light") {
   await page.addInitScript(
     ([key, value]) => {
       try {
@@ -50,9 +46,7 @@ export async function openPage(
   await page.addStyleTag({ content: FREEZE_CSS });
   // L'hydratation doit être terminée avant toute interaction : sans cela, un
   // clic part dans le vide et le test échoue pour une raison qui n'existe pas.
-  await page
-    .locator('header button[aria-label="Rechercher"]')
-    .waitFor({ state: "visible" });
+  await page.locator('header button[aria-label="Rechercher"]').waitFor({ state: "visible" });
   await page.waitForFunction(() => {
     const btn = document.querySelector('header button[aria-label="Rechercher"]');
     return !!btn && Object.keys(btn).some((k) => k.startsWith("__react"));
@@ -63,8 +57,7 @@ export async function openPage(
   // Données dynamiques neutralisées : l'année courante ne doit pas dater une baseline.
   await page.evaluate(() => {
     document.querySelectorAll("footer p").forEach((node) => {
-      if (node.textContent?.includes("©"))
-        node.textContent = "© 2000 ZELOR. Tous droits réservés.";
+      if (node.textContent?.includes("©")) node.textContent = "© 2000 ZELOR. Tous droits réservés.";
     });
   });
   await page.waitForTimeout(250);

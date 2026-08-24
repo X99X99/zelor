@@ -17,8 +17,7 @@ const launchOptions = chromiumPath ? { executablePath: chromiumPath } : {};
  */
 export default defineConfig({
   testDir: "./tests/e2e",
-  snapshotPathTemplate:
-    "{testDir}/baselines/{testFileName}/{arg}-{projectName}{ext}",
+  snapshotPathTemplate: "{testDir}/baselines/{testFileName}/{arg}-{projectName}{ext}",
   fullyParallel: true,
   forbidOnly: !!process.env["CI"],
   retries: 0,
