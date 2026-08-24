@@ -291,6 +291,7 @@ export function SiteHeader() {
       </div>
 
       {searchOpen && <SearchPanel onClose={() => setSearchOpen(false)} />}
+    </header>
 
       {menuOpen && (
         <div
