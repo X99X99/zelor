@@ -18,7 +18,7 @@ function AnnouncementBar() {
   if (!visible) return null;
   return (
     <div
-      className={`veil-top relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
+      className={`veil-top seam-z relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
     >
       <div className="container-z flex items-center justify-center gap-4 py-2.5">
         <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/85 uppercase">
@@ -28,18 +28,15 @@ function AnnouncementBar() {
           type="button"
           onClick={close}
           aria-label="Masquer le message d'information"
-          className="utility-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
+          className="utility-z utility-icon-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
         >
           <X className="size-3.5" aria-hidden="true" />
         </button>
       </div>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-navy-foreground/18 to-transparent"
-      />
     </div>
   );
 }
+
 
 
 function LanguageMenu() {
