@@ -74,7 +74,7 @@ function CollectionPage() {
   return (
     <>
       <Breadcrumbs items={[{ label: "Collection" }]} />
-      <header className="container-z pt-10 pb-8 md:pt-14">
+      <Reveal as="header" className="container-z pt-10 pb-8 md:pt-14">
         <h1 className="font-display text-4xl md:text-6xl">Collection</h1>
         <p className="mt-5 max-w-2xl text-base text-muted-foreground">
           La collection ZELOR réunit des pièces choisies pour leur équilibre
@@ -82,14 +82,14 @@ function CollectionPage() {
           précision : matière, usage, entretien et livraison, sans promesse
           approximative.
         </p>
-      </header>
+      </Reveal>
 
-      <div className="container-z pb-10">
+      <Reveal delay={80} className="container-z pb-10">
         <hr className="glowline-z mb-6" />
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          {/* Lignes : des onglets éditoriaux, pas un menu déroulant */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-            <span className="eyebrow">Lignes</span>
+          {/* Lignes : des capsules éditoriales, pas un menu déroulant */}
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+            <span className="eyebrow mr-2">Lignes</span>
             {lines.map((option) => {
               const active = option === line;
               return (
@@ -98,10 +98,8 @@ function CollectionPage() {
                   type="button"
                   onClick={() => setLine(option)}
                   aria-pressed={active}
-                  className={`press-z pb-[3px] text-sm transition-[color,border-color] duration-[var(--dur-2)] ease-[var(--ease-lux)] ${
-                    active
-                      ? "border-b border-foreground text-foreground"
-                      : "link-underline border-b border-transparent text-muted-foreground hover:text-foreground"
+                  className={`chip-z min-h-9 px-4 text-sm ${
+                    active ? "text-navy-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {option}
@@ -110,14 +108,14 @@ function CollectionPage() {
             })}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
-            <div className="relative">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
+            <div className="input-z flex min-h-11 items-center gap-2 px-4 text-foreground sm:w-60">
               <label htmlFor="collection-search" className="sr-only">
                 Rechercher dans la collection
               </label>
               <Search
                 aria-hidden="true"
-                className="pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2 text-muted-foreground"
+                className="pointer-events-none size-4 shrink-0 text-muted-foreground"
               />
               <input
                 id="collection-search"
@@ -125,10 +123,10 @@ function CollectionPage() {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Rechercher une pièce"
-                className="field-z min-h-11 w-full border-b border-input bg-transparent pl-6 text-sm outline-none placeholder:text-muted-foreground/70 sm:w-56"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
               />
             </div>
-            <div className="relative">
+            <div className="input-z relative flex min-h-11 items-center px-4 text-foreground sm:w-56">
               <label htmlFor="collection-sort" className="sr-only">
                 Ordre d'affichage
               </label>
@@ -136,7 +134,7 @@ function CollectionPage() {
                 id="collection-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value)}
-                className="field-z min-h-11 w-full cursor-pointer appearance-none border-b border-input bg-transparent pr-7 text-sm outline-none sm:w-52"
+                className="w-full cursor-pointer appearance-none bg-transparent pr-6 text-sm outline-none"
               >
                 <option value="nouveaute">Ordre de la maison</option>
                 <option value="ligne">Par ligne</option>
@@ -144,19 +142,19 @@ function CollectionPage() {
               </select>
               <ChevronDown
                 aria-hidden="true"
-                className="pointer-events-none absolute top-1/2 right-0 size-4 -translate-y-1/2 text-muted-foreground"
+                className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-muted-foreground"
               />
             </div>
           </div>
         </div>
-      </div>
+      </Reveal>
 
       <div className="container-z pb-28">
         <p className="sr-only" role="status">
           {products.length} produit(s) affiché(s)
         </p>
         {products.length === 0 ? (
-          <div className="surface-light aura-z border border-border/70 px-6 py-24 text-center">
+          <Reveal className="surface-light aura-z rounded-3xl border border-border/70 px-6 py-24 text-center">
             <h2 className="font-display text-2xl">Aucun résultat</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Essayez un autre terme ou revenez à la collection complète.
@@ -171,18 +169,23 @@ function CollectionPage() {
             >
               Voir toute la collection
             </button>
-          </div>
+          </Reveal>
         ) : (
-          <div
+          <Reveal
             key={`${line}-${sort}-${query}`}
+            delay={120}
             className="stagger-z grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4"
           >
             {products.map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}
-          </div>
+          </Reveal>
         )}
       </div>
+
+    </>
+  );
+}
 
     </>
   );
