@@ -10,19 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as AideRouteImport } from './routes/aide'
 import { Route as CollectionRouteImport } from './routes/collection'
 import { Route as CompteRouteImport } from './routes/compte'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as JournalRouteImport } from './routes/journal'
+import { Route as LivraisonRouteImport } from './routes/livraison'
 import { Route as NouveautesRouteImport } from './routes/nouveautes'
+import { Route as PaiementsRouteImport } from './routes/paiements'
 import { Route as PanierRouteImport } from './routes/panier'
+import { Route as QualiteRouteImport } from './routes/qualite'
+import { Route as RetoursRouteImport } from './routes/retours'
+import { Route as SuiviCommandeRouteImport } from './routes/suivi-commande'
 import { Route as UniversRouteImport } from './routes/univers'
 import { Route as ProduitSlugRouteImport } from './routes/produit.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AProposRoute = AProposRouteImport.update({
+  id: '/a-propos',
+  path: '/a-propos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AideRoute = AideRouteImport.update({
@@ -50,14 +61,39 @@ const JournalRoute = JournalRouteImport.update({
   path: '/journal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LivraisonRoute = LivraisonRouteImport.update({
+  id: '/livraison',
+  path: '/livraison',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NouveautesRoute = NouveautesRouteImport.update({
   id: '/nouveautes',
   path: '/nouveautes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaiementsRoute = PaiementsRouteImport.update({
+  id: '/paiements',
+  path: '/paiements',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PanierRoute = PanierRouteImport.update({
   id: '/panier',
   path: '/panier',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QualiteRoute = QualiteRouteImport.update({
+  id: '/qualite',
+  path: '/qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RetoursRoute = RetoursRouteImport.update({
+  id: '/retours',
+  path: '/retours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuiviCommandeRoute = SuiviCommandeRouteImport.update({
+  id: '/suivi-commande',
+  path: '/suivi-commande',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UniversRoute = UniversRouteImport.update({
@@ -73,38 +109,56 @@ const ProduitSlugRoute = ProduitSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/aide': typeof AideRoute
   '/collection': typeof CollectionRoute
   '/compte': typeof CompteRoute
   '/contact': typeof ContactRoute
   '/journal': typeof JournalRoute
+  '/livraison': typeof LivraisonRoute
   '/nouveautes': typeof NouveautesRoute
+  '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
+  '/qualite': typeof QualiteRoute
+  '/retours': typeof RetoursRoute
+  '/suivi-commande': typeof SuiviCommandeRoute
   '/univers': typeof UniversRoute
   '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/aide': typeof AideRoute
   '/collection': typeof CollectionRoute
   '/compte': typeof CompteRoute
   '/contact': typeof ContactRoute
   '/journal': typeof JournalRoute
+  '/livraison': typeof LivraisonRoute
   '/nouveautes': typeof NouveautesRoute
+  '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
+  '/qualite': typeof QualiteRoute
+  '/retours': typeof RetoursRoute
+  '/suivi-commande': typeof SuiviCommandeRoute
   '/univers': typeof UniversRoute
   '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/aide': typeof AideRoute
   '/collection': typeof CollectionRoute
   '/compte': typeof CompteRoute
   '/contact': typeof ContactRoute
   '/journal': typeof JournalRoute
+  '/livraison': typeof LivraisonRoute
   '/nouveautes': typeof NouveautesRoute
+  '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
+  '/qualite': typeof QualiteRoute
+  '/retours': typeof RetoursRoute
+  '/suivi-commande': typeof SuiviCommandeRoute
   '/univers': typeof UniversRoute
   '/produit/$slug': typeof ProduitSlugRoute
 }
@@ -112,50 +166,74 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/a-propos'
     | '/aide'
     | '/collection'
     | '/compte'
     | '/contact'
     | '/journal'
+    | '/livraison'
     | '/nouveautes'
+    | '/paiements'
     | '/panier'
+    | '/qualite'
+    | '/retours'
+    | '/suivi-commande'
     | '/univers'
     | '/produit/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/a-propos'
     | '/aide'
     | '/collection'
     | '/compte'
     | '/contact'
     | '/journal'
+    | '/livraison'
     | '/nouveautes'
+    | '/paiements'
     | '/panier'
+    | '/qualite'
+    | '/retours'
+    | '/suivi-commande'
     | '/univers'
     | '/produit/$slug'
   id:
     | '__root__'
     | '/'
+    | '/a-propos'
     | '/aide'
     | '/collection'
     | '/compte'
     | '/contact'
     | '/journal'
+    | '/livraison'
     | '/nouveautes'
+    | '/paiements'
     | '/panier'
+    | '/qualite'
+    | '/retours'
+    | '/suivi-commande'
     | '/univers'
     | '/produit/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AProposRoute: typeof AProposRoute
   AideRoute: typeof AideRoute
   CollectionRoute: typeof CollectionRoute
   CompteRoute: typeof CompteRoute
   ContactRoute: typeof ContactRoute
   JournalRoute: typeof JournalRoute
+  LivraisonRoute: typeof LivraisonRoute
   NouveautesRoute: typeof NouveautesRoute
+  PaiementsRoute: typeof PaiementsRoute
   PanierRoute: typeof PanierRoute
+  QualiteRoute: typeof QualiteRoute
+  RetoursRoute: typeof RetoursRoute
+  SuiviCommandeRoute: typeof SuiviCommandeRoute
   UniversRoute: typeof UniversRoute
   ProduitSlugRoute: typeof ProduitSlugRoute
 }
@@ -167,6 +245,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/a-propos': {
+      id: '/a-propos'
+      path: '/a-propos'
+      fullPath: '/a-propos'
+      preLoaderRoute: typeof AProposRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/aide': {
@@ -204,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/livraison': {
+      id: '/livraison'
+      path: '/livraison'
+      fullPath: '/livraison'
+      preLoaderRoute: typeof LivraisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/nouveautes': {
       id: '/nouveautes'
       path: '/nouveautes'
@@ -211,11 +303,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NouveautesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/paiements': {
+      id: '/paiements'
+      path: '/paiements'
+      fullPath: '/paiements'
+      preLoaderRoute: typeof PaiementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panier': {
       id: '/panier'
       path: '/panier'
       fullPath: '/panier'
       preLoaderRoute: typeof PanierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qualite': {
+      id: '/qualite'
+      path: '/qualite'
+      fullPath: '/qualite'
+      preLoaderRoute: typeof QualiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/retours': {
+      id: '/retours'
+      path: '/retours'
+      fullPath: '/retours'
+      preLoaderRoute: typeof RetoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suivi-commande': {
+      id: '/suivi-commande'
+      path: '/suivi-commande'
+      fullPath: '/suivi-commande'
+      preLoaderRoute: typeof SuiviCommandeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/univers': {
@@ -237,13 +357,19 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AProposRoute: AProposRoute,
   AideRoute: AideRoute,
   CollectionRoute: CollectionRoute,
   CompteRoute: CompteRoute,
   ContactRoute: ContactRoute,
   JournalRoute: JournalRoute,
+  LivraisonRoute: LivraisonRoute,
   NouveautesRoute: NouveautesRoute,
+  PaiementsRoute: PaiementsRoute,
   PanierRoute: PanierRoute,
+  QualiteRoute: QualiteRoute,
+  RetoursRoute: RetoursRoute,
+  SuiviCommandeRoute: SuiviCommandeRoute,
   UniversRoute: UniversRoute,
   ProduitSlugRoute: ProduitSlugRoute,
 }
