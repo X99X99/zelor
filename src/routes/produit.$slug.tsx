@@ -93,7 +93,6 @@ function ProductPage() {
               label={`${product.name}, détail de finition`}
             />
           </div>
-
         </Reveal>
 
         {/* Achat */}

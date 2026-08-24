@@ -45,7 +45,6 @@ export function ImageSlot({
       aria-label={described ? `${described} — visuel ZELOR` : "Visuel ZELOR"}
       className={`grain-z ${ratio} ${toneClass[tone] ?? "bg-sand"} relative flex items-center justify-center overflow-hidden rounded-[var(--radius-media)]`}
     >
-
       {/* Lumière naturelle entrant par le haut à gauche */}
       <span
         aria-hidden="true"
