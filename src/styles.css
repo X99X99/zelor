@@ -123,6 +123,12 @@
   --ease-glide: cubic-bezier(0.45, 0.05, 0.25, 1);
   /* Durée unique de la chorégraphie du menu (entrée comme retrait). */
   --dur-menu: 760ms;
+  /* Extinction de la signature lumineuse des logos : longue retombée, jamais
+   * une coupure. La montée conserve sa durée validée (--dur-4). */
+  --dur-fade-out-z: 1800ms;
+  /* La lumière tient d'abord sa valeur, puis décroît sans jamais retomber
+   * brutalement : une extinction, pas une coupure. */
+  --ease-fade-out-z: cubic-bezier(0.5, 0.02, 0.32, 1);
   /* Retrait des petits panneaux (Langue, Apparence) : strictement aligné sur
    * le délai de démontage côté composant (260 ms) — aucune coupure sèche. */
   --dur-panel-out: 260ms;
@@ -139,18 +145,28 @@
    * Profondeur marine — elle retrouve exactement la matière validée.
    */
   --cap-ink: var(--navy);
-  --cap-rest-bg: color-mix(in oklab, var(--cap-ink) 3.5%, transparent);
+  --cap-rest-bg: color-mix(in oklab, var(--cap-ink) 4%, transparent);
+  /* Relief : arête haute lumineuse, retour de lumière bas, filet net,
+   * puis deux ombres portées très courtes (contact + diffusion douce). */
   --cap-rest-shadow:
-    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 8%, transparent),
-    inset 0 1px 0 color-mix(in oklab, white 70%, transparent),
-    0 1px 2px -1px color-mix(in oklab, var(--cap-ink) 16%, transparent);
-  --cap-hover-bg: color-mix(in oklab, var(--cap-ink) 7%, transparent);
+    inset 0 1px 0 color-mix(in oklab, white 82%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--cap-ink) 7%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 9%, transparent),
+    0 1px 1px -1px color-mix(in oklab, var(--cap-ink) 20%, transparent),
+    0 4px 10px -8px color-mix(in oklab, var(--cap-ink) 26%, transparent);
+  --cap-hover-bg: color-mix(in oklab, var(--cap-ink) 7.5%, transparent);
   --cap-hover-shadow:
-    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 12%, transparent),
-    inset 0 1px 0 color-mix(in oklab, white 78%, transparent),
-    0 4px 10px -6px color-mix(in oklab, var(--cap-ink) 26%, transparent);
+    inset 0 1px 0 color-mix(in oklab, white 92%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--cap-ink) 10%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 14%, transparent),
+    0 1px 1px -1px color-mix(in oklab, var(--cap-ink) 24%, transparent),
+    0 8px 18px -12px color-mix(in oklab, var(--cap-ink) 34%, transparent);
   --cap-active-bg: color-mix(in oklab, var(--cap-ink) 10%, transparent);
+  --cap-active-shadow:
+    inset 0 1px 2px color-mix(in oklab, var(--cap-ink) 16%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 14%, transparent);
   --cap-current-bg: color-mix(in oklab, var(--cap-ink) 6%, transparent);
+
 
 
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
@@ -336,18 +352,31 @@
 }
 
 /* Sur toute surface marine — et dans l'ensemble du thème Profondeur marine —
- * la capsule conserve rigoureusement la matière déjà validée : encre claire,
- * aucun relief au repos, aucune ombre portée. Rien ne change de ce côté. */
+ * la capsule garde la même signature de relief, transposée à l'encre claire :
+ * arête haute de lumière, ombre de contact sous la capsule, filet net. La
+ * matière reste transparente, jamais un aplat. */
 :root.dark,
 .surface-navy,
 .overlay-navy,
 .panel-navy {
   --cap-ink: var(--navy-foreground);
-  --cap-rest-bg: transparent;
-  --cap-rest-shadow: none;
-  --cap-hover-bg: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
-  --cap-hover-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
+  --cap-rest-bg: color-mix(in oklab, var(--navy-foreground) 2.5%, transparent);
+  --cap-rest-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 9%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--navy-deep) 22%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 6%, transparent),
+    0 1px 1px -1px color-mix(in oklab, var(--navy-deep) 45%, transparent);
+  --cap-hover-bg: color-mix(in oklab, var(--navy-foreground) 6.5%, transparent);
+  --cap-hover-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 16%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--navy-deep) 30%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 11%, transparent),
+    0 1px 1px -1px color-mix(in oklab, var(--navy-deep) 55%, transparent),
+    0 8px 18px -14px color-mix(in oklab, var(--navy-deep) 70%, transparent);
   --cap-active-bg: color-mix(in oklab, var(--navy-foreground) 9%, transparent);
+  --cap-active-shadow:
+    inset 0 1px 2px color-mix(in oklab, var(--navy-deep) 45%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 10%, transparent);
   --cap-current-bg: color-mix(in oklab, var(--navy-foreground) 5%, transparent);
 }
 
@@ -386,7 +415,9 @@
       button,
       input,
       textarea
-    ):not(:where([data-focal], [data-focal] *)) {
+    ):not(
+      :where([data-focal], [data-focal] *, .wordmark-z, .wordmark-z *)
+    ) {
     transition: var(--theme-fade, none);
   }
 }
@@ -587,10 +618,18 @@
   position: relative;
   display: inline-block;
   isolation: isolate;
-  text-shadow: 0 0 0 transparent;
+  /* Repos : exactement la même géométrie de lueur, mais éteinte. Conserver
+   * les mêmes rayons permet à l'extinction d'interpoler l'intensité seule —
+   * la lumière décroît, elle ne se rétracte pas d'un coup. */
+  text-shadow:
+    0 0 5px color-mix(in oklab, currentColor 0%, transparent),
+    0 0 16px color-mix(in oklab, currentColor 0%, transparent);
+  /* Extinction : la lumière ne se coupe jamais. Au repos, la transition est
+   * volontairement plus longue et se termine en douceur — la montée, elle,
+   * garde exactement sa durée validée (--dur-4). */
   transition:
-    letter-spacing var(--dur-4) var(--ease-lux),
-    text-shadow var(--dur-4) var(--ease-glide),
+    letter-spacing var(--dur-5) var(--ease-lux),
+    text-shadow var(--dur-fade-out-z) var(--ease-fade-out-z),
     opacity var(--dur-2) var(--ease-lux);
   &::after {
     content: "";
@@ -607,7 +646,7 @@
       color-mix(in oklab, currentColor 4%, transparent) 45%,
       transparent 76%
     );
-    transition: opacity var(--dur-4) var(--ease-glide);
+    transition: opacity var(--dur-fade-out-z) var(--ease-fade-out-z);
   }
   /* Montée de lumière : pointeur fin, clavier, et activation tactile.
    * La transition porte la montée ; l'animation, différée d'exactement la
@@ -618,12 +657,18 @@
     text-shadow:
       0 0 5px color-mix(in oklab, currentColor 30%, transparent),
       0 0 16px color-mix(in oklab, currentColor 14%, transparent);
+    /* Montée : rapide et franche, exactement la présence déjà validée. */
+    transition:
+      letter-spacing var(--dur-4) var(--ease-lux),
+      text-shadow var(--dur-2) var(--ease-glide),
+      opacity var(--dur-2) var(--ease-lux);
   }
   &:hover::after,
   &:focus-visible::after,
   &:active::after {
     opacity: 1;
-    animation: zelor-wordmark-breathe 5.6s linear var(--dur-4) infinite alternate;
+    transition: opacity var(--dur-2) var(--ease-glide);
+    animation: zelor-wordmark-breathe 5.6s linear var(--dur-2) infinite alternate;
   }
   &:focus-visible {
     outline: none;
@@ -637,6 +682,7 @@
     animation: none !important;
   }
 }
+
 
 
 /* Éléments utilitaires : halo de matière au survol et au focus */
@@ -1196,6 +1242,7 @@
   }
   &:active {
     background-color: var(--cap-active-bg);
+    box-shadow: var(--cap-active-shadow, var(--cap-hover-shadow));
   }
 
 }
@@ -1693,15 +1740,30 @@
 
 @utility progress-z {
   position: relative;
-  background-image: linear-gradient(
-    90deg,
-    color-mix(in oklab, var(--gold) 30%, transparent) 0%,
-    color-mix(in oklab, var(--gold) 72%, transparent) 34%,
-    color-mix(in oklab, white 92%, transparent) 50%,
-    color-mix(in oklab, var(--gold) 80%, transparent) 66%,
-    color-mix(in oklab, var(--gold) 55%, transparent) 100%
-  );
-  background-size: 100% 100%;
+  /* Or physique : deux couches. Au-dessus, un modelé vertical (arête haute
+   * claire, cœur lumineux, base ombrée) qui donne au filet son épaisseur
+   * réelle de métal ; en dessous, la variation longitudinale de la matière.
+   * Aucune diffusion : la lumière est peinte, jamais floutée. */
+  background-image:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, white 62%, transparent) 0%,
+      color-mix(in oklab, white 14%, transparent) 34%,
+      transparent 62%,
+      color-mix(in oklab, var(--navy-deep) 26%, transparent) 100%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--gold) 34%, transparent) 0%,
+      color-mix(in oklab, var(--gold) 74%, transparent) 32%,
+      color-mix(in oklab, white 88%, transparent) 50%,
+      color-mix(in oklab, var(--gold) 82%, transparent) 66%,
+      color-mix(in oklab, var(--gold) 60%, transparent) 100%
+    );
+  background-size:
+    100% 100%,
+    100% 100%;
+
   border-radius: 999px;
   /* La tête d'éclat déborde volontairement du filet : elle marque le point de
    * lecture. Un `overflow: hidden` la tronquait — le halo doit rester entier.
@@ -1750,19 +1812,27 @@
     position: absolute;
     top: 50%;
     right: 0;
-    width: 14px;
-    height: 6px;
+    width: 18px;
+    height: 8px;
     transform: translate(50%, -50%);
     pointer-events: none;
     border-radius: 999px;
-    /* Marqueur de lecture : resserré et net, il reste plus intense que la
-     * ligne sans diffuser de halo autour de la zone. */
-    background: radial-gradient(
-      closest-side,
-      color-mix(in oklab, white 98%, transparent),
-      color-mix(in oklab, var(--gold) 82%, transparent) 55%,
-      transparent 100%
-    );
+    /* Marqueur de lecture : un cœur blanc très resserré, une couronne d'or
+     * chaude, puis une extinction complète à l'intérieur même de la zone.
+     * Rien ne bave au-delà : la lumière est peinte, pas diffusée. */
+    background:
+      radial-gradient(
+        closest-side at 50% 50%,
+        color-mix(in oklab, white 99%, transparent) 0%,
+        color-mix(in oklab, white 72%, transparent) 22%,
+        transparent 46%
+      ),
+      radial-gradient(
+        closest-side at 50% 50%,
+        color-mix(in oklab, var(--gold) 88%, transparent) 0%,
+        color-mix(in oklab, var(--gold) 44%, transparent) 52%,
+        transparent 92%
+      );
     /* Respiration très courte d'amplitude : lisible, jamais clignotante. */
     animation: zelor-progress-pulse 4.4s var(--ease-breathe) infinite alternate;
   }
