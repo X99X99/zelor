@@ -386,7 +386,7 @@ export function SiteHeader() {
               onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
               aria-expanded={searchOpen && !searchClosing}
               aria-label="Rechercher"
-              className={`utility-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
+              className={`utility-z utility-icon-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
               <Search
                 className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen && !searchClosing ? "rotate-90 scale-90" : ""}`}
@@ -399,16 +399,17 @@ export function SiteHeader() {
             <Link
               to="/compte"
               aria-label="Compte client"
-              className="utility-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 md:flex"
+              className="utility-z utility-icon-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 md:flex"
             >
               <User className="size-4.5" aria-hidden="true" />
             </Link>
             <Link
               to="/panier"
-              className="utility-z relative flex size-11 items-center justify-center opacity-90 hover:opacity-100"
+              className="utility-z utility-icon-z relative flex size-11 items-center justify-center opacity-90 hover:opacity-100"
               aria-label={`Panier${ready && count > 0 ? ` — ${count} article(s)` : " — vide"}`}
             >
               <ShoppingBag className="size-4.5" aria-hidden="true" />
+
               {ready && count > 0 && (
                 <span
                   aria-hidden="true"
