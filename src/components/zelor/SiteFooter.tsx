@@ -84,7 +84,18 @@ export function SiteFooter() {
         <p>
           © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>
-        <p>Maison lifestyle premium — France et Union européenne.</p>
+        <div className="flex items-center gap-6">
+          <p>Maison lifestyle premium — France et Union européenne.</p>
+          <button
+            type="button"
+            onClick={() =>
+              window.scrollTo({ top: 0, behavior: "smooth" })
+            }
+            className="link-underline press-z text-navy-foreground/70 hover:text-navy-foreground"
+          >
+            Haut de page
+          </button>
+        </div>
       </div>
     </footer>
   );
