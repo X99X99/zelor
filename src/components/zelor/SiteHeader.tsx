@@ -398,7 +398,7 @@ export function SiteHeader() {
               className={`utility-z utility-icon-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
               <Search
-                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen && !searchClosing ? "rotate-90 scale-90" : ""}`}
+                className={`size-4.5 ${searchOpen && !searchClosing ? "rotate-90" : "rotate-0"}`}
                 aria-hidden="true"
               />
             </button>
