@@ -138,6 +138,40 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
+/** Filet de progression de lecture : l'épaisseur d'un cheveu, sous le header. */
+function ReadingProgress() {
+  const [ratio, setRatio] = useState(0);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      setRatio(max > 40 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <span
+      aria-hidden="true"
+      className="progress-z pointer-events-none absolute inset-x-0 bottom-0 h-px"
+      style={{ transform: `scaleX(${ratio})`, opacity: ratio > 0.004 ? 0.9 : 0 }}
+    />
+  );
+}
+
 /** Masque le header au défilement vers le bas, le révèle au défilement vers le haut. */
 function useHideOnScroll(locked: boolean) {
   const [hidden, setHidden] = useState(false);
@@ -238,7 +272,7 @@ export function SiteHeader() {
     <>
       <header
         data-hidden={hidden}
-        className={`surface-navy sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
+        className={`surface-navy grain-z sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
           hidden
             ? "pointer-events-none -translate-y-full opacity-0"
             : "translate-y-0 opacity-100"
@@ -326,6 +360,7 @@ export function SiteHeader() {
         </div>
 
         {searchOpen && <SearchPanel onClose={() => setSearchOpen(false)} />}
+        <ReadingProgress />
       </header>
 
       {menuOpen && (
@@ -333,7 +368,7 @@ export function SiteHeader() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className={`overlay-navy fixed inset-0 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          className={`overlay-navy grain-z fixed inset-0 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
           <div className="container-z flex items-center justify-between py-4">
             <Link
