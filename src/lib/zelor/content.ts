@@ -1,10 +1,4 @@
-/**
- * ZELOR — contenu éditorial de la maison.
- *
- * Note interne : la présentation des pièces ci-dessous tient lieu de mise en
- * scène éditoriale tant que le catalogue réel n'est pas connecté. Aucun prix,
- * aucune origine et aucune certification n'y sont affirmés.
- */
+/** ZELOR — contenu éditorial de la maison. */
 
 export const BRAND = {
   name: "ZELOR",
@@ -43,7 +37,7 @@ export type DemoProduct = {
 
 export const DEMO_PRODUCTS: DemoProduct[] = [
   {
-    slug: "objet-demonstration-01",
+    slug: "etui-riviera",
     name: "Étui Riviera",
     line: "Ligne Signature",
     intro:
@@ -59,7 +53,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     available: "shopify",
   },
   {
-    slug: "objet-demonstration-02",
+    slug: "carnet-ligure",
     name: "Carnet Ligure",
     line: "Ligne Signature",
     intro:
@@ -75,7 +69,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     available: "shopify",
   },
   {
-    slug: "objet-demonstration-03",
+    slug: "plateau-colonne",
     name: "Plateau Colonne",
     line: "Ligne Atelier",
     intro:
@@ -90,7 +84,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     available: "shopify",
   },
   {
-    slug: "objet-demonstration-04",
+    slug: "miroir-cap",
     name: "Miroir Cap",
     line: "Ligne Atelier",
     intro:
@@ -105,7 +99,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     available: "shopify",
   },
   {
-    slug: "objet-demonstration-05",
+    slug: "pochette-escale",
     name: "Pochette Escale",
     line: "Ligne Voyage",
     intro:
@@ -120,7 +114,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     available: "shopify",
   },
   {
-    slug: "objet-demonstration-06",
+    slug: "trousse-cabine",
     name: "Trousse Cabine",
     line: "Ligne Voyage",
     intro:
