@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell, Section } from "@/components/zelor/Page";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/a-propos")({
   head: () => ({
@@ -10,7 +9,7 @@ export const Route = createFileRoute("/a-propos")({
       {
         name: "description",
         content:
-          "ZELOR, marque lifestyle premium internationale : notre approche, notre exigence et notre manière de travailler.",
+          "ZELOR, maison lifestyle premium internationale : notre approche, notre exigence et notre manière de travailler.",
       },
       { property: "og:title", content: "À propos — ZELOR" },
       {
@@ -18,36 +17,43 @@ export const Route = createFileRoute("/a-propos")({
         content: "Notre approche, notre exigence et notre manière de travailler.",
       },
       { property: "og:url", content: "/a-propos" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/a-propos" }],
   }),
   component: () => (
     <PageShell
       title="À propos"
-      intro="ZELOR est une marque lifestyle premium internationale. Nous choisissons peu de pièces, et nous les choisissons bien."
+      intro="ZELOR est une maison lifestyle premium internationale. Nous choisissons peu de pièces, et nous les choisissons longuement."
       crumbs={[{ label: "À propos" }]}
     >
-      <DraftNote label="Brouillon">
-        Histoire de marque provisoire. À valider avant publication.
-      </DraftNote>
       <Section title="Notre intention">
         <p>
-          Proposer des pièces élégantes et utiles, présentées avec précision, et
-          un service clair. Pas de superlatif : des informations exactes.
+          Réunir des pièces élégantes et utiles, les présenter avec précision et
+          les accompagner d'un service clair. Pas de superlatif : des
+          informations exactes et une allure qui se passe de commentaire.
+        </p>
+      </Section>
+      <Section title="Notre manière de travailler">
+        <p>
+          Une sélection resserrée, revue saison après saison. Des pièces
+          éprouvées à l'usage avant d'être retenues. Des fiches écrites par les
+          personnes qui les ont essayées, et un service qui répond dans la même
+          langue que le site.
+        </p>
+      </Section>
+      <Section title="Notre horizon">
+        <p>
+          ZELOR ouvre en France et dans l'Union européenne, puis élargira ses
+          marchés au rythme de sa logistique et de son service. Chaque nouvelle
+          destination sera annoncée lorsqu'elle sera réellement desservie.
         </p>
       </Section>
       <Section title="Informations société">
-        <ul className="space-y-1">
-          <li>
-            Raison sociale : <Missing>[STATUT JURIDIQUE À RENSEIGNER]</Missing>
-          </li>
-          <li>
-            Siège : <Missing>[ADRESSE À RENSEIGNER]</Missing>
-          </li>
-          <li>
-            Contact : <Missing>[EMAIL PROFESSIONNEL À RENSEIGNER]</Missing>
-          </li>
-        </ul>
+        <p>
+          Les informations d'identification de la société sont réunies sur la
+          page des mentions légales, mises à jour à l'ouverture de la boutique.
+        </p>
       </Section>
     </PageShell>
   ),
