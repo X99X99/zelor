@@ -223,8 +223,8 @@ function ProductPage() {
               ))}
             </dl>
           </section>
-        </div>
-        <div className="space-y-8">
+        </Reveal>
+        <Reveal delay={90} className="space-y-8">
           <section>
             <h2 className="font-display text-2xl">Livraison et retours</h2>
             <p className="mt-3 text-sm text-foreground/85">
@@ -267,33 +267,36 @@ function ProductPage() {
                 ],
               ].map(([question, answer]) => (
                 <details key={question} className="group py-3">
-                  <summary className="cursor-pointer list-none text-sm font-medium">
+                  <summary className="cursor-pointer list-none text-sm font-medium transition-colors duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:text-navy">
                     {question}
                   </summary>
-                  <p className="mt-2 text-sm text-muted-foreground">{answer}</p>
+                  <p className="slide-up-lux mt-2 text-sm text-muted-foreground">
+                    {answer}
+                  </p>
                 </details>
               ))}
             </div>
           </section>
-        </div>
+        </Reveal>
       </div>
 
-      <section
+      <Reveal
+        as="section"
         aria-labelledby="related-title"
         className="container-z pb-24"
       >
         <h2 id="related-title" className="font-display text-2xl md:text-3xl">
           À découvrir également
         </h2>
-        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6">
+        <div className="stagger-z mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6">
           {related.map((item) => (
             <ProductCard key={item.slug} product={item} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Barre d'achat fixe mobile */}
-      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 backdrop-blur-sm lg:hidden">
+      <div className="sticky bottom-0 z-30 border-t border-border bg-background/85 backdrop-blur-xl lg:hidden">
         <div className="container-z flex items-center justify-between gap-4 py-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{product.name}</p>
