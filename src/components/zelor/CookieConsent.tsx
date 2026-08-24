@@ -39,7 +39,7 @@ export function CookieConsent() {
       aria-label="Préférences de confidentialité"
       className="slide-up-lux fixed inset-x-4 bottom-4 z-60 md:inset-x-auto md:right-8 md:bottom-8 md:max-w-md"
     >
-      <div className="overlay-navy border border-navy-foreground/12 p-6 shadow-[var(--shadow-float)] md:p-7">
+      <div className="panel-navy p-6 md:p-7">
         <p className="eyebrow text-navy-foreground/60">Confidentialité</p>
         <h2 className="mt-2 font-display text-2xl text-navy-foreground">
           Une expérience mesurée.
@@ -53,14 +53,14 @@ export function CookieConsent() {
           <button
             type="button"
             onClick={() => decide("all")}
-            className="min-h-12 flex-1 bg-navy-foreground px-6 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-opacity duration-500 hover:opacity-85"
+            className="press-z min-h-12 flex-1 bg-navy-foreground px-6 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-[opacity,box-shadow] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:opacity-85 hover:shadow-[var(--shadow-float)]"
           >
             Tout accepter
           </button>
           <button
             type="button"
             onClick={() => decide("essential")}
-            className="min-h-12 flex-1 border border-navy-foreground/30 px-6 text-[0.8125rem] tracking-[0.16em] text-navy-foreground uppercase transition-colors duration-500 hover:bg-navy-foreground/10"
+            className="press-z min-h-12 flex-1 border border-navy-foreground/30 px-6 text-[0.8125rem] tracking-[0.16em] text-navy-foreground uppercase transition-[background-color,border-color] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:border-navy-foreground/60 hover:bg-navy-foreground/10"
           >
             Essentiels
           </button>
@@ -68,7 +68,7 @@ export function CookieConsent() {
         <Link
           to="/cookies"
           onClick={() => setOpen(false)}
-          className="mt-4 inline-block text-xs tracking-wide text-navy-foreground/70 underline underline-offset-4 transition-opacity hover:opacity-100"
+          className="link-underline mt-4 text-xs tracking-wide text-navy-foreground/70 hover:text-navy-foreground"
         >
           Personnaliser mes préférences
         </Link>

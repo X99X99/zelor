@@ -114,7 +114,7 @@ function CartPage() {
                     <button
                       type="button"
                       onClick={() => remove(line.slug, line.variant)}
-                      className="text-xs text-muted-foreground underline underline-offset-4"
+                      className="link-underline press-z text-xs text-muted-foreground hover:text-foreground"
                     >
                       Retirer
                     </button>
@@ -149,7 +149,7 @@ function CartPage() {
             <p className="text-xs text-muted-foreground">
               La commande ouvrira avec la boutique. Retour possible dans le
               délai légal. Moyens de paiement acceptés :{" "}
-              <Link to="/paiements" className="underline underline-offset-4">
+              <Link to="/paiements" className="link-underline">
                 voir la page dédiée
               </Link>
               .

@@ -37,7 +37,7 @@ function NotFoundComponent() {
           <li key={item.to}>
             <Link
               to={item.to}
-              className="flex min-h-12 items-center border border-border px-4 text-sm transition-colors hover:bg-accent"
+              className="lift-z press-z flex min-h-12 items-center border border-border px-4 text-sm hover:border-navy/40 hover:bg-accent"
             >
               {item.label}
             </Link>
@@ -77,7 +77,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </button>
         <a
           href="/"
-          className="min-h-12 border border-border px-6 text-sm leading-[3rem] tracking-[0.14em] uppercase"
+          className="btn-lux-ghost press-z"
         >
           Accueil
         </a>

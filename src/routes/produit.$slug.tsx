@@ -118,7 +118,7 @@ function ProductPage() {
                   className={`min-h-11 border px-4 text-sm transition-colors ${
                     variant === option
                       ? "border-navy bg-navy text-navy-foreground"
-                      : "border-input hover:bg-accent"
+                      : "border-input hover:border-navy/50 hover:bg-accent"
                   }`}
                 >
                   {option}

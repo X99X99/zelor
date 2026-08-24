@@ -91,6 +91,24 @@
 :root {
   --radius: 0.125rem;
 
+  /* ————— Grammaire de mouvement ZELOR —————
+   * 1 : réponse immédiate (états pressés) · 2 : micro-interaction
+   * 3 : transition de matière · 4 : mouvement éditorial · 5 : reveal au scroll
+   */
+  --dur-1: 180ms;
+  --dur-2: 380ms;
+  --dur-3: 620ms;
+  --dur-4: 900ms;
+  --dur-5: 1150ms;
+  --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-enter: cubic-bezier(0.16, 0.84, 0.28, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
+  --blur-veil: 22px;
+  --blur-panel: 16px;
+  --lift-1: -1px;
+  --lift-2: -3px;
+  --glow-soft: 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
   --background: oklch(0.975 0.005 88);
   --ivory: oklch(0.985 0.004 88);
@@ -264,15 +282,92 @@
   font-weight: 500;
 }
 
+/* ————— Signature de lien ZELOR —————
+ * Un filet se déploie depuis la gauche, se replie vers la droite à la sortie.
+ * Même grammaire pour la navigation, le footer et les liens éditoriaux.
+ */
 @utility link-underline {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 100% 1px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  padding-bottom: 2px;
-  transition: background-size 0.35s ease;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 3px;
+  transition: opacity var(--dur-2) var(--ease-lux);
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    opacity: 0.65;
+    transition:
+      transform var(--dur-2) var(--ease-lux),
+      opacity var(--dur-2) var(--ease-lux);
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+    opacity: 1;
+  }
+}
+
+/* Élément de marque : le mot ZELOR respire à l'approche */
+@utility wordmark-z {
+  position: relative;
+  display: inline-block;
+  transition:
+    letter-spacing var(--dur-4) var(--ease-lux),
+    text-shadow var(--dur-4) var(--ease-lux),
+    opacity var(--dur-3) var(--ease-lux);
   &:hover {
-    background-size: 0% 1px;
+    text-shadow:
+      0 0 18px color-mix(in oklab, currentColor 32%, transparent),
+      0 0 42px color-mix(in oklab, currentColor 14%, transparent);
+  }
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+/* Éléments utilitaires : halo de matière au survol et au focus */
+@utility utility-z {
+  position: relative;
+  border-radius: 999px;
+  transition:
+    background-color var(--dur-2) var(--ease-lux),
+    transform var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux),
+    opacity var(--dur-2) var(--ease-lux);
+  &:hover {
+    background-color: color-mix(in oklab, currentColor 9%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 12%, transparent);
+    transform: translateY(-1px);
+    opacity: 1;
+  }
+  &:focus-visible {
+    background-color: color-mix(in oklab, currentColor 9%, transparent);
+  }
+  &:active {
+    transform: translateY(0) scale(0.96);
+  }
+}
+
+/* Champs de saisie : matière calme, réponse progressive */
+@utility field-z {
+  transition:
+    border-color var(--dur-2) var(--ease-lux),
+    background-color var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:hover {
+    border-color: color-mix(in oklab, currentColor 45%, transparent);
+  }
+  &:focus,
+  &:focus-visible {
+    border-color: currentColor;
+    box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 10%, transparent);
+    outline: none;
   }
 }
 
@@ -485,5 +580,92 @@
   .reveal-z {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* ————— Matière flottante unifiée : menus, panneaux, surfaces système ————— */
+@utility panel-navy {
+  background-color: color-mix(in oklab, var(--navy-deep) 88%, transparent);
+  background-image: radial-gradient(
+    120% 90% at 50% 0%,
+    color-mix(in oklab, var(--navy-soft) 45%, transparent),
+    transparent 70%
+  );
+  backdrop-filter: blur(var(--blur-panel)) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+  box-shadow: var(--shadow-float);
+  color: var(--navy-foreground);
+}
+
+/* Apparition de panneau : voile + profondeur, jamais brutal */
+@keyframes zelor-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@utility panel-in {
+  animation: zelor-panel-in var(--dur-3) var(--ease-enter) both;
+}
+
+@keyframes zelor-overlay-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(var(--blur-veil));
+  }
+}
+
+@utility overlay-in {
+  animation: zelor-overlay-in var(--dur-4) var(--ease-enter) both;
+}
+
+@keyframes zelor-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@utility overlay-out {
+  animation: zelor-overlay-out var(--dur-3) var(--ease-exit) both;
+}
+
+/* Réponse tactile commune à tous les boutons de matière claire */
+@utility press-z {
+  transition:
+    transform var(--dur-1) var(--ease-lux),
+    opacity var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:active {
+    transform: scale(0.985);
+  }
+}
+
+/* Médias éditoriaux : même logique de survol que les vidéos */
+@utility media-z {
+  overflow: hidden;
+  & img,
+  & video {
+    transition:
+      transform var(--dur-5) var(--ease-lux),
+      opacity var(--dur-4) var(--ease-lux);
+  }
+  &:hover img,
+  &:hover video {
+    transform: scale(1.035);
   }
 }

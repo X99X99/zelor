@@ -89,7 +89,7 @@ function ContactPage() {
               autoComplete={field.autoComplete}
               aria-invalid={errors[field.id] ? true : undefined}
               aria-describedby={errors[field.id] ? `${field.id}-error` : undefined}
-              className="mt-2 min-h-12 w-full border border-input bg-transparent px-3 text-base outline-none"
+              className="mt-2 min-h-12 w-full field-z border border-input bg-transparent px-3 text-base outline-none"
             />
             {errors[field.id] && (
               <p id={`${field.id}-error`} role="alert" className="mt-1 text-sm text-destructive">
@@ -108,7 +108,7 @@ function ContactPage() {
             rows={6}
             aria-invalid={errors["message"] ? true : undefined}
             aria-describedby={errors["message"] ? "message-error" : undefined}
-            className="mt-2 w-full border border-input bg-transparent px-3 py-2 text-base outline-none"
+            className="mt-2 w-full field-z border border-input bg-transparent px-3 py-2 text-base outline-none"
           />
           {errors["message"] && (
             <p id="message-error" role="alert" className="mt-1 text-sm text-destructive">
