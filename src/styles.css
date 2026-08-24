@@ -422,6 +422,34 @@
   }
 }
 
+@keyframes zelor-wordmark-breathe {
+  0%,
+  100% {
+    text-shadow:
+      0 0 6px color-mix(in oklab, currentColor 52%, transparent),
+      0 0 20px color-mix(in oklab, currentColor 30%, transparent),
+      0 0 46px color-mix(in oklab, currentColor 15%, transparent);
+  }
+  50% {
+    text-shadow:
+      0 0 5px color-mix(in oklab, currentColor 38%, transparent),
+      0 0 18px color-mix(in oklab, currentColor 20%, transparent),
+      0 0 42px color-mix(in oklab, currentColor 10%, transparent);
+  }
+}
+
+@keyframes zelor-wordmark-halo {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+
+
 /* Éléments utilitaires : halo de matière au survol et au focus */
 @utility utility-z {
   position: relative;
