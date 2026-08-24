@@ -153,7 +153,8 @@ function Home() {
             caption="Séquence silencieuse — au survol."
           />
         </div>
-      </section>
+      </Reveal>
+
 
       {/* E. Qualité */}
       <Reveal
