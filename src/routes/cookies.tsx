@@ -96,11 +96,7 @@ function CookiesPage() {
           ))}
         </ul>
       </Section>
-      <button
-        type="button"
-        onClick={() => setSaved(true)}
-        className="min-h-12 bg-primary px-7 text-sm tracking-[0.14em] text-primary-foreground uppercase"
-      >
+      <button type="button" onClick={() => setSaved(true)} className="btn-lux">
         Enregistrer mes préférences
       </button>
       {saved && (

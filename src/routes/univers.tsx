@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import editorialImage from "@/assets/editorial.jpg";
+import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
 import { PageShell, Section } from "@/components/zelor/Page";
+import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/univers")({
@@ -33,13 +35,12 @@ function UniversePage() {
       intro="ZELOR privilégie les détails qui restent : une matière agréable, une silhouette équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard."
       crumbs={[{ label: "L'univers ZELOR" }]}
       aside={
-        <img
-          src={editorialImage}
-          width={1408}
-          height={1760}
-          loading="lazy"
-          alt="Intérieur contemporain aux tons pierre et vert profond, socle et objet unique."
-          className="aspect-4/5 w-full object-cover"
+        <HoverVideo
+          src={editorialVideo.url}
+          poster={editorialImage}
+          ratio="aspect-4/5"
+          alt="Intérieur contemporain aux tons pierre et marine profond, socle et objet unique."
+          caption="Séquence silencieuse — lecture au survol."
         />
       }
     >

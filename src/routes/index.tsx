@@ -3,8 +3,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImage from "@/assets/hero.jpg";
 import editorialImage from "@/assets/editorial.jpg";
 import detailImage from "@/assets/detail.jpg";
+import detailVideo from "@/assets/video-detail.mp4.asset.json";
+import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
 import { BRAND, DEMO_PRODUCTS, PROMISES } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/")({
@@ -34,7 +37,7 @@ function Home() {
   return (
     <>
       {/* A. Hero */}
-      <section className="relative">
+      <section className="relative isolate">
         <img
           src={heroImage}
           width={1920}
@@ -43,29 +46,37 @@ function Home() {
           alt="Atmosphère ZELOR : lumière naturelle sur une composition en pierre, céramique et lin."
           className="h-[68vh] min-h-[26rem] w-full object-cover md:h-[82vh]"
         />
-        <div className="container-z absolute inset-0 flex items-end pb-10 md:items-center md:pb-0">
-          <div className="rise max-w-xl bg-background/80 p-6 backdrop-blur-[2px] md:bg-transparent md:p-0 md:backdrop-blur-none">
-            <p className="eyebrow">Maison ZELOR</p>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-linear-to-t from-navy-deep/80 via-navy/25 to-transparent md:bg-linear-to-r md:from-navy-deep/75 md:via-navy/20 md:to-transparent"
+        />
+        <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
+          <div className="slide-up-lux max-w-xl text-navy-foreground">
+            <p className="eyebrow text-navy-foreground/65">Maison ZELOR</p>
             <h1 className="mt-3 font-display text-4xl md:text-6xl lg:text-7xl">
               {BRAND.taglineFr}
             </h1>
-            <p className="mt-4 max-w-md text-sm text-foreground/80 md:text-base">
+            <p className="mt-4 max-w-md text-sm text-navy-foreground/80 md:text-base">
               {BRAND.heroSubtitle}
             </p>
-            <div className="mt-7 flex flex-wrap items-center gap-5">
+            <div className="mt-8 flex flex-wrap items-center gap-5">
               <Link
                 to="/collection"
-                className="inline-flex min-h-12 items-center bg-primary px-7 text-sm tracking-[0.14em] text-primary-foreground uppercase transition-opacity hover:opacity-85"
+                className="inline-flex min-h-12 items-center bg-navy-foreground px-8 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-all duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-px hover:opacity-90 hover:shadow-[var(--shadow-float)]"
               >
                 Découvrir la collection
               </Link>
-              <Link to="/univers" className="link-underline text-sm">
+              <Link
+                to="/univers"
+                className="link-underline text-sm text-navy-foreground/90"
+              >
                 L'univers ZELOR
               </Link>
             </div>
           </div>
         </div>
       </section>
+
 
       <div className="container-z pt-6">
         <DraftNote label="Placeholder">
@@ -155,13 +166,12 @@ function Home() {
               </DraftNote>
             </div>
           </div>
-          <img
-            src={detailImage}
-            width={1408}
-            height={1008}
-            loading="lazy"
+          <HoverVideo
+            src={detailVideo.url}
+            poster={detailImage}
+            ratio="aspect-4/3"
             alt="Détail de matière : arête d'un objet posée sur un tissu de lin sable."
-            className="aspect-4/3 w-full object-cover"
+            caption="Survolez le média — séquence silencieuse, sans son."
           />
         </div>
       </section>
@@ -200,13 +210,12 @@ function Home() {
 
       {/* F. Section éditoriale */}
       <section className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28">
-        <img
-          src={editorialImage}
-          width={1408}
-          height={1760}
-          loading="lazy"
-          alt="Intérieur de boutique contemporaine : alcôve vert profond, socle de pierre et lumière douce."
-          className="aspect-4/5 w-full object-cover"
+        <HoverVideo
+          src={editorialVideo.url}
+          poster={editorialImage}
+          ratio="aspect-4/5"
+          alt="Intérieur de boutique contemporaine : alcôve profonde, socle de pierre et lumière douce."
+          caption="Survolez le média — séquence silencieuse, sans son."
         />
         <div>
           <p className="eyebrow">Éditorial</p>

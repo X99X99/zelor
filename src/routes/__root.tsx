@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/lib/zelor/cart";
 import { SiteHeader } from "@/components/zelor/SiteHeader";
 import { SiteFooter } from "@/components/zelor/SiteFooter";
+import { CookieConsent } from "@/components/zelor/CookieConsent";
 
 function NotFoundComponent() {
   return (
@@ -101,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fr_FR" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#F7F5F0" },
+      { name: "theme-color", content: "#151F31" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -167,6 +168,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <SiteFooter />
+        <CookieConsent />
       </CartProvider>
     </QueryClientProvider>
   );
