@@ -1639,3 +1639,10 @@
     transition-duration: 1ms !important;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-z:hover,
+  .wordmark-z:hover::after {
+    animation: none !important;
+  }
+}
