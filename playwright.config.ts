@@ -19,9 +19,13 @@ export default defineConfig({
   testDir: "./tests/e2e",
   snapshotPathTemplate: "{testDir}/baselines/{testFileName}/{arg}-{projectName}{ext}",
   fullyParallel: true,
+  // Deux workers : au-delà, la contention CPU altère le rendu du texte et
+  // rendait les captures de fin de page instables (faux positifs visuels).
+  workers: 2,
   forbidOnly: !!process.env["CI"],
   retries: 0,
   reporter: process.env["CI"] ? "line" : "list",
+
   expect: {
     // Tolérance étroite : seules les différences de rendu inévitables passent.
     toHaveScreenshot: { maxDiffPixelRatio: 0.012, animations: "disabled" },
