@@ -304,12 +304,28 @@
 
 /* Couche marine translucide : header, overlays, panneaux système */
 @utility surface-navy {
-  background-color: color-mix(in oklab, var(--navy) 88%, transparent);
-  backdrop-filter: blur(18px) saturate(130%);
+  background-image: var(--gradient-header);
+  backdrop-filter: blur(22px) saturate(135%);
   color: var(--navy-foreground);
-  border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 10%, transparent);
   box-shadow: var(--shadow-elegant);
 }
+
+/* Voile atmosphérique posé au-dessus du header : fondu progressif */
+@utility veil-top {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--navy-deep) 78%, transparent) 0%,
+    color-mix(in oklab, var(--navy-deep) 34%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* Fond éditorial clair, dégradé imperceptible */
+@utility surface-light {
+  background-image: var(--gradient-light);
+}
+
 
 @utility surface-panel {
   background-color: color-mix(in oklab, var(--card) 96%, transparent);
