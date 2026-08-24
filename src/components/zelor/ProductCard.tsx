@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
         params={{ slug: product.slug }}
         className="block focus-visible:outline-offset-4"
       >
-        <div className="lift-z sheen-z relative overflow-hidden">
+        <div className="lift-z sheen-z relative overflow-hidden rounded-2xl">
           <div className="transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]">
             <ImageSlot tone={product.tone} caption={product.name} />
           </div>
@@ -21,7 +21,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           />
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-navy/92 py-3 text-center text-[0.6875rem] tracking-[0.2em] text-navy-foreground uppercase backdrop-blur-sm transition-transform duration-600 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-y-0"
+            className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-navy/85 py-3 text-center text-[0.6875rem] tracking-[0.2em] text-navy-foreground uppercase backdrop-blur-md transition-transform duration-600 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-y-0"
           >
             Découvrir
           </span>

@@ -11,6 +11,7 @@ import { useCart } from "@/lib/zelor/cart";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/produit/$slug")({
   loader: ({ params }) => {
@@ -81,7 +82,7 @@ function ProductPage() {
 
       <div className="container-z grid gap-10 pt-8 pb-16 lg:grid-cols-2 lg:gap-16">
         {/* Galerie */}
-        <div className="space-y-3">
+        <Reveal className="space-y-3">
           <ImageSlot
             tone={product.tone}
             ratio="aspect-4/5"
@@ -92,10 +93,10 @@ function ProductPage() {
             <ImageSlot tone="stone" ratio="aspect-square" caption="Matière" />
             <ImageSlot tone="forest" ratio="aspect-square" caption="Détail" />
           </div>
-        </div>
+        </Reveal>
 
         {/* Achat */}
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        <Reveal delay={90} className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">{product.line}</p>
           <h1 className="mt-3 font-display text-3xl md:text-5xl">
             {product.name}
@@ -108,17 +109,15 @@ function ProductPage() {
 
           <fieldset className="mt-8">
             <legend className="eyebrow">Variante</legend>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2.5">
               {product.variants.map((option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => setVariant(option)}
                   aria-pressed={variant === option}
-                  className={`min-h-11 border px-4 text-sm transition-colors ${
-                    variant === option
-                      ? "border-navy bg-navy text-navy-foreground"
-                      : "border-input hover:border-navy/50 hover:bg-accent"
+                  className={`chip-z min-h-11 px-5 text-sm ${
+                    variant === option ? "text-navy-foreground" : "text-foreground"
                   }`}
                 >
                   {option}
@@ -129,7 +128,7 @@ function ProductPage() {
 
           <div className="mt-6 flex items-center gap-4">
             <span className="eyebrow">Quantité</span>
-            <div className="flex items-center border border-input">
+            <div className="stepper-z">
               <button
                 type="button"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -198,12 +197,12 @@ function ProductPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </div>
 
       {/* Informations détaillées */}
       <div className="container-z grid gap-10 pb-20 lg:grid-cols-2 lg:gap-16">
-        <div className="space-y-8">
+        <Reveal className="space-y-8">
           <section>
             <h2 className="font-display text-2xl">Description</h2>
             <p className="mt-3 text-base text-foreground/85">{product.intro}</p>
@@ -225,8 +224,8 @@ function ProductPage() {
               ))}
             </dl>
           </section>
-        </div>
-        <div className="space-y-8">
+        </Reveal>
+        <Reveal delay={90} className="space-y-8">
           <section>
             <h2 className="font-display text-2xl">Livraison et retours</h2>
             <p className="mt-3 text-sm text-foreground/85">
@@ -269,33 +268,36 @@ function ProductPage() {
                 ],
               ].map(([question, answer]) => (
                 <details key={question} className="group py-3">
-                  <summary className="cursor-pointer list-none text-sm font-medium">
+                  <summary className="cursor-pointer list-none text-sm font-medium transition-colors duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:text-navy">
                     {question}
                   </summary>
-                  <p className="mt-2 text-sm text-muted-foreground">{answer}</p>
+                  <p className="slide-up-lux mt-2 text-sm text-muted-foreground">
+                    {answer}
+                  </p>
                 </details>
               ))}
             </div>
           </section>
-        </div>
+        </Reveal>
       </div>
 
-      <section
+      <Reveal
+        as="section"
         aria-labelledby="related-title"
         className="container-z pb-24"
       >
         <h2 id="related-title" className="font-display text-2xl md:text-3xl">
           À découvrir également
         </h2>
-        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6">
+        <div className="stagger-z mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6">
           {related.map((item) => (
             <ProductCard key={item.slug} product={item} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Barre d'achat fixe mobile */}
-      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 backdrop-blur-sm lg:hidden">
+      <div className="sticky bottom-0 z-30 border-t border-border bg-background/85 backdrop-blur-xl lg:hidden">
         <div className="container-z flex items-center justify-between gap-4 py-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{product.name}</p>
