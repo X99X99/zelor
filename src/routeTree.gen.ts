@@ -10,33 +10,284 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AProposRouteImport } from './routes/a-propos'
+import { Route as AideRouteImport } from './routes/aide'
+import { Route as CgvRouteImport } from './routes/cgv'
+import { Route as CollectionRouteImport } from './routes/collection'
+import { Route as CompteRouteImport } from './routes/compte'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as LivraisonRouteImport } from './routes/livraison'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as NouveautesRouteImport } from './routes/nouveautes'
+import { Route as PaiementsRouteImport } from './routes/paiements'
+import { Route as PanierRouteImport } from './routes/panier'
+import { Route as QualiteRouteImport } from './routes/qualite'
+import { Route as RetoursRouteImport } from './routes/retours'
+import { Route as SuiviCommandeRouteImport } from './routes/suivi-commande'
+import { Route as UniversRouteImport } from './routes/univers'
+import { Route as ProduitSlugRouteImport } from './routes/produit.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AProposRoute = AProposRouteImport.update({
+  id: '/a-propos',
+  path: '/a-propos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AideRoute = AideRouteImport.update({
+  id: '/aide',
+  path: '/aide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CgvRoute = CgvRouteImport.update({
+  id: '/cgv',
+  path: '/cgv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionRoute = CollectionRouteImport.update({
+  id: '/collection',
+  path: '/collection',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompteRoute = CompteRouteImport.update({
+  id: '/compte',
+  path: '/compte',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LivraisonRoute = LivraisonRouteImport.update({
+  id: '/livraison',
+  path: '/livraison',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NouveautesRoute = NouveautesRouteImport.update({
+  id: '/nouveautes',
+  path: '/nouveautes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaiementsRoute = PaiementsRouteImport.update({
+  id: '/paiements',
+  path: '/paiements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PanierRoute = PanierRouteImport.update({
+  id: '/panier',
+  path: '/panier',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QualiteRoute = QualiteRouteImport.update({
+  id: '/qualite',
+  path: '/qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RetoursRoute = RetoursRouteImport.update({
+  id: '/retours',
+  path: '/retours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuiviCommandeRoute = SuiviCommandeRouteImport.update({
+  id: '/suivi-commande',
+  path: '/suivi-commande',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversRoute = UniversRouteImport.update({
+  id: '/univers',
+  path: '/univers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProduitSlugRoute = ProduitSlugRouteImport.update({
+  id: '/produit/$slug',
+  path: '/produit/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/aide': typeof AideRoute
+  '/cgv': typeof CgvRoute
+  '/collection': typeof CollectionRoute
+  '/compte': typeof CompteRoute
+  '/confidentialite': typeof ConfidentialiteRoute
+  '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
+  '/journal': typeof JournalRoute
+  '/livraison': typeof LivraisonRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
+  '/nouveautes': typeof NouveautesRoute
+  '/paiements': typeof PaiementsRoute
+  '/panier': typeof PanierRoute
+  '/qualite': typeof QualiteRoute
+  '/retours': typeof RetoursRoute
+  '/suivi-commande': typeof SuiviCommandeRoute
+  '/univers': typeof UniversRoute
+  '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/aide': typeof AideRoute
+  '/cgv': typeof CgvRoute
+  '/collection': typeof CollectionRoute
+  '/compte': typeof CompteRoute
+  '/confidentialite': typeof ConfidentialiteRoute
+  '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
+  '/journal': typeof JournalRoute
+  '/livraison': typeof LivraisonRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
+  '/nouveautes': typeof NouveautesRoute
+  '/paiements': typeof PaiementsRoute
+  '/panier': typeof PanierRoute
+  '/qualite': typeof QualiteRoute
+  '/retours': typeof RetoursRoute
+  '/suivi-commande': typeof SuiviCommandeRoute
+  '/univers': typeof UniversRoute
+  '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/aide': typeof AideRoute
+  '/cgv': typeof CgvRoute
+  '/collection': typeof CollectionRoute
+  '/compte': typeof CompteRoute
+  '/confidentialite': typeof ConfidentialiteRoute
+  '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
+  '/journal': typeof JournalRoute
+  '/livraison': typeof LivraisonRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
+  '/nouveautes': typeof NouveautesRoute
+  '/paiements': typeof PaiementsRoute
+  '/panier': typeof PanierRoute
+  '/qualite': typeof QualiteRoute
+  '/retours': typeof RetoursRoute
+  '/suivi-commande': typeof SuiviCommandeRoute
+  '/univers': typeof UniversRoute
+  '/produit/$slug': typeof ProduitSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/a-propos'
+    | '/aide'
+    | '/cgv'
+    | '/collection'
+    | '/compte'
+    | '/confidentialite'
+    | '/contact'
+    | '/cookies'
+    | '/journal'
+    | '/livraison'
+    | '/mentions-legales'
+    | '/nouveautes'
+    | '/paiements'
+    | '/panier'
+    | '/qualite'
+    | '/retours'
+    | '/suivi-commande'
+    | '/univers'
+    | '/produit/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/a-propos'
+    | '/aide'
+    | '/cgv'
+    | '/collection'
+    | '/compte'
+    | '/confidentialite'
+    | '/contact'
+    | '/cookies'
+    | '/journal'
+    | '/livraison'
+    | '/mentions-legales'
+    | '/nouveautes'
+    | '/paiements'
+    | '/panier'
+    | '/qualite'
+    | '/retours'
+    | '/suivi-commande'
+    | '/univers'
+    | '/produit/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/a-propos'
+    | '/aide'
+    | '/cgv'
+    | '/collection'
+    | '/compte'
+    | '/confidentialite'
+    | '/contact'
+    | '/cookies'
+    | '/journal'
+    | '/livraison'
+    | '/mentions-legales'
+    | '/nouveautes'
+    | '/paiements'
+    | '/panier'
+    | '/qualite'
+    | '/retours'
+    | '/suivi-commande'
+    | '/univers'
+    | '/produit/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AProposRoute: typeof AProposRoute
+  AideRoute: typeof AideRoute
+  CgvRoute: typeof CgvRoute
+  CollectionRoute: typeof CollectionRoute
+  CompteRoute: typeof CompteRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
+  ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
+  JournalRoute: typeof JournalRoute
+  LivraisonRoute: typeof LivraisonRoute
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
+  NouveautesRoute: typeof NouveautesRoute
+  PaiementsRoute: typeof PaiementsRoute
+  PanierRoute: typeof PanierRoute
+  QualiteRoute: typeof QualiteRoute
+  RetoursRoute: typeof RetoursRoute
+  SuiviCommandeRoute: typeof SuiviCommandeRoute
+  UniversRoute: typeof UniversRoute
+  ProduitSlugRoute: typeof ProduitSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +299,163 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/a-propos': {
+      id: '/a-propos'
+      path: '/a-propos'
+      fullPath: '/a-propos'
+      preLoaderRoute: typeof AProposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aide': {
+      id: '/aide'
+      path: '/aide'
+      fullPath: '/aide'
+      preLoaderRoute: typeof AideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgv': {
+      id: '/cgv'
+      path: '/cgv'
+      fullPath: '/cgv'
+      preLoaderRoute: typeof CgvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collection': {
+      id: '/collection'
+      path: '/collection'
+      fullPath: '/collection'
+      preLoaderRoute: typeof CollectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compte': {
+      id: '/compte'
+      path: '/compte'
+      fullPath: '/compte'
+      preLoaderRoute: typeof CompteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/livraison': {
+      id: '/livraison'
+      path: '/livraison'
+      fullPath: '/livraison'
+      preLoaderRoute: typeof LivraisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nouveautes': {
+      id: '/nouveautes'
+      path: '/nouveautes'
+      fullPath: '/nouveautes'
+      preLoaderRoute: typeof NouveautesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paiements': {
+      id: '/paiements'
+      path: '/paiements'
+      fullPath: '/paiements'
+      preLoaderRoute: typeof PaiementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/panier': {
+      id: '/panier'
+      path: '/panier'
+      fullPath: '/panier'
+      preLoaderRoute: typeof PanierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qualite': {
+      id: '/qualite'
+      path: '/qualite'
+      fullPath: '/qualite'
+      preLoaderRoute: typeof QualiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/retours': {
+      id: '/retours'
+      path: '/retours'
+      fullPath: '/retours'
+      preLoaderRoute: typeof RetoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/suivi-commande': {
+      id: '/suivi-commande'
+      path: '/suivi-commande'
+      fullPath: '/suivi-commande'
+      preLoaderRoute: typeof SuiviCommandeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/univers': {
+      id: '/univers'
+      path: '/univers'
+      fullPath: '/univers'
+      preLoaderRoute: typeof UniversRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produit/$slug': {
+      id: '/produit/$slug'
+      path: '/produit/$slug'
+      fullPath: '/produit/$slug'
+      preLoaderRoute: typeof ProduitSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AProposRoute: AProposRoute,
+  AideRoute: AideRoute,
+  CgvRoute: CgvRoute,
+  CollectionRoute: CollectionRoute,
+  CompteRoute: CompteRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
+  ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
+  JournalRoute: JournalRoute,
+  LivraisonRoute: LivraisonRoute,
+  MentionsLegalesRoute: MentionsLegalesRoute,
+  NouveautesRoute: NouveautesRoute,
+  PaiementsRoute: PaiementsRoute,
+  PanierRoute: PanierRoute,
+  QualiteRoute: QualiteRoute,
+  RetoursRoute: RetoursRoute,
+  SuiviCommandeRoute: SuiviCommandeRoute,
+  UniversRoute: UniversRoute,
+  ProduitSlugRoute: ProduitSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
