@@ -77,6 +77,19 @@ export async function openPage(page: Page, path: string, theme: ThemeName = "lig
   });
 }
 
+/**
+ * Masque le header collant pendant une capture assemblée (élément plus haut
+ * que le viewport). Playwright fait défiler la page pour assembler l'image :
+ * le header pouvait alors se superposer au pied de page selon l'état du
+ * masquage au défilement — source de diffs aléatoires. `visibility: hidden`
+ * retire les pixels sans toucher à la géométrie.
+ */
+export async function hideStickyChrome(page: Page) {
+  await page.addStyleTag({
+    content: "header, [data-consent-panel] { visibility: hidden !important; }",
+  });
+}
+
 /** Signature structurelle d'une page : hiérarchie, zones cliquables, états. */
 export async function structuralSignature(page: Page) {
   return page.evaluate(() => {
