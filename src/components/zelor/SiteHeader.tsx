@@ -123,7 +123,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
         </div>
         <button
           type="submit"
-          className="press-z hidden min-h-12 shrink-0 rounded-full border border-navy-foreground/25 bg-navy-foreground/8 px-6 text-xs tracking-[0.16em] uppercase backdrop-blur-md transition-[background-color,border-color,transform,box-shadow] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:-translate-y-px hover:border-navy-foreground/45 hover:bg-navy-foreground/14 hover:shadow-[var(--shadow-float)] sm:inline-flex sm:items-center"
+          className="btn-veil hidden shrink-0 sm:inline-flex"
         >
           Rechercher
         </button>
