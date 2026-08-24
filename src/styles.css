@@ -91,6 +91,24 @@
 :root {
   --radius: 0.125rem;
 
+  /* ————— Grammaire de mouvement ZELOR —————
+   * 1 : réponse immédiate (états pressés) · 2 : micro-interaction
+   * 3 : transition de matière · 4 : mouvement éditorial · 5 : reveal au scroll
+   */
+  --dur-1: 180ms;
+  --dur-2: 380ms;
+  --dur-3: 620ms;
+  --dur-4: 900ms;
+  --dur-5: 1150ms;
+  --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-enter: cubic-bezier(0.16, 0.84, 0.28, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
+  --blur-veil: 22px;
+  --blur-panel: 16px;
+  --lift-1: -1px;
+  --lift-2: -3px;
+  --glow-soft: 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
   --background: oklch(0.975 0.005 88);
   --ivory: oklch(0.985 0.004 88);
