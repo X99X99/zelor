@@ -390,6 +390,7 @@
 
 /* Champs de saisie : matière calme, réponse progressive */
 @utility field-z {
+  border-radius: var(--radius-field);
   transition:
     border-color var(--dur-2) var(--ease-lux),
     background-color var(--dur-2) var(--ease-lux),
@@ -402,6 +403,94 @@
     border-color: currentColor;
     box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 10%, transparent);
     outline: none;
+  }
+}
+
+/* Champ de matière : verre doux, halo progressif — clair ou marine. */
+@utility input-z {
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+  background-color: color-mix(in oklab, currentColor 4%, transparent);
+  backdrop-filter: blur(10px) saturate(130%);
+  transition:
+    border-color var(--dur-2) var(--ease-lux),
+    background-color var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:hover {
+    border-color: color-mix(in oklab, currentColor 30%, transparent);
+    background-color: color-mix(in oklab, currentColor 6%, transparent);
+  }
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    border-color: color-mix(in oklab, currentColor 45%, transparent);
+    box-shadow:
+      0 0 0 4px color-mix(in oklab, currentColor 9%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+    outline: none;
+  }
+}
+
+/* Capsule d'action secondaire : variantes, quantité, filtres, badges. */
+@utility chip-z {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
+  background-color: color-mix(in oklab, currentColor 3%, transparent);
+  backdrop-filter: blur(8px);
+  transition:
+    background-color var(--dur-2) var(--ease-lux),
+    border-color var(--dur-2) var(--ease-lux),
+    color var(--dur-2) var(--ease-lux),
+    transform var(--dur-1) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:hover {
+    background-color: color-mix(in oklab, currentColor 8%, transparent);
+    border-color: color-mix(in oklab, currentColor 38%, transparent);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -18px color-mix(in oklab, var(--navy) 80%, transparent);
+  }
+  &:active {
+    transform: translateY(0) scale(0.975);
+  }
+  &[aria-pressed="true"] {
+    background-image: var(--gradient-cta);
+    border-color: transparent;
+    color: var(--navy-foreground);
+    box-shadow: var(--shadow-elegant);
+  }
+}
+
+/* Groupe de quantité : une pilule unique, jamais deux carrés collés. */
+@utility stepper-z {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in oklab, var(--navy) 18%, transparent);
+  background-color: color-mix(in oklab, var(--navy) 3%, transparent);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition:
+    border-color var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:hover {
+    border-color: color-mix(in oklab, var(--navy) 30%, transparent);
+    box-shadow: 0 10px 30px -24px color-mix(in oklab, var(--navy) 85%, transparent);
+  }
+  & button {
+    border-radius: var(--radius-pill);
+    transition:
+      background-color var(--dur-2) var(--ease-lux),
+      transform var(--dur-1) var(--ease-lux),
+      opacity var(--dur-2) var(--ease-lux);
+  }
+  & button:hover {
+    background-color: color-mix(in oklab, var(--navy) 8%, transparent);
+  }
+  & button:active {
+    transform: scale(0.9);
   }
 }
 
