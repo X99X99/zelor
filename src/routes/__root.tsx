@@ -16,6 +16,8 @@ import { CartProvider } from "@/lib/zelor/cart";
 import { SiteHeader } from "@/components/zelor/SiteHeader";
 import { SiteFooter } from "@/components/zelor/SiteFooter";
 import { CookieConsent } from "@/components/zelor/CookieConsent";
+import { THEME_INIT_SCRIPT } from "@/lib/zelor/theme";
+
 
 function NotFoundComponent() {
   return (
@@ -120,6 +122,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
     scripts: [
+      // Pose la classe de thème avant le premier rendu : aucun flash.
+      { children: THEME_INIT_SCRIPT },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -130,6 +134,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         }),
       },
     ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -139,7 +144,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

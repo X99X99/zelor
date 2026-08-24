@@ -78,12 +78,13 @@ describe("système de mouvement ZELOR", () => {
     expect(css).not.toContain("@utility surface-search");
   });
 
-  it("garde une seule nuit, pilotée par la préférence système", () => {
-    expect(css).toContain("@media (prefers-color-scheme: dark)");
-    const night = css.slice(css.indexOf("@media (prefers-color-scheme: dark)"));
+  it("garde une seule nuit, pilotée par la classe posée sur <html>", () => {
+    expect(css).toContain(":root.dark {");
+    const night = css.slice(css.indexOf(":root.dark {"));
     expect(night).toContain("--background:");
     expect(night).toContain("--foreground:");
   });
+
 
 
   it("centralise les easings boomerang et respiration", () => {
