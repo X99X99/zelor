@@ -295,7 +295,6 @@ test.describe("capsules de navigation : géométrie issue du contenu", () => {
     expect(info.right).toBeLessThanOrEqual(info.vw);
   });
 
-
   test("capsules desktop : même famille, largeur épousant le libellé", async ({
     page,
     isMobile,
