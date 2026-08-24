@@ -406,9 +406,11 @@ export function SiteHeader() {
                 aria-hidden="true"
               />
             </button>
+            <ThemeToggle />
             <div className="hidden md:block">
               <LanguageMenu />
             </div>
+
             <Link
               to="/compte"
               aria-label="Compte client"
