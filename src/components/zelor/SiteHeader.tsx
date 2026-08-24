@@ -53,7 +53,7 @@ function LanguageMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="px-2 py-2 text-xs tracking-[0.16em] uppercase opacity-80 transition-opacity duration-500 hover:opacity-100"
+        className={`utility-z px-3 py-2 text-xs tracking-[0.16em] uppercase ${open ? "opacity-100" : "opacity-80"} hover:opacity-100`}
       >
         FR
         <span className="sr-only"> — changer de langue</span>
@@ -62,7 +62,7 @@ function LanguageMenu() {
         <ul
           role="listbox"
           aria-label="Langues"
-          className="veil-in absolute right-0 z-50 mt-2 w-52 overflow-hidden border border-navy-foreground/12 bg-navy-deep/95 py-1 text-navy-foreground shadow-[var(--shadow-float)] backdrop-blur-xl"
+          className="panel-navy panel-in absolute right-0 z-50 mt-2 w-52 overflow-hidden py-1"
         >
           {LANGUAGES.map((lang) => (
             <li key={lang.code}>
@@ -71,7 +71,7 @@ function LanguageMenu() {
                 role="option"
                 aria-selected={lang.active}
                 disabled={!lang.active}
-                className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-colors duration-400 hover:bg-navy-foreground/10 disabled:cursor-not-allowed disabled:text-navy-foreground/45"
+                className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-[background-color,padding] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-navy-foreground/10 hover:px-5 disabled:cursor-not-allowed disabled:text-navy-foreground/45 disabled:hover:px-4"
               >
                 <span>{lang.label}</span>
                 {lang.active ? (
