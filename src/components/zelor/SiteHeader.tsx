@@ -18,7 +18,7 @@ function AnnouncementBar() {
           type="button"
           onClick={() => setVisible(false)}
           aria-label="Masquer le message d'information"
-          className="shrink-0 rounded-sm p-1 opacity-60 transition-opacity duration-700 hover:opacity-100"
+          className="utility-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
         >
           <X className="size-3.5" aria-hidden="true" />
         </button>
