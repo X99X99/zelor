@@ -9,12 +9,22 @@ export function ProductCard({ product }: { product: DemoProduct }) {
       <Link
         to="/produit/$slug"
         params={{ slug: product.slug }}
-        className="block"
+        className="block focus-visible:outline-offset-4"
       >
-        <div className="overflow-hidden">
-          <div className="transition-transform duration-700 group-hover:scale-[1.03]">
+        <div className="relative overflow-hidden">
+          <div className="transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-[1.04]">
             <ImageSlot tone={product.tone} caption="Visuel produit à fournir" />
           </div>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-navy/0 transition-colors duration-700 group-hover:bg-navy/8"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-navy/90 py-3 text-center text-[0.6875rem] tracking-[0.2em] text-navy-foreground uppercase backdrop-blur-sm transition-transform duration-600 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-y-0"
+          >
+            Découvrir
+          </span>
         </div>
         <div className="mt-4 flex items-baseline justify-between gap-3">
           <h3 className="font-sans text-sm font-medium">{product.name}</h3>
