@@ -81,7 +81,7 @@ function ProductPage() {
 
       <div className="container-z grid gap-10 pt-8 pb-16 lg:grid-cols-2 lg:gap-16">
         {/* Galerie */}
-        <div className="space-y-3">
+        <Reveal className="space-y-3">
           <ImageSlot
             tone={product.tone}
             ratio="aspect-4/5"
@@ -92,10 +92,10 @@ function ProductPage() {
             <ImageSlot tone="stone" ratio="aspect-square" caption="Matière" />
             <ImageSlot tone="forest" ratio="aspect-square" caption="Détail" />
           </div>
-        </div>
+        </Reveal>
 
         {/* Achat */}
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        <Reveal delay={90} className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">{product.line}</p>
           <h1 className="mt-3 font-display text-3xl md:text-5xl">
             {product.name}
