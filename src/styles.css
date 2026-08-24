@@ -616,16 +616,21 @@
 }
 
 
+/* ————— Primitive « bulle » —————
+ * Référence canonique : la barre « Découvrir » des cartes produit.
+ * La matière glisse depuis son bord, se dévoile sans clignoter, et se retire
+ * exactement par le même chemin. Toute surface flottante hérite d'ici.
+ */
 @keyframes zelor-unfold {
   from {
     opacity: 0;
     clip-path: inset(0 0 100% 0);
-    transform: translateY(-6px);
+    translate: 0 -10px;
   }
   to {
     opacity: 1;
     clip-path: inset(0 0 0 0);
-    transform: none;
+    translate: 0 0;
   }
 }
 
@@ -634,19 +639,19 @@
   animation: zelor-unfold var(--dur-4) var(--ease-enter) both;
 }
 
-/* … et se replie exactement comme il s'est déployé : même matière, même
- * durée, courbe strictement miroir de --ease-enter. La sortie est l'inverse
- * naturel de l'entrée, jamais un retrait plus sec. */
+/* … et se replie exactement comme elle s'est déployée : même matière, même
+ * durée, courbe strictement miroir. La sortie est l'inverse naturel de
+ * l'entrée, jamais un retrait plus sec. */
 @keyframes zelor-unfold-out {
   from {
     opacity: 1;
     clip-path: inset(0 0 0 0);
-    transform: none;
+    translate: 0 0;
   }
   to {
     opacity: 0;
     clip-path: inset(0 0 100% 0);
-    transform: translateY(-6px);
+    translate: 0 -10px;
   }
 }
 
@@ -654,6 +659,32 @@
   animation: zelor-unfold-out var(--dur-4) var(--ease-enter-mirror) both;
 }
 
+/* Barre « Découvrir » : le geste de référence, factorisé.
+ * Le parent porte .group ; l'aller et le retour partagent durée et courbe. */
+@utility discover-bar-z {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding-block: 0.75rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--navy-foreground);
+  background-color: color-mix(in oklab, var(--navy) 85%, transparent);
+  backdrop-filter: blur(12px) saturate(135%);
+  translate: 0 100%;
+  opacity: 0;
+  transition:
+    translate var(--dur-3) var(--ease-lux),
+    opacity var(--dur-3) var(--ease-lux);
+  .group:hover &,
+  .group:focus-within & {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
 
 @utility overlay-navy {
   background-color: var(--navy-deep);
@@ -777,11 +808,13 @@
   border-radius: var(--radius-field);
   border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 14%, transparent);
   transition:
-    padding-inline 0.55s var(--ease-lux),
-    background-color 0.55s var(--ease-lux),
-    box-shadow 0.55s var(--ease-lux),
-    opacity 0.55s var(--ease-lux);
-  &:hover {
+    padding-inline var(--dur-3) var(--ease-lux),
+    background-color var(--dur-3) var(--ease-lux),
+    box-shadow var(--dur-3) var(--ease-lux),
+    opacity var(--dur-3) var(--ease-lux),
+    scale var(--dur-3) var(--ease-lux);
+  &:hover,
+  &:focus-within {
     padding-inline: 0.75rem;
     background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
@@ -946,20 +979,20 @@
   & > [data-focal] {
     transition:
       opacity var(--dur-3) var(--ease-lux),
-      transform var(--dur-3) var(--ease-lux),
+      scale var(--dur-3) var(--ease-lux),
       letter-spacing var(--dur-3) var(--ease-lux),
       color var(--dur-3) var(--ease-lux);
   }
   &:hover > [data-focal],
   &:focus-within > [data-focal] {
     opacity: 0.42;
-    transform: scale(0.985);
+    scale: 0.985;
   }
   & > [data-focal]:hover,
   & > [data-focal]:focus-visible,
   & > [data-focal]:focus-within {
     opacity: 1;
-    transform: scale(1.015);
+    scale: 1.015;
   }
 }
 
@@ -1456,6 +1489,10 @@
   .tactile-z:hover,
   .tactile-lift-z:hover,
   .utility-icon-z:hover > svg {
-    transform: none !important;
+    translate: none !important;
+    scale: none !important;
+  }
+  .discover-bar-z {
+    transition-duration: 1ms !important;
   }
 }
