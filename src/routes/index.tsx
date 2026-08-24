@@ -131,7 +131,7 @@ function Home() {
       </Reveal>
 
       {/* D. Storytelling */}
-      <section className="surface-light hairline-z">
+      <Reveal as="section" replay className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
             <h2 className="font-display text-3xl md:text-5xl">
