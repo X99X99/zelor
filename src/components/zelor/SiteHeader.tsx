@@ -214,10 +214,13 @@ export function SiteHeader() {
     <>
       <header
         data-hidden={hidden}
-        className={`surface-navy sticky top-0 z-50 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
-          hidden ? "-translate-y-full" : "translate-y-0"
+        className={`surface-navy sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
+          hidden
+            ? "pointer-events-none -translate-y-full opacity-0"
+            : "translate-y-0 opacity-100"
         } ${scrolled ? "shadow-[var(--shadow-elegant)]" : "shadow-none"}`}
       >
+
         <AnnouncementBar />
         <div className="container-z flex items-center justify-between gap-4 py-4">
           <div className="flex flex-1 items-center gap-1 md:hidden">
