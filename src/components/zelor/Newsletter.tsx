@@ -51,10 +51,7 @@ export function Newsletter() {
               className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/50"
             />
           </div>
-          <button
-            type="submit"
-            className="press-z min-h-12 shrink-0 rounded-full border border-navy-foreground/25 bg-navy-foreground/10 px-8 text-[0.8125rem] tracking-[0.16em] text-navy-foreground uppercase backdrop-blur-md transition-[transform,background-color,border-color,box-shadow] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:-translate-y-px hover:border-navy-foreground/50 hover:bg-navy-foreground/18 hover:shadow-[var(--shadow-float)] active:translate-y-0 active:scale-[0.985]"
-          >
+          <button type="submit" className="btn-veil shrink-0 px-8">
             S'inscrire
           </button>
         </div>
