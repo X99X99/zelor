@@ -146,21 +146,19 @@
    */
   --cap-ink: var(--navy);
   --cap-rest-bg: color-mix(in oklab, var(--cap-ink) 4%, transparent);
-  /* Relief : arête haute lumineuse, retour de lumière bas, filet net,
-   * puis deux ombres portées très courtes (contact + diffusion douce). */
+  /* Au repos, la capsule reste calme et discrète : seul un filet très fin
+   * la distingue du fond. Le relief premium apparaît à l'interaction. */
   --cap-rest-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 5%, transparent);
+  --cap-hover-bg: color-mix(in oklab, var(--cap-ink) 7.5%, transparent);
+  /* Survol / focus : on révèle exactement le relief premium existant
+   * (arête haute lumineuse, retour d'ombre bas, filet net, ombres courtes). */
+  --cap-hover-shadow:
     inset 0 1px 0 color-mix(in oklab, white 82%, transparent),
     inset 0 -1px 0 color-mix(in oklab, var(--cap-ink) 7%, transparent),
     inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 9%, transparent),
     0 1px 1px -1px color-mix(in oklab, var(--cap-ink) 20%, transparent),
     0 4px 10px -8px color-mix(in oklab, var(--cap-ink) 26%, transparent);
-  --cap-hover-bg: color-mix(in oklab, var(--cap-ink) 7.5%, transparent);
-  --cap-hover-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 92%, transparent),
-    inset 0 -1px 0 color-mix(in oklab, var(--cap-ink) 10%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 14%, transparent),
-    0 1px 1px -1px color-mix(in oklab, var(--cap-ink) 24%, transparent),
-    0 8px 18px -12px color-mix(in oklab, var(--cap-ink) 34%, transparent);
   --cap-active-bg: color-mix(in oklab, var(--cap-ink) 10%, transparent);
   --cap-active-shadow:
     inset 0 1px 2px color-mix(in oklab, var(--cap-ink) 16%, transparent),
@@ -361,18 +359,17 @@
 .panel-navy {
   --cap-ink: var(--navy-foreground);
   --cap-rest-bg: color-mix(in oklab, var(--navy-foreground) 2.5%, transparent);
+  /* Au repos, la capsule reste calme et discrète : seul un filet très fin
+   * la distingue du fond. Le relief premium apparaît à l'interaction. */
   --cap-rest-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 4%, transparent);
+  --cap-hover-bg: color-mix(in oklab, var(--navy-foreground) 6.5%, transparent);
+  /* Survol / focus : on révèle exactement le relief premium existant. */
+  --cap-hover-shadow:
     inset 0 1px 0 color-mix(in oklab, white 9%, transparent),
     inset 0 -1px 0 color-mix(in oklab, var(--navy-deep) 22%, transparent),
     inset 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 6%, transparent),
     0 1px 1px -1px color-mix(in oklab, var(--navy-deep) 45%, transparent);
-  --cap-hover-bg: color-mix(in oklab, var(--navy-foreground) 6.5%, transparent);
-  --cap-hover-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 16%, transparent),
-    inset 0 -1px 0 color-mix(in oklab, var(--navy-deep) 30%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 11%, transparent),
-    0 1px 1px -1px color-mix(in oklab, var(--navy-deep) 55%, transparent),
-    0 8px 18px -14px color-mix(in oklab, var(--navy-deep) 70%, transparent);
   --cap-active-bg: color-mix(in oklab, var(--navy-foreground) 9%, transparent);
   --cap-active-shadow:
     inset 0 1px 2px color-mix(in oklab, var(--navy-deep) 45%, transparent),
