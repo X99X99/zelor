@@ -363,6 +363,13 @@ test.describe("garde-fous — lumière et cohérence interactive", () => {
           afterLeft: after.left,
         };
       });
-    expect(geo).toEqual(ref);
+    // Même famille de capsule : géométrie et matière identiques. Seule
+    // la respiration horizontale est resserrée en pleine ligne de texte,
+    // pour que le mot reste soudé à sa phrase.
+    expect(geo.radius).toBe(ref.radius);
+    expect(geo.display).toBe(ref.display);
+    expect(geo.pad).toBe(geo.afterLeft);
+    expect(ref.pad).toBe(ref.afterLeft);
+    expect(parseFloat(geo.pad)).toBeLessThanOrEqual(parseFloat(ref.pad));
   });
 });
