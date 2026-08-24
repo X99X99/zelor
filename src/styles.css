@@ -229,9 +229,18 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* Défilement instantané par défaut : le lissage global transformait
+     * la restauration de scroll et les changements de route en faux
+     * déplacements animés. Le lissage reste réservé aux ancres. */
+    scroll-behavior: auto;
     /* Le header couvre les ancres : on réserve sa hauteur. */
     scroll-padding-top: 7.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html:has(:target) {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
@@ -768,6 +777,8 @@
   &[data-visible="true"] {
     opacity: 1;
     transform: none;
+    /* Une fois posé, on libère la couche GPU (mobile). */
+    will-change: auto;
   }
 }
 
@@ -886,20 +897,21 @@
  * Transition de page, matière granuleuse, lumière rasante, respiration.
  */
 
-/* Entrée de page : le contenu se pose, il n'apparaît jamais d'un coup. */
+/* Entrée de page : fondu seul.
+ * Pas de translation sur le conteneur global : elle simulerait un déplacement
+ * que le défilement réel n'effectue pas, et créerait un bloc de confinement
+ * pour les éléments en position fixed (barre d'achat mobile). */
 @keyframes zelor-page-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
 @utility page-in {
-  animation: zelor-page-in var(--dur-4) var(--ease-enter) both;
+  animation: zelor-page-in var(--dur-3) var(--ease-enter) both;
 }
 
 /* Grain imperceptible : les aplats marine cessent d'être plats. */

@@ -254,7 +254,18 @@ export function SiteHeader() {
     body.style.overflow = "hidden";
     return () => {
       body.style.cssText = previous;
-      window.scrollTo({ top: scrollY });
+      // Restitution exacte, sans animation : la position ne doit pas « glisser ».
+      // Un reflow forcé garantit que la hauteur du document est rétablie avant
+      // le repositionnement, puis on confirme à la frame suivante (mobile).
+      void body.offsetHeight;
+      const restore = () =>
+        window.scrollTo({
+          top: scrollY,
+          left: 0,
+          behavior: "instant" as ScrollBehavior,
+        });
+      restore();
+      window.requestAnimationFrame(restore);
     };
   }, [menuOpen]);
 
