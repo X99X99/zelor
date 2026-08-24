@@ -64,10 +64,7 @@ function CookiesPage() {
       <Section title="Catégories">
         <ul className="relief-z divide-y divide-border/70 overflow-hidden px-6">
           {categories.map((category) => (
-            <li
-              key={category.id}
-              className="flex items-start justify-between gap-6 py-5"
-            >
+            <li key={category.id} className="flex items-start justify-between gap-6 py-5">
               <div>
                 <p className="font-medium">{category.label}</p>
                 <p className="text-sm text-muted-foreground">{category.body}</p>

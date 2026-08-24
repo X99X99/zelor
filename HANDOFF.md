@@ -70,7 +70,7 @@ Tout est centralisé dans ce fichier, dans cet ordre :
   progressive via `header-motion-z`. **Motion validé : ne pas y toucher.**
 - **Barre d'annonce** : à l'intérieur de la même surface marine (`veil-top`,
   `seam-z`), fermeture animée (`collapse-out-z`) avant démontage.
-- **Recherche** : ouverte *dans* le header via `slot-z` (animation de
+- **Recherche** : ouverte _dans_ le header via `slot-z` (animation de
   `grid-template-rows` 0fr → 1fr) et `NavySurface material={false}` — elle
   hérite de la matière du header et ne repeint jamais un second gradient.
   Fermeture symétrique, démontage après `NAVY_SURFACE_EXIT_MS`.
@@ -157,3 +157,38 @@ système, pointer `ZELOR_CHROMIUM_PATH` vers un Chromium compatible.
 
 Contrôle complet avant mise en ligne : `bun run preflight`
 (lint → typecheck → tests unitaires → build → tests navigateur).
+
+## 9. Contrats visuels et interactions protégées
+
+Ces comportements sont **validés**. Toute modification qui les altère est une
+régression, même si elle « paraît mieux ». Ils sont couverts par des tests :
+un échec signifie qu'il faut corriger le code, pas le test.
+
+1. **Header et son motion** (masquage au défilement, dissolution, seuils,
+   `header-motion-z`) : validés, ne pas réinterpréter.
+2. **Continuité marine annonce → header → recherche** : une seule matière
+   peinte. La recherche hérite de `NavySurface` (`material={false}`) et ne doit
+   jamais introduire un second gradient (test « continuité marine »).
+3. **Menu mobile** : l'entrée « Langue » est l'étalon de mouvement. Une entrée-
+   lien ne porte aucune géométrie propre : `nav-link-z` neutralise display,
+   padding et transitions pour `data-variant="sheet"`, la ligne hérite
+   intégralement de `menu-row`. Aucun rebond ni remontée parasite au retour.
+4. **Soulignement mobile** : contenu dans la capsule (`inset-inline: 0.9rem`,
+   `bottom: 0.55rem`), même épaisseur et même rythme sur toutes les entrées.
+   Aucun `overflow: hidden` sur la ligne : le focus clavier doit rester visible.
+5. **Liens actifs et logo** : une seule primitive, `useSameRouteTop` dans
+   `src/components/zelor/NavLink.tsx`, utilisée par `NavLink` (header, feuille,
+   footer) et par `BrandLink` (logos header et footer). Page déjà active →
+   remontée douce, sans navigation, sans entrée d'historique, sans changement
+   d'URL, `prefers-reduced-motion` respecté. Ne jamais créer une seconde
+   implémentation ni un second lien « retour en haut ».
+6. **Thèmes clair / sombre et préférence système** : tri-état persistant,
+   script anti-flash, parité structurelle clair/sombre — protégés par tests.
+
+Avant toute livraison : `bun run preflight`
+(lint → typecheck → tests unitaires → build → tests navigateur).
+Si Chromium système est requis : `ZELOR_CHROMIUM_PATH=$(readlink -f /bin/chromium)`.
+
+Toute régression visuelle se corrige **avant** fusion. Une baseline ne se met à
+jour que pour un changement visuel intentionnel, revu, et justifié en une phrase
+dans le message de commit : jamais pour faire taire un échec.

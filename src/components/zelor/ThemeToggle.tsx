@@ -54,14 +54,8 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       >
         {/* Les deux astres coexistent : l'affichage suit la classe de thème,
          * jamais un état JavaScript — aucun flash au chargement. */}
-        <Sun
-          className="theme-icon-z theme-icon-day-z size-4.5"
-          aria-hidden="true"
-        />
-        <Moon
-          className="theme-icon-z theme-icon-night-z size-4.5"
-          aria-hidden="true"
-        />
+        <Sun className="theme-icon-z theme-icon-day-z size-4.5" aria-hidden="true" />
+        <Moon className="theme-icon-z theme-icon-night-z size-4.5" aria-hidden="true" />
       </button>
 
       <button

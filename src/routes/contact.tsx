@@ -38,12 +38,10 @@ function ContactPage() {
         <div className="rule-z space-y-2 pt-5">
           <p className="eyebrow">Service client</p>
           <p>
-            Écrivez-nous par ce formulaire : chaque message est lu et reçoit une
-            réponse, dans l'ordre d'arrivée.
+            Écrivez-nous par ce formulaire : chaque message est lu et reçoit une réponse, dans
+            l'ordre d'arrivée.
           </p>
-          <p className="text-muted-foreground">
-            Du lundi au vendredi, en français et en anglais.
-          </p>
+          <p className="text-muted-foreground">Du lundi au vendredi, en français et en anglais.</p>
         </div>
       }
     >
@@ -54,13 +52,8 @@ function ContactPage() {
           event.preventDefault();
           const data = new FormData(event.currentTarget);
           const next: Record<string, string> = {};
-          if (!String(data.get("nom") ?? "").trim())
-            next["nom"] = "Indiquez votre nom.";
-          if (
-            !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(
-              String(data.get("email") ?? "").trim(),
-            )
-          )
+          if (!String(data.get("nom") ?? "").trim()) next["nom"] = "Indiquez votre nom.";
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(data.get("email") ?? "").trim()))
             next["email"] = "Indiquez une adresse email valide.";
           if (String(data.get("message") ?? "").trim().length < 10)
             next["message"] = "Votre message doit contenir au moins 10 caractères.";
@@ -116,16 +109,13 @@ function ContactPage() {
             </p>
           )}
         </div>
-        <button
-          type="submit"
-          className="btn-lux"
-        >
+        <button type="submit" className="btn-lux">
           Envoyer
         </button>
         {sent && (
           <p role="status" className="text-sm">
-            Merci, votre message nous est bien parvenu. Nous vous répondrons
-            dans les meilleurs délais.
+            Merci, votre message nous est bien parvenu. Nous vous répondrons dans les meilleurs
+            délais.
           </p>
         )}
       </form>

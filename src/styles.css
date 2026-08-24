@@ -66,12 +66,12 @@
   --color-draft-border: var(--draft-border);
 
   --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --shadow-elegant: 0 1px 0 color-mix(in oklab, var(--navy) 8%, transparent),
+  --shadow-elegant:
+    0 1px 0 color-mix(in oklab, var(--navy) 8%, transparent),
     0 18px 40px -28px color-mix(in oklab, var(--navy) 55%, transparent);
-  --shadow-float: 0 28px 70px -34px color-mix(in oklab, var(--navy) 65%, transparent),
+  --shadow-float:
+    0 28px 70px -34px color-mix(in oklab, var(--navy) 65%, transparent),
     0 2px 10px -6px color-mix(in oklab, var(--navy) 30%, transparent);
-
-
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -123,7 +123,6 @@
   --lift-1: -1px;
   --lift-2: -3px;
   --glow-soft: 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 12%, transparent);
-
 
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
   --background: oklch(0.975 0.005 88);
@@ -257,55 +256,54 @@
  * système au premier chargement, puis priorité absolue au choix manuel.
  */
 :root.dark {
-    color-scheme: dark;
-    --background: oklch(0.188 0.028 262);
+  color-scheme: dark;
+  --background: oklch(0.188 0.028 262);
 
+  --ivory: oklch(0.228 0.03 262);
+  --cream: oklch(0.206 0.029 262);
+  --foreground: oklch(0.958 0.005 88);
+  --ink: oklch(0.958 0.005 88);
 
-    --ivory: oklch(0.228 0.03 262);
-    --cream: oklch(0.206 0.029 262);
-    --foreground: oklch(0.958 0.005 88);
-    --ink: oklch(0.958 0.005 88);
+  --card: oklch(0.238 0.03 261);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.242 0.03 261);
+  --popover-foreground: var(--foreground);
 
-    --card: oklch(0.238 0.03 261);
-    --card-foreground: var(--foreground);
-    --popover: oklch(0.242 0.03 261);
-    --popover-foreground: var(--foreground);
+  --primary: oklch(0.452 0.052 258);
+  --primary-foreground: oklch(0.968 0.005 88);
 
-    --primary: oklch(0.452 0.052 258);
-    --primary-foreground: oklch(0.968 0.005 88);
+  --secondary: oklch(0.278 0.031 260);
+  --secondary-foreground: var(--foreground);
+  --sand: oklch(0.298 0.028 258);
 
-    --secondary: oklch(0.278 0.031 260);
-    --secondary-foreground: var(--foreground);
-    --sand: oklch(0.298 0.028 258);
+  --muted: oklch(0.258 0.03 261);
+  --muted-foreground: oklch(0.735 0.014 254);
+  --stone: oklch(0.392 0.02 258);
+  --mineral: oklch(0.615 0.016 256);
+  --silver: oklch(0.492 0.012 252);
 
-    --muted: oklch(0.258 0.03 261);
-    --muted-foreground: oklch(0.735 0.014 254);
-    --stone: oklch(0.392 0.02 258);
-    --mineral: oklch(0.615 0.016 256);
-    --silver: oklch(0.492 0.012 252);
+  --accent: oklch(0.288 0.032 259);
+  --accent-foreground: var(--foreground);
 
-    --accent: oklch(0.288 0.032 259);
-    --accent-foreground: var(--foreground);
+  --forest: oklch(0.288 0.04 262);
+  --gold: oklch(0.755 0.052 82);
 
-    --forest: oklch(0.288 0.04 262);
-    --gold: oklch(0.755 0.052 82);
+  --border: oklch(0.332 0.028 258);
+  --input: oklch(0.372 0.03 258);
+  --ring: oklch(0.72 0.03 256);
 
-    --border: oklch(0.332 0.028 258);
-    --input: oklch(0.372 0.03 258);
-    --ring: oklch(0.72 0.03 256);
+  --draft: oklch(0.262 0.03 260);
+  --draft-foreground: oklch(0.795 0.02 256);
+  --draft-border: oklch(0.372 0.03 256);
 
-    --draft: oklch(0.262 0.03 260);
-    --draft-foreground: oklch(0.795 0.02 256);
-    --draft-border: oklch(0.372 0.03 256);
-
-    --sidebar: oklch(0.208 0.029 262);
-    --sidebar-foreground: var(--foreground);
-    --sidebar-primary: oklch(0.452 0.052 258);
-    --sidebar-primary-foreground: oklch(0.968 0.005 88);
-    --sidebar-accent: oklch(0.288 0.032 259);
+  --sidebar: oklch(0.208 0.029 262);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: oklch(0.452 0.052 258);
+  --sidebar-primary-foreground: oklch(0.968 0.005 88);
+  --sidebar-accent: oklch(0.288 0.032 259);
   --sidebar-accent-foreground: var(--foreground);
-    --sidebar-border: oklch(0.332 0.028 258);
-    --sidebar-ring: oklch(0.72 0.03 256);
+  --sidebar-border: oklch(0.332 0.028 258);
+  --sidebar-ring: oklch(0.72 0.03 256);
 }
 
 /* Bascule de thème : seules les couleurs et les surfaces traversent, jamais
@@ -313,12 +311,30 @@
 @media (prefers-reduced-motion: no-preference) {
   :root.light,
   :root.dark {
-    --theme-fade: color var(--dur-3) var(--ease-lux),
-      background-color var(--dur-3) var(--ease-lux),
+    --theme-fade:
+      color var(--dur-3) var(--ease-lux), background-color var(--dur-3) var(--ease-lux),
       border-color var(--dur-3) var(--ease-lux);
   }
   body,
-  body :where(main, section, article, aside, footer, p, h1, h2, h3, h4, li, a, span, button, input, textarea) {
+  body
+    :where(
+      main,
+      section,
+      article,
+      aside,
+      footer,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      li,
+      a,
+      span,
+      button,
+      input,
+      textarea
+    ) {
     transition: var(--theme-fade, none);
   }
 }
@@ -369,12 +385,6 @@
   }
 }
 
-
-
-
-
-
-
 @layer base {
   * {
     border-color: var(--color-border);
@@ -402,7 +412,10 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.65;
-    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1,
+      "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -441,8 +454,7 @@
   @media (pointer: fine) {
     * {
       scrollbar-width: thin;
-      scrollbar-color: color-mix(in oklab, var(--navy) 28%, transparent)
-        transparent;
+      scrollbar-color: color-mix(in oklab, var(--navy) 28%, transparent) transparent;
     }
   }
 
@@ -451,7 +463,6 @@
     -webkit-user-drag: none;
   }
 }
-
 
 @utility container-z {
   width: 100%;
@@ -586,8 +597,6 @@
     opacity: 0.72;
   }
 }
-
-
 
 /* Éléments utilitaires : halo de matière au survol et au focus */
 @utility utility-z {
@@ -795,8 +804,6 @@
   }
 }
 
-
-
 /* Voile atmosphérique posé au-dessus du header : fondu progressif */
 @utility veil-top {
   background-image: linear-gradient(
@@ -811,7 +818,6 @@
 @utility surface-light {
   background-image: var(--gradient-light);
 }
-
 
 @utility surface-panel {
   background-color: color-mix(in oklab, var(--card) 92%, transparent);
@@ -886,11 +892,8 @@
       color-mix(in oklab, var(--surface-floor) 78%, transparent) 89%,
       var(--surface-floor) 100%
     );
-
   }
 }
-
-
 
 /* ————— Primitive « bulle » —————
  * Référence canonique : la barre « Découvrir » des cartes produit.
@@ -1071,7 +1074,6 @@
   }
 }
 
-
 @utility btn-lux-ghost {
   display: inline-flex;
   align-items: center;
@@ -1152,13 +1154,21 @@
 }
 
 @keyframes zelor-shimmer {
-  from { background-position: 140% 0; }
-  to { background-position: -40% 0; }
+  from {
+    background-position: 140% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
 }
 
 @keyframes zelor-veil {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @utility veil-in {
@@ -1166,8 +1176,14 @@
 }
 
 @keyframes zelor-slide-up {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @utility slide-up-lux {
@@ -1175,8 +1191,14 @@
 }
 
 @keyframes zelor-slide-down-out {
-  from { opacity: 1; transform: none; }
-  to { opacity: 0; transform: translateY(18px) scale(0.99); }
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(18px) scale(0.99);
+  }
 }
 
 @utility slide-down-out {
@@ -1340,7 +1362,6 @@
   }
 }
 
-
 @keyframes zelor-overlay-in {
   from {
     opacity: 0;
@@ -1462,13 +1483,27 @@
   & > * {
     animation: zelor-slide-up var(--dur-4) var(--ease-enter) both;
   }
-  & > *:nth-child(1) { animation-delay: 40ms; }
-  & > *:nth-child(2) { animation-delay: 110ms; }
-  & > *:nth-child(3) { animation-delay: 180ms; }
-  & > *:nth-child(4) { animation-delay: 250ms; }
-  & > *:nth-child(5) { animation-delay: 320ms; }
-  & > *:nth-child(6) { animation-delay: 390ms; }
-  & > *:nth-child(n + 7) { animation-delay: 450ms; }
+  & > *:nth-child(1) {
+    animation-delay: 40ms;
+  }
+  & > *:nth-child(2) {
+    animation-delay: 110ms;
+  }
+  & > *:nth-child(3) {
+    animation-delay: 180ms;
+  }
+  & > *:nth-child(4) {
+    animation-delay: 250ms;
+  }
+  & > *:nth-child(5) {
+    animation-delay: 320ms;
+  }
+  & > *:nth-child(6) {
+    animation-delay: 390ms;
+  }
+  & > *:nth-child(n + 7) {
+    animation-delay: 450ms;
+  }
 }
 
 /* Filet lumineux horizontal : sépare sans trancher. */
@@ -1584,7 +1619,6 @@
     animation: none !important;
   }
 }
-
 
 /* ————— Joaillerie : boutons de matière sur fond marine ————— */
 @utility btn-veil {
@@ -1842,12 +1876,18 @@
  */
 @utility nav-link-z {
   position: relative;
-  display: inline-block;
-  padding-bottom: 3px;
   border-radius: 2px;
-  transition:
-    opacity var(--dur-2) var(--ease-lux),
-    color var(--dur-2) var(--ease-lux);
+  /* Header et footer : le lien porte sa propre géométrie.
+   * En feuille mobile (`variant="sheet"`), il n'en porte aucune : la ligne
+   * hérite intégralement de `menu-row`, donc une entrée-lien bouge exactement
+   * comme l'entrée « Langue », qui reste la référence du menu. */
+  &:not([data-variant="sheet"]) {
+    display: inline-block;
+    padding-bottom: 3px;
+    transition:
+      opacity var(--dur-2) var(--ease-lux),
+      color var(--dur-2) var(--ease-lux);
+  }
   &::after {
     content: "";
     position: absolute;
@@ -1862,11 +1902,18 @@
       scale var(--dur-2) var(--ease-lux),
       opacity var(--dur-2) var(--ease-lux);
   }
+  /* Le filet reste contenu dans la capsule : marge nette à gauche et à
+   * droite, aucun débordement à l'entrée, à l'état actif ni au retour. */
+  &[data-variant="sheet"]::after {
+    inset-inline: 0.9rem;
+    bottom: 0.55rem;
+    opacity: 0.5;
+  }
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 45%, transparent);
   }
-  &:active {
+  &:not([data-variant="sheet"]):active {
     opacity: 0.75;
   }
   /* Page consultée : le filet reste posé, la présence est plus dense. */
@@ -1877,6 +1924,9 @@
     scale: 1 1;
     transform-origin: left center;
     opacity: 0.9;
+  }
+  &[data-variant="sheet"][aria-current="page"]::after {
+    opacity: 0.6;
   }
 }
 

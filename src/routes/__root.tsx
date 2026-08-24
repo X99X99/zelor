@@ -18,7 +18,6 @@ import { SiteFooter } from "@/components/zelor/SiteFooter";
 import { CookieConsent } from "@/components/zelor/CookieConsent";
 import { THEME_INIT_SCRIPT } from "@/lib/zelor/theme";
 
-
 function NotFoundComponent() {
   return (
     <main className="container-z flex min-h-[70vh] flex-col justify-center py-20">
@@ -27,8 +26,7 @@ function NotFoundComponent() {
         Cette page n'existe plus.
       </h1>
       <p className="mt-4 max-w-md text-muted-foreground">
-        Le lien est peut-être ancien ou incomplet. Voici les chemins les plus
-        utiles.
+        Le lien est peut-être ancien ou incomplet. Voici les chemins les plus utiles.
       </p>
       <ul className="mt-8 grid max-w-lg gap-3 sm:grid-cols-2">
         {[
@@ -65,8 +63,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         Cette page ne s'est pas chargée.
       </h1>
       <p className="mt-4 max-w-md text-muted-foreground">
-        Vous pouvez réessayer ou revenir à l'accueil. Si le problème persiste,
-        écrivez-nous depuis la page contact.
+        Vous pouvez réessayer ou revenir à l'accueil. Si le problème persiste, écrivez-nous depuis
+        la page contact.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <button
@@ -78,10 +76,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         >
           Réessayer
         </button>
-        <a
-          href="/"
-          className="btn-lux-ghost press-z"
-        >
+        <a href="/" className="btn-lux-ghost press-z">
           Accueil
         </a>
       </div>
@@ -134,7 +129,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         }),
       },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,

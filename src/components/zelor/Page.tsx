@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { Reveal } from "./Reveal";
 
-
 /** Gabarit de page éditoriale : fil d'Ariane, H1 unique, contenu en colonne. */
 export function PageShell({
   title,
@@ -23,9 +22,7 @@ export function PageShell({
       <div className="surface-light hairline-z border-t-0">
         <Breadcrumbs items={crumbs} />
         <header className="container-z pt-10 pb-12 md:pt-16">
-          <h1 className="slide-up-lux max-w-3xl font-display text-4xl md:text-6xl">
-            {title}
-          </h1>
+          <h1 className="slide-up-lux max-w-3xl font-display text-4xl md:text-6xl">{title}</h1>
           {intro && (
             <p
               className="slide-up-lux mt-5 max-w-2xl text-base text-muted-foreground"
@@ -44,14 +41,7 @@ export function PageShell({
   );
 }
 
-
-export function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
+export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
       <h2 className="font-display text-2xl">{title}</h2>

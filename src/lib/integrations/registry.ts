@@ -16,14 +16,7 @@
  */
 
 export type IntegrationDomain =
-  | "payments"
-  | "commerce"
-  | "crm"
-  | "shipping"
-  | "inventory"
-  | "analytics"
-  | "email"
-  | "support";
+  "payments" | "commerce" | "crm" | "shipping" | "inventory" | "analytics" | "email" | "support";
 
 export type IntegrationSpec = {
   id: string;

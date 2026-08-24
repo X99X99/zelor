@@ -1,12 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 
-import {
-  DEMO_PRODUCTS,
-  PRICING,
-  getProduct,
-  type DemoProduct,
-} from "@/lib/zelor/content";
+import { DEMO_PRODUCTS, PRICING, getProduct, type DemoProduct } from "@/lib/zelor/content";
 import { useCart } from "@/lib/zelor/cart";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
@@ -22,10 +17,7 @@ export const Route = createFileRoute("/produit/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Produit indisponible — ZELOR" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Produit indisponible — ZELOR" }, { name: "robots", content: "noindex" }],
       };
     }
     const { product } = loaderData;
@@ -53,10 +45,7 @@ function ProductNotFound() {
       <p className="mt-4 text-sm text-muted-foreground">
         Elle a peut-être été retirée du catalogue.
       </p>
-      <Link
-        to="/collection"
-        className="btn-lux mt-8"
-      >
+      <Link to="/collection" className="btn-lux mt-8">
         Voir la collection
       </Link>
     </div>
@@ -73,21 +62,12 @@ function ProductPage() {
 
   return (
     <>
-      <Breadcrumbs
-        items={[
-          { label: "Collection", to: "/collection" },
-          { label: product.name },
-        ]}
-      />
+      <Breadcrumbs items={[{ label: "Collection", to: "/collection" }, { label: product.name }]} />
 
       <div className="container-z grid gap-10 pt-8 pb-16 lg:grid-cols-2 lg:gap-16">
         {/* Galerie */}
         <Reveal className="space-y-3">
-          <ImageSlot
-            tone={product.tone}
-            ratio="aspect-4/5"
-            caption={product.name}
-          />
+          <ImageSlot tone={product.tone} ratio="aspect-4/5" caption={product.name} />
           <div className="grid grid-cols-3 gap-3">
             <ImageSlot tone="sand" ratio="aspect-square" caption="Allure" />
             <ImageSlot tone="stone" ratio="aspect-square" caption="Matière" />
@@ -98,13 +78,10 @@ function ProductPage() {
         {/* Achat */}
         <Reveal delay={90} className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">{product.line}</p>
-          <h1 className="mt-3 font-display text-3xl md:text-5xl">
-            {product.name}
-          </h1>
+          <h1 className="mt-3 font-display text-3xl md:text-5xl">{product.name}</h1>
           <p className="mt-4 text-lg">{PRICING.label}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Pièce de la sélection d'ouverture. La disponibilité sera indiquée
-            dès la mise en vente.
+            Pièce de la sélection d'ouverture. La disponibilité sera indiquée dès la mise en vente.
           </p>
 
           <fieldset className="mt-8">
@@ -137,10 +114,7 @@ function ProductPage() {
               >
                 −
               </button>
-              <span
-                aria-live="polite"
-                className="w-10 text-center text-sm tabular-nums"
-              >
+              <span aria-live="polite" className="w-10 text-center text-sm tabular-nums">
                 {quantity}
               </span>
               <button
@@ -182,8 +156,8 @@ function ProductPage() {
           )}
 
           <p className="mt-6 text-sm text-foreground/80">
-            Retour possible dans le délai légal — paiement sécurisé — service
-            client en français et en anglais.
+            Retour possible dans le délai légal — paiement sécurisé — service client en français et
+            en anglais.
           </p>
 
           {/* Bénéfices */}
@@ -229,9 +203,9 @@ function ProductPage() {
           <section>
             <h2 className="font-display text-2xl">Livraison et retours</h2>
             <p className="mt-3 text-sm text-foreground/85">
-              Expédition en France et dans l'Union européenne. Le délai et les
-              frais exacts s'affichent avant le paiement. Retour possible dans
-              le délai légal, remboursement après réception et contrôle.
+              Expédition en France et dans l'Union européenne. Le délai et les frais exacts
+              s'affichent avant le paiement. Retour possible dans le délai légal, remboursement
+              après réception et contrôle.
             </p>
             <div className="mt-4 flex flex-wrap gap-4 text-sm">
               <Link to="/livraison" className="link-underline">
@@ -245,9 +219,8 @@ function ProductPage() {
           <section>
             <h2 className="font-display text-2xl">Garantie légale</h2>
             <p className="mt-3 text-sm text-foreground/85">
-              Chaque pièce bénéficie de la garantie légale de conformité et de
-              la garantie contre les vices cachés. Les modalités figurent dans
-              les conditions générales de vente.
+              Chaque pièce bénéficie de la garantie légale de conformité et de la garantie contre
+              les vices cachés. Les modalités figurent dans les conditions générales de vente.
             </p>
           </section>
           <section>
@@ -271,9 +244,7 @@ function ProductPage() {
                   <summary className="cursor-pointer list-none text-sm font-medium transition-colors duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:text-navy">
                     {question}
                   </summary>
-                  <p className="slide-up-lux mt-2 text-sm text-muted-foreground">
-                    {answer}
-                  </p>
+                  <p className="slide-up-lux mt-2 text-sm text-muted-foreground">{answer}</p>
                 </details>
               ))}
             </div>
@@ -281,11 +252,7 @@ function ProductPage() {
         </Reveal>
       </div>
 
-      <Reveal
-        as="section"
-        aria-labelledby="related-title"
-        className="container-z pb-24"
-      >
+      <Reveal as="section" aria-labelledby="related-title" className="container-z pb-24">
         <h2 id="related-title" className="font-display text-2xl md:text-3xl">
           À découvrir également
         </h2>
@@ -301,9 +268,7 @@ function ProductPage() {
         <div className="container-z flex items-center justify-between gap-4 py-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{product.name}</p>
-            <p className="truncate text-xs text-muted-foreground">
-              {PRICING.short}
-            </p>
+            <p className="truncate text-xs text-muted-foreground">{PRICING.short}</p>
           </div>
           <button
             type="button"

@@ -7,11 +7,7 @@ const css = readFileSync("src/styles.css", "utf8");
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((entry) => {
     const full = join(dir, entry);
-    return statSync(full).isDirectory()
-      ? walk(full)
-      : /\.tsx?$/.test(full)
-        ? [full]
-        : [];
+    return statSync(full).isDirectory() ? walk(full) : /\.tsx?$/.test(full) ? [full] : [];
   });
 }
 
@@ -48,10 +44,7 @@ describe("système de mouvement ZELOR", () => {
   });
 
   it("n'utilise plus transform dans les primitives tactiles", () => {
-    const block = css.slice(
-      css.indexOf("@utility tactile-z"),
-      css.indexOf("@utility seam-z"),
-    );
+    const block = css.slice(css.indexOf("@utility tactile-z"), css.indexOf("@utility seam-z"));
     expect(block).not.toMatch(/\btransform:/);
   });
 
@@ -85,8 +78,6 @@ describe("système de mouvement ZELOR", () => {
     expect(night).toContain("--foreground:");
   });
 
-
-
   it("centralise les easings boomerang et respiration", () => {
     expect(css).toContain("--ease-back:");
     expect(css).toContain("--ease-breathe:");
@@ -104,4 +95,3 @@ describe("système de mouvement ZELOR", () => {
     expect(header).not.toContain("surface-navy");
   });
 });
-

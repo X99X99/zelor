@@ -32,8 +32,22 @@ export const LOCALES = [
   { code: "ja-JP", label: "日本語", status: "draft", dir: "ltr", currency: "JPY", region: "JP" },
   { code: "ko-KR", label: "한국어", status: "draft", dir: "ltr", currency: "KRW", region: "KR" },
   { code: "ar", label: "العربية", status: "draft", dir: "rtl", currency: "AED", region: "AE" },
-  { code: "zh-Hans", label: "简体中文", status: "draft", dir: "ltr", currency: "CNY", region: "CN" },
-  { code: "zh-Hant", label: "繁體中文", status: "draft", dir: "ltr", currency: "TWD", region: "TW" },
+  {
+    code: "zh-Hans",
+    label: "简体中文",
+    status: "draft",
+    dir: "ltr",
+    currency: "CNY",
+    region: "CN",
+  },
+  {
+    code: "zh-Hant",
+    label: "繁體中文",
+    status: "draft",
+    dir: "ltr",
+    currency: "TWD",
+    region: "TW",
+  },
 ] as const satisfies readonly LocaleDefinition[];
 
 export type LocaleCode = (typeof LOCALES)[number]["code"];
@@ -66,14 +80,10 @@ export function resolveLocale(
 ): LocaleCode {
   if (stored && isPublicLocale(stored)) return stored as LocaleCode;
   for (const candidate of accepted) {
-    const exact = publicLocales().find(
-      (l) => l.code.toLowerCase() === candidate.toLowerCase(),
-    );
+    const exact = publicLocales().find((l) => l.code.toLowerCase() === candidate.toLowerCase());
     if (exact) return exact.code as LocaleCode;
     const base = candidate.split("-")[0]?.toLowerCase();
-    const loose = publicLocales().find((l) =>
-      l.code.toLowerCase().startsWith(`${base}`),
-    );
+    const loose = publicLocales().find((l) => l.code.toLowerCase().startsWith(`${base}`));
     if (loose) return loose.code as LocaleCode;
   }
   return DEFAULT_LOCALE;

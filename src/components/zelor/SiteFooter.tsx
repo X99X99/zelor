@@ -1,7 +1,5 @@
-import { Link } from "@tanstack/react-router";
-
 import { BRAND } from "@/lib/zelor/content";
-import { NavLink, scrollToTop } from "@/components/zelor/NavLink";
+import { BrandLink, NavLink, scrollToTop } from "@/components/zelor/NavLink";
 import { Newsletter } from "./Newsletter";
 
 const columns = [
@@ -50,22 +48,16 @@ export function SiteFooter() {
       <Newsletter />
       <div className="container-z grid gap-10 border-t border-navy-foreground/12 py-16 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-1">
-          <Link
-            to="/"
-            aria-label="ZELOR — accueil"
-            className="wordmark-z inline-block font-display text-2xl tracking-[0.4em]"
-          >
+          <BrandLink className="wordmark-z inline-block font-display text-2xl tracking-[0.4em]">
             {BRAND.name}
-          </Link>
+          </BrandLink>
           <p className="mt-4 max-w-56 text-sm leading-relaxed text-navy-foreground/65">
             {BRAND.taglineFr}
           </p>
         </div>
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>
-            <h2 className="eyebrow font-sans text-navy-foreground/50">
-              {column.title}
-            </h2>
+            <h2 className="eyebrow font-sans text-navy-foreground/50">{column.title}</h2>
             <ul className="mt-5 space-y-3">
               {column.links.map((link) => (
                 <li key={link.to}>
@@ -101,4 +93,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-

@@ -41,8 +41,8 @@ export const Route = createFileRoute("/suivi-commande")({
           <Link to="/contact" className="link-underline">
             Contact
           </Link>{" "}
-          avec votre numéro de commande : nous contactons le transporteur et
-          vous tenons informé jusqu'à la remise du colis.
+          avec votre numéro de commande : nous contactons le transporteur et vous tenons informé
+          jusqu'à la remise du colis.
         </p>
       </Section>
     </PageShell>

@@ -41,35 +41,32 @@ export const Route = createFileRoute("/qualite")({
       <Section title="Nos critères">
         <ul className="list-disc space-y-2 pl-5">
           <li>
-            Finition : une arête franche, une couture régulière, un assemblage
-            qui ne se remarque pas.
+            Finition : une arête franche, une couture régulière, un assemblage qui ne se remarque
+            pas.
           </li>
           <li>
-            Matière : une main agréable, une teinte stable, une surface qui se
-            patine sans se marquer.
+            Matière : une main agréable, une teinte stable, une surface qui se patine sans se
+            marquer.
           </li>
           <li>
-            Conception : un usage évident dès la première prise en main, sans
-            notice ni apprentissage.
+            Conception : un usage évident dès la première prise en main, sans notice ni
+            apprentissage.
           </li>
-          <li>
-            Usage réel : plusieurs semaines d'essai avant toute mise en ligne.
-          </li>
+          <li>Usage réel : plusieurs semaines d'essai avant toute mise en ligne.</li>
         </ul>
       </Section>
       <Section title="Ce que nous vérifions auprès des fournisseurs">
         <p>
-          Composition, lieu de fabrication, conditions d'entretien, durée de
-          disponibilité. Une information qui ne peut pas être documentée n'est
-          pas publiée : elle reste absente de la fiche plutôt que d'être
-          approximative.
+          Composition, lieu de fabrication, conditions d'entretien, durée de disponibilité. Une
+          information qui ne peut pas être documentée n'est pas publiée : elle reste absente de la
+          fiche plutôt que d'être approximative.
         </p>
       </Section>
       <Section title="Ce que nous n'écrirons pas">
         <p>
-          Pas d'origine annoncée sans preuve, pas de savoir-faire supposé, pas
-          de certification que nous ne détenons pas, pas de bénéfice qui n'a pas
-          été démontré. La retenue fait partie de l'exigence.
+          Pas d'origine annoncée sans preuve, pas de savoir-faire supposé, pas de certification que
+          nous ne détenons pas, pas de bénéfice qui n'a pas été démontré. La retenue fait partie de
+          l'exigence.
         </p>
       </Section>
     </PageShell>

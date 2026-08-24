@@ -57,9 +57,7 @@ export const Route = createFileRoute("/journal")({
             <p className="eyebrow mt-4">{entry.theme}</p>
             <h2 className="mt-2 font-display text-xl">{entry.title}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{entry.body}</p>
-            <p className="mt-3 text-xs tracking-wide text-muted-foreground">
-              À paraître
-            </p>
+            <p className="mt-3 text-xs tracking-wide text-muted-foreground">À paraître</p>
           </li>
         ))}
       </ul>
