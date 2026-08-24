@@ -18,7 +18,7 @@ function AnnouncementBar() {
   if (!visible) return null;
   return (
     <div
-      className={`veil-top relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
+      className={`veil-top seam-z relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
     >
       <div className="container-z flex items-center justify-center gap-4 py-2.5">
         <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/85 uppercase">
@@ -28,18 +28,15 @@ function AnnouncementBar() {
           type="button"
           onClick={close}
           aria-label="Masquer le message d'information"
-          className="utility-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
+          className="utility-z utility-icon-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
         >
           <X className="size-3.5" aria-hidden="true" />
         </button>
       </div>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-navy-foreground/18 to-transparent"
-      />
     </div>
   );
 }
+
 
 
 function LanguageMenu() {
@@ -124,6 +121,13 @@ function SearchPanel({
 }) {
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // La prise de focus ne doit jamais déplacer la lecture : le panneau
+  // s'ouvre sous un header collant, la page reste exactement où elle est.
+  useEffect(() => {
+    inputRef.current?.focus({ preventScroll: true });
+  }, []);
 
   return (
     <div
@@ -147,7 +151,7 @@ function SearchPanel({
           <Search className="size-4 shrink-0 opacity-70" aria-hidden="true" />
           <input
             id="site-search"
-            autoFocus
+            ref={inputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Rechercher une pièce, une ligne…"
@@ -201,11 +205,19 @@ function ReadingProgress() {
   return (
     <span
       aria-hidden="true"
-      className="progress-z pointer-events-none absolute inset-x-0 bottom-0 h-px"
-      style={{ transform: `scaleX(${ratio})`, opacity: ratio > 0.004 ? 0.9 : 0 }}
-    />
+      className="progress-track-z pointer-events-none absolute inset-x-0 bottom-0 block h-0.5 overflow-visible"
+    >
+      <span
+        className="progress-z block h-full"
+        style={{
+          width: `${ratio * 100}%`,
+          opacity: ratio > 0.004 ? 1 : 0,
+        }}
+      />
+    </span>
   );
 }
+
 
 /** Masque le header au défilement vers le bas, le révèle au défilement vers le haut. */
 function useHideOnScroll(locked: boolean) {
@@ -262,15 +274,17 @@ export function SiteHeader() {
     }, 380);
   };
 
-  // La recherche se replie avec le même soin qu'elle se déploie.
+  // La recherche se replie exactement comme elle se déploie :
+  // même durée (--dur-4), courbe miroir. L'aller et le retour se valent.
   const closeSearch = () => {
     if (!searchOpen || searchClosing) return;
     setSearchClosing(true);
     window.setTimeout(() => {
       setSearchClosing(false);
       setSearchOpen(false);
-    }, 420);
+    }, 900);
   };
+
 
   // Le panier respire lorsqu'une pièce est ajoutée.
   const firstCount = useRef(true);
@@ -381,7 +395,7 @@ export function SiteHeader() {
               onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
               aria-expanded={searchOpen && !searchClosing}
               aria-label="Rechercher"
-              className={`utility-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
+              className={`utility-z utility-icon-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
               <Search
                 className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen && !searchClosing ? "rotate-90 scale-90" : ""}`}
@@ -394,16 +408,17 @@ export function SiteHeader() {
             <Link
               to="/compte"
               aria-label="Compte client"
-              className="utility-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 md:flex"
+              className="utility-z utility-icon-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 md:flex"
             >
               <User className="size-4.5" aria-hidden="true" />
             </Link>
             <Link
               to="/panier"
-              className="utility-z relative flex size-11 items-center justify-center opacity-90 hover:opacity-100"
+              className="utility-z utility-icon-z relative flex size-11 items-center justify-center opacity-90 hover:opacity-100"
               aria-label={`Panier${ready && count > 0 ? ` — ${count} article(s)` : " — vide"}`}
             >
               <ShoppingBag className="size-4.5" aria-hidden="true" />
+
               {ready && count > 0 && (
                 <span
                   aria-hidden="true"
@@ -465,27 +480,39 @@ export function SiteHeader() {
                 to={item.to}
                 onClick={closeMenu}
                 data-focal=""
-                style={{ animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms` }}
-                className={`menu-row font-display text-3xl ${menuClosing ? "" : "slide-up-lux"}`}
+                className="menu-row font-display text-3xl"
               >
-                <span>{item.label}</span>
+                {/* L'entrée en cascade porte sur le contenu, jamais sur la
+                 * ligne : la ligne conserve sa transformation focale, donc
+                 * « Collection » réagit exactement comme « Services ». */}
+                <span
+                  className={menuClosing ? "" : "slide-up-lux"}
+                  style={{
+                    animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms`,
+                  }}
+                >
+                  {item.label}
+                </span>
               </Link>
             ))}
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
             <Link
               to="/compte"
               onClick={closeMenu}
+              data-focal=""
               className="menu-row text-sm tracking-[0.08em]"
             >
-              Compte client
+              <span>Compte client</span>
             </Link>
             <Link
               to="/aide"
               onClick={closeMenu}
+              data-focal=""
               className="menu-row text-sm tracking-[0.08em]"
             >
-              Aide et contact
+              <span>Aide et contact</span>
             </Link>
+
             <div className="menu-row text-sm tracking-[0.08em]">
               <span>Langue</span>
               <LanguageMenu />

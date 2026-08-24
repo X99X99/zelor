@@ -131,7 +131,7 @@ function Home() {
       </Reveal>
 
       {/* D. Storytelling */}
-      <section className="surface-light hairline-z">
+      <Reveal as="section" replay className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
             <h2 className="font-display text-3xl md:text-5xl">
@@ -153,7 +153,8 @@ function Home() {
             caption="Séquence silencieuse — au survol."
           />
         </div>
-      </section>
+      </Reveal>
+
 
       {/* E. Qualité */}
       <Reveal
@@ -196,7 +197,12 @@ function Home() {
       </Reveal>
 
       {/* F. Section éditoriale */}
-      <section className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28">
+      <Reveal
+        as="section"
+        replay
+        className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28"
+      >
+
         <HoverVideo
           src={editorialVideo.url}
           poster={editorialImage}
@@ -221,7 +227,8 @@ function Home() {
             Lire l'univers ZELOR
           </Link>
         </div>
-      </section>
+      </Reveal>
+
 
       {/* G. Avis */}
       <section

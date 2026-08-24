@@ -12,15 +12,30 @@ export function CookieConsent() {
 
   useEffect(() => {
     try {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        const t = setTimeout(() => setOpen(true), 900);
-        return () => clearTimeout(t);
-      }
+      if (localStorage.getItem(STORAGE_KEY)) return;
     } catch {
       /* stockage indisponible */
     }
-    return;
+    // Le bandeau ne coupe jamais la première impression : il attend que la
+    // lecture soit engagée, ou un court silence, avant de se présenter.
+    let done = false;
+    const show = () => {
+      if (done) return;
+      done = true;
+      window.removeEventListener("scroll", onScroll);
+      setOpen(true);
+    };
+    const onScroll = () => {
+      if (window.scrollY > 280) show();
+    };
+    const t = window.setTimeout(show, 3200);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
+
 
   // Le bandeau se retire avec le même soin qu'il apparaît.
   const dismiss = () => {
@@ -48,7 +63,9 @@ export function CookieConsent() {
       role="dialog"
       aria-modal="false"
       aria-label="Préférences de confidentialité"
-      className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 bottom-4 z-60 md:inset-x-auto md:right-8 md:bottom-8 md:max-w-md`}
+      style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
+      className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 z-60 md:inset-x-auto md:right-8 md:max-w-md`}
+
     >
       <div className="panel-navy p-6 md:p-7">
         <p className="eyebrow text-navy-foreground/60">Confidentialité</p>
