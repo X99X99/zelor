@@ -124,7 +124,7 @@ function ContactPage() {
         </div>
         <button
           type="submit"
-          className="min-h-12 bg-primary px-7 text-sm tracking-[0.14em] text-primary-foreground uppercase"
+          className="btn-lux"
         >
           Envoyer
         </button>

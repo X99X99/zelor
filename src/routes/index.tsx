@@ -9,6 +9,7 @@ import { BRAND, DEMO_PRODUCTS, PROMISES } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { DraftNote, Missing } from "@/components/zelor/Placeholder";
+import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,7 +49,7 @@ function Home() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-t from-navy-deep/80 via-navy/25 to-transparent md:bg-linear-to-r md:from-navy-deep/75 md:via-navy/20 md:to-transparent"
+          className="absolute inset-0 bg-linear-to-t from-navy-deep/85 via-navy/30 to-navy-deep/25 md:bg-linear-to-r md:from-navy-deep/80 md:via-navy/25 md:to-navy-deep/10"
         />
         <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
           <div className="slide-up-lux max-w-xl text-navy-foreground">
@@ -62,7 +63,7 @@ function Home() {
             <div className="mt-8 flex flex-wrap items-center gap-5">
               <Link
                 to="/collection"
-                className="inline-flex min-h-12 items-center bg-navy-foreground px-8 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-all duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] hover:-translate-y-px hover:opacity-90 hover:shadow-[var(--shadow-float)]"
+                className="btn-lux ring-1 ring-navy-foreground/20"
               >
                 Découvrir la collection
               </Link>
@@ -87,9 +88,10 @@ function Home() {
       </div>
 
       {/* B. Promesse */}
-      <section
+      <Reveal
+        as="section"
         aria-labelledby="promesse-title"
-        className="container-z py-20 md:py-28"
+        className="container-z py-24 md:py-32"
       >
         <h2 id="promesse-title" className="sr-only">
           Nos engagements
@@ -110,12 +112,13 @@ function Home() {
             certification, ni une garantie contractuelle.
           </DraftNote>
         </div>
-      </section>
+      </Reveal>
 
       {/* C. Collection */}
-      <section
+      <Reveal
+        as="section"
         aria-labelledby="collection-title"
-        className="container-z pb-20 md:pb-28"
+        className="container-z pb-24 md:pb-32"
       >
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -143,10 +146,10 @@ function Home() {
             <ProductCard key={product.slug} product={product} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* D. Storytelling */}
-      <section className="bg-secondary/60">
+      <section className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
             <h2 className="font-display text-3xl md:text-5xl">
@@ -177,9 +180,10 @@ function Home() {
       </section>
 
       {/* E. Qualité */}
-      <section
+      <Reveal
+        as="section"
         aria-labelledby="qualite-title"
-        className="container-z py-20 md:py-28"
+        className="container-z py-24 md:py-32"
       >
         <p className="eyebrow">Qualité</p>
         <h2
@@ -206,7 +210,7 @@ function Home() {
           Aucune origine, certification, garantie ou performance n'est affirmée
           tant qu'elle n'a pas été vérifiée et documentée.
         </p>
-      </section>
+      </Reveal>
 
       {/* F. Section éditoriale */}
       <section className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28">
@@ -244,12 +248,12 @@ function Home() {
       {/* G. Avis */}
       <section
         aria-labelledby="avis-title"
-        className="container-z pb-20 md:pb-28"
+        className="container-z pb-4"
       >
         <h2 id="avis-title" className="font-display text-3xl md:text-4xl">
           Avis clients
         </h2>
-        <div className="mt-6 border border-dashed border-border p-10 text-center">
+        <div className="surface-light mt-6 border border-border/70 p-14 text-center">
           <p className="text-sm text-muted-foreground">
             Les avis clients apparaîtront ici après les premières commandes.
           </p>

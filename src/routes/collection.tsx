@@ -143,7 +143,7 @@ function CollectionPage() {
           {products.length} produit(s) affiché(s)
         </p>
         {products.length === 0 ? (
-          <div className="border border-dashed border-border px-6 py-20 text-center">
+          <div className="surface-light border border-border/70 px-6 py-24 text-center">
             <h2 className="font-display text-2xl">Aucun résultat</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Essayez un autre terme ou revenez à la collection complète.
@@ -154,7 +154,7 @@ function CollectionPage() {
                 setQuery("");
                 setLine("Toutes");
               }}
-              className="mt-6 min-h-12 bg-primary px-6 text-sm tracking-[0.14em] text-primary-foreground uppercase"
+              className="btn-lux mt-6"
             >
               Réinitialiser
             </button>

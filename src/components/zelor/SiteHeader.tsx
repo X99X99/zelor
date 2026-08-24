@@ -9,23 +9,28 @@ function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
   return (
-    <div className="border-b border-navy-foreground/10 bg-navy-deep text-navy-foreground">
-      <div className="container-z flex items-center justify-center gap-4 py-2">
-        <p className="text-center text-[0.6875rem] tracking-[0.18em] uppercase">
+    <div className="veil-top relative text-navy-foreground">
+      <div className="container-z flex items-center justify-center gap-4 py-2.5">
+        <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/85 uppercase">
           {BRAND.announcement}
         </p>
         <button
           type="button"
           onClick={() => setVisible(false)}
           aria-label="Masquer le message d'information"
-          className="shrink-0 rounded-sm p-1 opacity-70 transition-opacity duration-500 hover:opacity-100"
+          className="shrink-0 rounded-sm p-1 opacity-60 transition-opacity duration-700 hover:opacity-100"
         >
           <X className="size-3.5" aria-hidden="true" />
         </button>
       </div>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-navy-foreground/18 to-transparent"
+      />
     </div>
   );
 }
+
 
 function LanguageMenu() {
   const [open, setOpen] = useState(false);
@@ -209,10 +214,13 @@ export function SiteHeader() {
     <>
       <header
         data-hidden={hidden}
-        className={`surface-navy sticky top-0 z-50 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
-          hidden ? "-translate-y-full" : "translate-y-0"
+        className={`surface-navy sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
+          hidden
+            ? "pointer-events-none -translate-y-full opacity-0"
+            : "translate-y-0 opacity-100"
         } ${scrolled ? "shadow-[var(--shadow-elegant)]" : "shadow-none"}`}
       >
+
         <AnnouncementBar />
         <div className="container-z flex items-center justify-between gap-4 py-4">
           <div className="flex flex-1 items-center gap-1 md:hidden">
@@ -329,9 +337,6 @@ export function SiteHeader() {
                 className="menu-row slide-up-lux font-display text-3xl"
               >
                 <span>{item.label}</span>
-                <span aria-hidden="true" className="text-xs tracking-[0.2em] opacity-40">
-                  0{index + 1}
-                </span>
               </Link>
             ))}
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
