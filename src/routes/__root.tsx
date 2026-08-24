@@ -120,6 +120,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
     scripts: [
+      // Pose la classe de thème avant le premier rendu : aucun flash.
+      { children: THEME_INIT_SCRIPT },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -130,6 +132,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         }),
       },
     ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,
