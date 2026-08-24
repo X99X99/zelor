@@ -39,7 +39,7 @@ export function ImageSlot({
     <div
       role="img"
       aria-label="Visuel ZELOR"
-      className={`grain-z ${ratio} ${toneClass[tone] ?? "bg-sand"} relative flex items-center justify-center overflow-hidden rounded-2xl`}
+      className={`grain-z ${ratio} ${toneClass[tone] ?? "bg-sand"} relative flex items-center justify-center overflow-hidden rounded-[var(--radius-media)]`}
     >
       {/* Lumière naturelle entrant par le haut à gauche */}
       <span
@@ -54,7 +54,7 @@ export function ImageSlot({
       {/* Filet intérieur : la surface a une arête */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-navy/8"
+        className="pointer-events-none absolute inset-0 rounded-[var(--radius-media)] ring-1 ring-inset ring-navy/8"
       />
       <span
         className={`eyebrow relative ${toneText[tone] ?? "text-foreground/40"} px-4 text-center`}

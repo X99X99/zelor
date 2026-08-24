@@ -7,16 +7,26 @@ import { useCart } from "@/lib/zelor/cart";
 
 function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
+  const [closing, setClosing] = useState(false);
+
+  const close = () => {
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(() => setVisible(false), 420);
+  };
+
   if (!visible) return null;
   return (
-    <div className="veil-top relative text-navy-foreground">
+    <div
+      className={`veil-top relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
+    >
       <div className="container-z flex items-center justify-center gap-4 py-2.5">
         <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/85 uppercase">
           {BRAND.announcement}
         </p>
         <button
           type="button"
-          onClick={() => setVisible(false)}
+          onClick={close}
           aria-label="Masquer le message d'information"
           className="utility-z shrink-0 p-1.5 opacity-60 hover:opacity-100"
         >
@@ -34,12 +44,27 @@ function AnnouncementBar() {
 
 function LanguageMenu() {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Fermeture animée : le panneau se retire, puis se démonte.
+  const close = () => {
+    setClosing(true);
+    window.setTimeout(() => {
+      setClosing(false);
+      setOpen(false);
+    }, 260);
+  };
+
+  const toggle = () => (open && !closing ? close() : setOpen(true));
 
   useEffect(() => {
     function onClick(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
+        setOpen((v) => {
+          if (v) close();
+          return v;
+        });
       }
     }
     document.addEventListener("mousedown", onClick);
@@ -50,8 +75,8 @@ function LanguageMenu() {
     <div className="relative" ref={ref}>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
+        onClick={toggle}
+        aria-expanded={open && !closing}
         aria-haspopup="listbox"
         className={`utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
       >
@@ -62,7 +87,7 @@ function LanguageMenu() {
         <ul
           role="listbox"
           aria-label="Langues"
-          className="panel-navy panel-in absolute right-0 z-50 mt-2 w-52 overflow-hidden py-1"
+          className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-2 w-52 overflow-hidden py-1`}
         >
           {LANGUAGES.map((lang) => (
             <li key={lang.code}>
@@ -90,12 +115,20 @@ function LanguageMenu() {
   );
 }
 
-function SearchPanel({ onClose }: { onClose: () => void }) {
+function SearchPanel({
+  onClose,
+  closing,
+}: {
+  onClose: () => void;
+  closing: boolean;
+}) {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
   return (
-    <div className="surface-search grain-z unfold-z relative overflow-hidden">
+    <div
+      className={`surface-search grain-z relative overflow-hidden ${closing ? "unfold-out-z" : "unfold-z"}`}
+    >
       <form
         className="container-z flex items-center gap-3 py-5"
         onSubmit={(event) => {
@@ -214,6 +247,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchClosing, setSearchClosing] = useState(false);
   const [bump, setBump] = useState(false);
   const { count, ready } = useCart();
   const { hidden, scrolled } = useHideOnScroll(menuOpen || searchOpen);
@@ -226,6 +260,16 @@ export function SiteHeader() {
       setMenuClosing(false);
       setMenuOpen(false);
     }, 380);
+  };
+
+  // La recherche se replie avec le même soin qu'elle se déploie.
+  const closeSearch = () => {
+    if (!searchOpen || searchClosing) return;
+    setSearchClosing(true);
+    window.setTimeout(() => {
+      setSearchClosing(false);
+      setSearchOpen(false);
+    }, 420);
   };
 
   // Le panier respire lorsqu'une pièce est ajoutée.
@@ -273,13 +317,13 @@ export function SiteHeader() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setMenuOpen(false);
-        setSearchOpen(false);
+        closeMenu();
+        closeSearch();
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, []);
+  });
 
   return (
     <>
@@ -334,13 +378,13 @@ export function SiteHeader() {
           <div className="flex flex-1 items-center justify-end gap-0.5">
             <button
               type="button"
-              onClick={() => setSearchOpen((v) => !v)}
-              aria-expanded={searchOpen}
+              onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+              aria-expanded={searchOpen && !searchClosing}
               aria-label="Rechercher"
-              className={`utility-z flex size-11 items-center justify-center ${searchOpen ? "opacity-100" : "opacity-90"} hover:opacity-100`}
+              className={`utility-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
               <Search
-                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen ? "rotate-90 scale-90" : ""}`}
+                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen && !searchClosing ? "rotate-90 scale-90" : ""}`}
                 aria-hidden="true"
               />
             </button>
@@ -372,7 +416,9 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {searchOpen && <SearchPanel onClose={() => setSearchOpen(false)} />}
+        {searchOpen && (
+          <SearchPanel onClose={closeSearch} closing={searchClosing} />
+        )}
         <ReadingProgress />
       </header>
 
@@ -408,13 +454,17 @@ export function SiteHeader() {
               <X className="size-5" aria-hidden="true" />
             </button>
           </div>
-          <nav aria-label="Navigation mobile" className="container-z flex flex-col pt-6 pb-16">
+          <nav
+            aria-label="Navigation mobile"
+            className="focal-list container-z flex flex-col pt-6 pb-16"
+          >
             <p className="eyebrow mb-2 text-navy-foreground/50">Collection</p>
             {MAIN_NAV.map((item, index) => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={closeMenu}
+                data-focal=""
                 style={{ animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms` }}
                 className={`menu-row font-display text-3xl ${menuClosing ? "" : "slide-up-lux"}`}
               >
