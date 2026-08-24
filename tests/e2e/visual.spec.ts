@@ -54,6 +54,14 @@ for (const theme of themes) {
       await page.waitForTimeout(400);
       // Capture assemblée : le header collant ne doit pas s'y inviter.
       await hideStickyChrome(page);
+      // Le pied de page mobile est plus haut que la fenêtre : Playwright
+      // assemblait alors plusieurs captures en faisant défiler la page, d'où
+      // un décalage d'un ou deux pixels selon la charge. On agrandit la
+      // fenêtre le temps de la prise : une seule image, aucun assemblage.
+      const width = page.viewportSize()!.width;
+      const height = await page.locator("footer").evaluate((el) => el.scrollHeight);
+      await page.setViewportSize({ width, height: height + 80 });
+      await page.waitForTimeout(300);
 
       await expect(page.locator("footer")).toHaveScreenshot(`footer-${theme}.png`);
     });

@@ -226,3 +226,143 @@ test.describe("garde-fou filet de progression", () => {
     expect(end.ratio).toBeGreaterThan(0.95);
   });
 });
+
+/**
+ * Passe « lumière » : l'ombre dorée diffuse a été supprimée, le marqueur de
+ * lecture conservé ; les logos partagent une signature unique sans animation
+ * au repos ; les liens juridiques restent hors de la famille des capsules.
+ */
+test.describe("garde-fous — lumière et cohérence interactive", () => {
+  test("le filet doré n'a aucune ombre diffuse mais garde sa tête de lecture", async ({ page }) => {
+    await openPage(page, "/");
+    await page.evaluate(() => window.scrollTo(0, 800));
+    await page.waitForTimeout(400);
+    const state = await page
+      .locator(".progress-z")
+      .first()
+      .evaluate((el) => {
+        const s = getComputedStyle(el);
+        const after = getComputedStyle(el, "::after");
+        return {
+          shadow: s.boxShadow,
+          headShadow: after.boxShadow,
+          headContent: after.content,
+          headWidth: parseFloat(after.width),
+        };
+      });
+    expect(state.shadow).toBe("none");
+    expect(state.headShadow).toBe("none");
+    // Le point de lecture existe toujours, resserré et net.
+    expect(state.headContent).not.toBe("none");
+    expect(state.headWidth).toBeGreaterThan(0);
+    expect(state.headWidth).toBeLessThanOrEqual(18);
+  });
+
+  test("les logos ZELOR partagent la même signature, éteinte au repos", async ({ page }) => {
+    await openPage(page, "/");
+    const marks = page.locator("a.wordmark-z");
+    const count = await marks.count();
+    expect(count).toBeGreaterThanOrEqual(1);
+    const states = await marks.evaluateAll((els) =>
+      els.map((el) => {
+        const s = getComputedStyle(el);
+        const after = getComputedStyle(el, "::after");
+        return {
+          animation: s.animationName,
+          haloAnimation: after.animationName,
+          haloOpacity: after.opacity,
+          transition: s.transitionDuration,
+          haloTransition: after.transitionDuration,
+        };
+      }),
+    );
+    const ref = states[0]!;
+    for (const s of states) {
+      // Aucune animation automatique au repos.
+      expect(s.animation).toBe("none");
+      expect(s.haloAnimation).toBe("none");
+      expect(s.haloOpacity).toBe("0");
+      // Montée et retrait strictement identiques d'un logo à l'autre.
+      expect(s.transition).toBe(ref.transition);
+      expect(s.haloTransition).toBe(ref.haloTransition);
+    }
+  });
+
+  test("tous les liens visibles appartiennent à la famille des capsules", async ({ page }) => {
+    for (const path of ["/", "/cgv", "/confidentialite", "/mentions-legales", "/aide"]) {
+      await openPage(page, path);
+      const nu = await page.evaluate(() => {
+        const visible = (el: Element) => {
+          const r = el.getBoundingClientRect();
+          return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== "hidden";
+        };
+        return [...document.querySelectorAll("a")]
+          .filter(
+            (a) =>
+              visible(a) &&
+              // Lien d'évitement : outil d'accessibilité, hors interface.
+              (a.getAttribute("href") ?? "").startsWith("/") &&
+              // Cartes et vignettes : ce ne sont pas des liens textuels.
+              !a.querySelector("img, svg, picture, video, h1, h2, h3, figure") &&
+              (a.textContent ?? "").trim().length > 0 &&
+              !a.classList.contains("wordmark-z"),
+          )
+          .filter(
+            (a) =>
+              !a.classList.contains("nav-link-z") &&
+              !a.classList.contains("link-underline") &&
+              !a.className.includes("btn-"),
+          )
+          .map((a) => `${(a.textContent ?? "").trim().slice(0, 40)} @ ${a.getAttribute("href")}`);
+      });
+      expect(nu, `liens hors capsule sur ${path}`).toEqual([]);
+    }
+  });
+
+  test("les liens juridiques du footer portent bien la capsule", async ({ page }) => {
+    await openPage(page, "/");
+    const legal = page.locator('footer nav[aria-label="Informations"] a.nav-link-z');
+    expect(await legal.count()).toBeGreaterThan(2);
+    for (const attr of await legal.evaluateAll((els) =>
+      els.map((el) => el.hasAttribute("data-capsule")),
+    )) {
+      expect(attr).toBe(true);
+    }
+    const nav = page.locator('footer nav[aria-label="Boutique"] a.nav-link-z');
+    for (const attr of await nav.evaluateAll((els) =>
+      els.map((el) => el.hasAttribute("data-capsule")),
+    )) {
+      expect(attr).toBe(true);
+    }
+  });
+
+  test("un lien de paragraphe porte la même capsule que la navigation", async ({ page }) => {
+    await openPage(page, "/cgv");
+    const prose = page.locator("main a.link-underline").first();
+    await expect(prose).toBeVisible();
+    const geo = await prose.evaluate((el) => {
+      const s = getComputedStyle(el);
+      const after = getComputedStyle(el, "::after");
+      return {
+        radius: s.borderRadius,
+        pad: s.paddingLeft,
+        display: s.display,
+        afterLeft: after.left,
+      };
+    });
+    const ref = await page
+      .locator("footer a.nav-link-z[data-capsule]")
+      .first()
+      .evaluate((el) => {
+        const s = getComputedStyle(el);
+        const after = getComputedStyle(el, "::after");
+        return {
+          radius: s.borderRadius,
+          pad: s.paddingLeft,
+          display: s.display,
+          afterLeft: after.left,
+        };
+      });
+    expect(geo).toEqual(ref);
+  });
+});

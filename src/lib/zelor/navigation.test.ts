@@ -51,11 +51,16 @@ describe("capsule de navigation partagée", () => {
   });
 
   it("le lien-capsule n'impose aucune géométrie propre", () => {
-    expect(css).toContain("&:not([data-capsule])");
+    expect(css).toContain("&:not(:where([data-capsule], .link-underline))");
+  });
+
+  it("les liens de lecture réutilisent la même capsule", () => {
+    // `link-underline` n'est qu'un alias : aucune famille graphique parallèle.
+    expect(css).toMatch(/@utility link-underline \{\s*@apply menu-row menu-row-inline nav-link-z;/);
   });
 
   it("le soulignement dérive de la géométrie de la capsule", () => {
-    const rule = css.slice(css.indexOf("&[data-capsule]::after"));
+    const rule = css.slice(css.indexOf("&:where([data-capsule], .link-underline)::after"));
     expect(rule).toMatch(/inset-inline:\s*var\(--cap-pad\)/);
     expect(rule).toMatch(/bottom:\s*var\(--cap-underline-bottom\)/);
     // La géométrie interne est définie une seule fois, dans menu-row.
