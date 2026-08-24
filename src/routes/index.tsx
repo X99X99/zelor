@@ -166,13 +166,12 @@ function Home() {
               </DraftNote>
             </div>
           </div>
-          <img
-            src={detailImage}
-            width={1408}
-            height={1008}
-            loading="lazy"
+          <HoverVideo
+            src={detailVideo.url}
+            poster={detailImage}
+            ratio="aspect-4/3"
             alt="Détail de matière : arête d'un objet posée sur un tissu de lin sable."
-            className="aspect-4/3 w-full object-cover"
+            caption="Survolez le média — séquence silencieuse, sans son."
           />
         </div>
       </section>
@@ -211,13 +210,12 @@ function Home() {
 
       {/* F. Section éditoriale */}
       <section className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28">
-        <img
-          src={editorialImage}
-          width={1408}
-          height={1760}
-          loading="lazy"
-          alt="Intérieur de boutique contemporaine : alcôve vert profond, socle de pierre et lumière douce."
-          className="aspect-4/5 w-full object-cover"
+        <HoverVideo
+          src={editorialVideo.url}
+          poster={editorialImage}
+          ratio="aspect-4/5"
+          alt="Intérieur de boutique contemporaine : alcôve profonde, socle de pierre et lumière douce."
+          caption="Survolez le média — séquence silencieuse, sans son."
         />
         <div>
           <p className="eyebrow">Éditorial</p>
