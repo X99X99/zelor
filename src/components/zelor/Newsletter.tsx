@@ -14,7 +14,7 @@ export function Newsletter() {
         <h2 id="newsletter-title" className="font-display text-3xl md:text-4xl">
           Entrez dans l'univers ZELOR.
         </h2>
-        <p className="mt-3 max-w-md text-sm text-forest-foreground/75">
+        <p className="mt-3 max-w-md text-sm text-navy-foreground/75">
           Recevez nos nouveautés, nos histoires et nos sélections directement
           dans votre boîte mail.
         </p>
@@ -48,7 +48,7 @@ export function Newsletter() {
               aria-describedby={error ? "newsletter-error" : undefined}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Votre adresse email"
-              className="min-h-12 w-full border border-forest-foreground/30 bg-transparent px-4 text-base text-forest-foreground outline-none placeholder:text-forest-foreground/50 focus-visible:border-forest-foreground"
+              className="min-h-12 w-full border border-navy-foreground/30 bg-transparent px-4 text-base text-navy-foreground outline-none placeholder:text-navy-foreground/50 focus-visible:border-navy-foreground"
             />
           </div>
           <button
@@ -62,18 +62,18 @@ export function Newsletter() {
           <p
             id="newsletter-error"
             role="alert"
-            className="mt-2 text-sm text-forest-foreground"
+            className="mt-2 text-sm text-navy-foreground"
           >
             ⚠ {error}
           </p>
         )}
         {done && (
-          <p role="status" className="mt-2 text-sm text-forest-foreground">
+          <p role="status" className="mt-2 text-sm text-navy-foreground">
             Formulaire de démonstration : à connecter à Shopify Forms / Shopify
             Email avant publication. Aucune donnée n'est enregistrée.
           </p>
         )}
-        <p className="mt-3 text-xs text-forest-foreground/60">
+        <p className="mt-3 text-xs text-navy-foreground/60">
           Vous pouvez vous désinscrire à tout moment. Vos données sont utilisées
           uniquement pour vous envoyer nos communications.
         </p>
