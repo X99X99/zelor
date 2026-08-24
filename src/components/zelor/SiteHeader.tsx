@@ -95,9 +95,9 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
   const router = useRouter();
 
   return (
-    <div className="panel-in border-t border-navy-foreground/10 bg-navy-deep/90 text-navy-foreground shadow-[var(--shadow-float)] backdrop-blur-[var(--blur-panel)]">
+    <div className="surface-search grain-z unfold-z relative overflow-hidden">
       <form
-        className="container-z flex items-center gap-3 py-4"
+        className="container-z flex items-center gap-3 py-5"
         onSubmit={(event) => {
           event.preventDefault();
           onClose();
@@ -110,18 +110,20 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
         <label htmlFor="site-search" className="sr-only">
           Rechercher un produit
         </label>
-        <Search className="size-4 opacity-70" aria-hidden="true" />
-        <input
-          id="site-search"
-          autoFocus
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Rechercher une pièce, une ligne…"
-          className="field-z min-h-11 w-full border-b border-navy-foreground/20 bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/45"
-        />
+        <div className="input-z flex min-h-12 flex-1 items-center gap-3 px-5 text-navy-foreground">
+          <Search className="size-4 shrink-0 opacity-70" aria-hidden="true" />
+          <input
+            id="site-search"
+            autoFocus
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Rechercher une pièce, une ligne…"
+            className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/45"
+          />
+        </div>
         <button
           type="submit"
-          className="link-underline press-z min-h-11 px-3 text-xs tracking-[0.16em] uppercase"
+          className="press-z hidden min-h-12 shrink-0 rounded-full border border-navy-foreground/25 bg-navy-foreground/8 px-6 text-xs tracking-[0.16em] uppercase backdrop-blur-md transition-[background-color,border-color,transform,box-shadow] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:-translate-y-px hover:border-navy-foreground/45 hover:bg-navy-foreground/14 hover:shadow-[var(--shadow-float)] sm:inline-flex sm:items-center"
         >
           Rechercher
         </button>
@@ -129,7 +131,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
           type="button"
           onClick={onClose}
           aria-label="Fermer la recherche"
-          className="utility-z flex size-11 items-center justify-center opacity-70 hover:opacity-100"
+          className="utility-z flex size-12 shrink-0 items-center justify-center opacity-70 hover:opacity-100"
         >
           <X className="size-4" aria-hidden="true" />
         </button>
