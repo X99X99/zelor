@@ -1,30 +1,5 @@
 import type { ReactNode } from "react";
 
-/** Bandeau signalant un contenu provisoire à valider avant publication. */
-export function DraftNote({
-  children,
-  label = "À valider",
-}: {
-  children: ReactNode;
-  label?: string;
-}) {
-  return (
-    <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 border-l-2 border-draft-border bg-draft/60 px-3 py-2 text-sm text-draft-foreground">
-      <span className="eyebrow text-draft-foreground">{label}</span>
-      <span>{children}</span>
-    </p>
-  );
-}
-
-/** Marqueur inline pour une donnée manquante. */
-export function Missing({ children }: { children: ReactNode }) {
-  return (
-    <span className="bg-draft px-1.5 py-0.5 font-mono text-[0.8em] tracking-tight text-draft-foreground">
-      {children}
-    </span>
-  );
-}
-
 const toneClass: Record<string, string> = {
   sand: "bg-sand",
   stone: "bg-stone",
@@ -33,33 +8,33 @@ const toneClass: Record<string, string> = {
 };
 
 const toneText: Record<string, string> = {
-  sand: "text-foreground/70",
-  stone: "text-foreground/70",
-  forest: "text-navy-foreground/80",
-  ink: "text-navy-foreground/80",
+  sand: "text-foreground/45",
+  stone: "text-foreground/45",
+  forest: "text-navy-foreground/55",
+  ink: "text-navy-foreground/55",
 };
 
 /**
- * Emplacement visuel produit. Remplace une photo réelle non fournie :
- * on n'affiche jamais une image d'illustration comme si c'était le produit.
+ * Aplat éditorial tenant lieu de visuel tant que la photographie officielle
+ * n'est pas livrée. Aucune image d'illustration n'est présentée comme un produit.
  */
 export function ImageSlot({
   tone = "sand",
   ratio = "aspect-[4/5]",
-  caption = "Visuel produit à fournir",
+  caption = "ZELOR",
 }: {
   tone?: string;
   ratio?: string;
-  caption?: string;
+  caption?: ReactNode;
 }) {
   return (
     <div
       role="img"
-      aria-label={`Emplacement d'image : ${caption}`}
+      aria-label="Visuel ZELOR"
       className={`${ratio} ${toneClass[tone] ?? "bg-sand"} flex items-center justify-center overflow-hidden`}
     >
       <span
-        className={`eyebrow ${toneText[tone] ?? "text-foreground/70"} px-4 text-center`}
+        className={`eyebrow ${toneText[tone] ?? "text-foreground/45"} px-4 text-center`}
       >
         {caption}
       </span>
