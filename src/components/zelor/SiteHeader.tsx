@@ -343,11 +343,9 @@ export function SiteHeader() {
       <NavySurface
         as="header"
         data-hidden={hidden}
-        className={`sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[var(--dur-4)] ease-[var(--ease-lux)] ${
-          hidden
-            ? "pointer-events-none -translate-y-full opacity-0"
-            : "translate-y-0 opacity-100"
-        } ${scrolled ? "shadow-[var(--shadow-elegant)]" : "shadow-none"}`}
+        className={`header-motion-z sticky top-0 z-50 ${
+          scrolled ? "shadow-[var(--shadow-elegant)]" : "shadow-none"
+        }`}
       >
 
         <AnnouncementBar />
