@@ -112,11 +112,14 @@
   --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-enter: cubic-bezier(0.16, 0.84, 0.28, 1);
   --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
+  /* Miroir strict de --ease-enter : une sortie qui est l'inverse de l'entrée. */
+  --ease-enter-mirror: cubic-bezier(0.72, 0, 0.84, 0.16);
   --blur-veil: 22px;
   --blur-panel: 16px;
   --lift-1: -1px;
   --lift-2: -3px;
   --glow-soft: 0 0 0 1px color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+
 
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
   --background: oklch(0.975 0.005 88);
