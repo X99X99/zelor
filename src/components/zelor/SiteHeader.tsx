@@ -206,6 +206,7 @@ export function SiteHeader() {
   }, []);
 
   return (
+    <>
     <header
       data-hidden={hidden}
       className={`surface-navy sticky top-0 z-50 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
