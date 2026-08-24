@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { DEMO_PRODUCTS } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
+import { Reveal } from "@/components/zelor/Reveal";
 
 type CollectionSearch = { q?: string };
 
