@@ -227,7 +227,8 @@ function Home() {
             Lire l'univers ZELOR
           </Link>
         </div>
-      </section>
+      </Reveal>
+
 
       {/* G. Avis */}
       <section
