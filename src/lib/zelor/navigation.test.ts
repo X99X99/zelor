@@ -43,14 +43,23 @@ describe("primitive partagée de retour en haut", () => {
   });
 });
 
-describe("contrat visuel du menu mobile", () => {
-  it("le lien en feuille n'impose aucune géométrie propre", () => {
-    expect(css).toContain('&:not([data-variant="sheet"])');
+describe("capsule de navigation partagée", () => {
+  it("header, feuille mobile et footer réutilisent la primitive menu-row", () => {
+    expect(navLink).toContain("menu-row menu-row-inline");
+    expect(navLink).toContain('sheet: "menu-row"');
+    expect(navLink).toContain("data-capsule");
   });
 
-  it("le soulignement de la feuille reste contenu dans la capsule", () => {
-    const rule = css.slice(css.indexOf('&[data-variant="sheet"]::after'));
-    expect(rule).toMatch(/inset-inline:\s*0\.9rem/);
-    expect(rule).toMatch(/bottom:\s*0\.55rem/);
+  it("le lien-capsule n'impose aucune géométrie propre", () => {
+    expect(css).toContain("&:not([data-capsule])");
+  });
+
+  it("le soulignement dérive de la géométrie de la capsule", () => {
+    const rule = css.slice(css.indexOf("&[data-capsule]::after"));
+    expect(rule).toMatch(/inset-inline:\s*var\(--cap-pad\)/);
+    expect(rule).toMatch(/bottom:\s*var\(--cap-underline-bottom\)/);
+    // La géométrie interne est définie une seule fois, dans menu-row.
+    expect(css).toMatch(/--cap-pad:\s*0\.75rem/);
   });
 });
+
