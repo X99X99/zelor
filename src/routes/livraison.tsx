@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell, Section } from "@/components/zelor/Page";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/livraison")({
   head: () => ({
@@ -10,7 +9,7 @@ export const Route = createFileRoute("/livraison")({
       {
         name: "description",
         content:
-          "Zones desservies, délais et frais de livraison ZELOR. Phase 1 : France et Union européenne.",
+          "Zones desservies, délais et frais de livraison ZELOR. À l'ouverture : France et Union européenne.",
       },
       { property: "og:title", content: "Livraison — ZELOR" },
       {
@@ -18,44 +17,58 @@ export const Route = createFileRoute("/livraison")({
         content: "Zones desservies, délais et frais de livraison.",
       },
       { property: "og:url", content: "/livraison" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/livraison" }],
   }),
   component: () => (
     <PageShell
       title="Livraison"
-      intro="Phase 1 : France et Union européenne. Les autres marchés seront ouverts après validation de la logistique, de la fiscalité et du service."
+      intro="À l'ouverture, nous livrons en France et dans l'Union européenne. Les autres marchés suivront, une fois la logistique, la fiscalité et le service pleinement en place."
       crumbs={[{ label: "Livraison" }]}
     >
-      <DraftNote label="À renseigner">
-        Aucune livraison offerte n'est annoncée tant que le seuil n'est pas
-        défini : <Missing>[SEUIL DE LIVRAISON OFFERTE À DÉFINIR]</Missing>.
-      </DraftNote>
-      <Section title="Zones et délais">
+      <Section title="Zones desservies">
         <dl className="divide-y divide-border border-y border-border text-sm">
           {[
-            ["France", "[DÉLAI À RENSEIGNER] · [FRAIS DE PORT À RENSEIGNER]"],
-            ["Union européenne", "[DÉLAI À RENSEIGNER] · [FRAIS À RENSEIGNER]"],
-            ["Suisse, Royaume-Uni", "Phase 2 — à ouvrir après validation"],
+            [
+              "France",
+              "Desservie à l'ouverture · délai et frais affichés avant paiement",
+            ],
+            [
+              "Union européenne",
+              "Desservie à l'ouverture · délai et frais affichés avant paiement",
+            ],
+            ["Suisse, Royaume-Uni", "Ouverture prévue dans un second temps"],
             [
               "États-Unis, Canada, Japon, Émirats, Australie, Singapour, Corée du Sud",
-              "Phase 2 — à ouvrir après validation",
+              "Ouverture prévue dans un second temps",
             ],
           ].map(([zone, value]) => (
             <div key={zone} className="flex flex-wrap justify-between gap-3 py-3">
               <dt>{zone}</dt>
-              <dd>
-                <Missing>{value}</Missing>
-              </dd>
+              <dd className="text-muted-foreground">{value}</dd>
             </div>
           ))}
         </dl>
       </Section>
+      <Section title="Délais et frais">
+        <p>
+          Le délai et le montant exacts dépendent de la destination et du
+          transporteur retenu. Ils s'affichent avant le paiement, sans surprise
+          à l'étape suivante, et sont rappelés dans l'email de confirmation.
+        </p>
+      </Section>
       <Section title="Douanes et taxes">
         <p>
           Pour les commandes hors Union européenne, des droits et taxes peuvent
-          s'appliquer. Les règles exactes seront précisées après configuration
-          fiscale dans Shopify.
+          s'ajouter au montant réglé. Les modalités applicables à chaque
+          destination seront précisées à son ouverture.
+        </p>
+      </Section>
+      <Section title="Emballage">
+        <p>
+          Chaque commande est emballée avec soin, dans une présentation sobre
+          qui protège la pièce sans excès de matière.
         </p>
       </Section>
     </PageShell>
