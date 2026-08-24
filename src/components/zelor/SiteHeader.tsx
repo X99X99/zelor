@@ -53,7 +53,7 @@ function LanguageMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`utility-z flex h-11 min-w-11 items-center justify-center rounded-full border border-navy-foreground/20 px-4 text-xs tracking-[0.16em] uppercase ${open ? "border-navy-foreground/45 bg-navy-foreground/10 opacity-100" : "opacity-85"} hover:opacity-100`}
+        className={`utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
       >
         FR
         <span className="sr-only"> — changer de langue</span>
