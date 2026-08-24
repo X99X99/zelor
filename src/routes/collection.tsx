@@ -98,10 +98,10 @@ function CollectionPage() {
                   type="button"
                   onClick={() => setLine(option)}
                   aria-pressed={active}
-                  className={`link-underline press-z text-sm transition-opacity duration-[var(--dur-2)] ease-[var(--ease-lux)] ${
+                  className={`press-z pb-[3px] text-sm transition-[color,border-color] duration-[var(--dur-2)] ease-[var(--ease-lux)] ${
                     active
-                      ? "text-foreground opacity-100 after:origin-left after:scale-x-100"
-                      : "text-muted-foreground opacity-80 hover:opacity-100"
+                      ? "border-b border-foreground text-foreground"
+                      : "link-underline border-b border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {option}
