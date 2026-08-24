@@ -96,6 +96,9 @@
   --radius-panel: 1.5rem;
   --radius-sheet: 1.75rem;
   --radius-pill: 999px;
+  /* Rayon unique des images et médias : net, régulier, jamais excessif. */
+  --radius-media: 1.125rem;
+  --radius-media-lg: 1.5rem;
 
   /* ————— Grammaire de mouvement ZELOR —————
    * 1 : réponse immédiate (états pressés) · 2 : micro-interaction
