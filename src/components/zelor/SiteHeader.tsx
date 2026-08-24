@@ -470,27 +470,39 @@ export function SiteHeader() {
                 to={item.to}
                 onClick={closeMenu}
                 data-focal=""
-                style={{ animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms` }}
-                className={`menu-row font-display text-3xl ${menuClosing ? "" : "slide-up-lux"}`}
+                className="menu-row font-display text-3xl"
               >
-                <span>{item.label}</span>
+                {/* L'entrée en cascade porte sur le contenu, jamais sur la
+                 * ligne : la ligne conserve sa transformation focale, donc
+                 * « Collection » réagit exactement comme « Services ». */}
+                <span
+                  className={menuClosing ? "" : "slide-up-lux"}
+                  style={{
+                    animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms`,
+                  }}
+                >
+                  {item.label}
+                </span>
               </Link>
             ))}
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
             <Link
               to="/compte"
               onClick={closeMenu}
+              data-focal=""
               className="menu-row text-sm tracking-[0.08em]"
             >
-              Compte client
+              <span>Compte client</span>
             </Link>
             <Link
               to="/aide"
               onClick={closeMenu}
+              data-focal=""
               className="menu-row text-sm tracking-[0.08em]"
             >
-              Aide et contact
+              <span>Aide et contact</span>
             </Link>
+
             <div className="menu-row text-sm tracking-[0.08em]">
               <span>Langue</span>
               <LanguageMenu />
