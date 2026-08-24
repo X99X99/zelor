@@ -81,11 +81,38 @@ describe("système de mouvement ZELOR", () => {
   it("centralise les easings boomerang et respiration", () => {
     expect(css).toContain("--ease-back:");
     expect(css).toContain("--ease-breathe:");
+    expect(css).toContain("--ease-glide:");
     const progress = css.slice(
       css.indexOf("@utility progress-z"),
-      css.indexOf("@keyframes zelor-progress-sheen"),
+      css.indexOf("@keyframes zelor-progress-drift"),
     );
     expect(progress).toContain("width var(--dur-3) var(--ease-back)");
+    // La lumière décorative fait un vrai aller-retour : jamais de saut.
+    expect(progress).toContain("infinite alternate");
+    expect(css).not.toContain("zelor-progress-sheen");
+  });
+
+  it("le menu téléphone n'a qu'une seule chorégraphie, sans reflow", () => {
+    const focal = css.slice(
+      css.indexOf("@utility focal-list"),
+      css.indexOf("@utility media-frame"),
+    );
+    // Aucune propriété de layout animée dans le menu.
+    for (const forbidden of ["letter-spacing ", "padding", "margin", "height "]) {
+      expect(focal, `${forbidden} ne doit pas être animé`).not.toContain(forbidden);
+    }
+    expect(focal).toContain("var(--dur-menu) var(--ease-glide)");
+    expect(focal).not.toContain("transition: all");
+
+    const row = css.slice(
+      css.indexOf("@utility menu-row {"),
+      css.indexOf("@utility menu-row-inline"),
+    );
+    // La capsule ne respire plus en padding : plus aucun reflow au contact.
+    expect(row).not.toContain("padding-inline var(");
+    expect(row).toContain("var(--dur-menu) var(--ease-glide)");
+    // Aucun survol fantôme sur téléphone.
+    expect(row).toContain("(hover: hover) and (pointer: fine)");
   });
 
   it("factorise la surface marine dans un composant unique", () => {
