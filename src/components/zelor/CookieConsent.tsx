@@ -49,18 +49,18 @@ export function CookieConsent() {
           votre accord. Les cookies nécessaires assurent seulement le
           fonctionnement du site et du panier.
         </p>
-        <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
           <button
             type="button"
             onClick={() => decide("all")}
-            className="press-z min-h-12 flex-1 bg-navy-foreground px-6 text-[0.8125rem] tracking-[0.16em] text-navy uppercase transition-[opacity,box-shadow] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:opacity-85 hover:shadow-[var(--shadow-float)]"
+            className="btn-veil btn-veil-solid flex-1"
           >
             Tout accepter
           </button>
           <button
             type="button"
             onClick={() => decide("essential")}
-            className="press-z min-h-12 flex-1 border border-navy-foreground/30 px-6 text-[0.8125rem] tracking-[0.16em] text-navy-foreground uppercase transition-[background-color,border-color] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:border-navy-foreground/60 hover:bg-navy-foreground/10"
+            className="btn-veil flex-1"
           >
             Essentiels
           </button>

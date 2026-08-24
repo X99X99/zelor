@@ -53,7 +53,7 @@ function LanguageMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`utility-z flex h-11 min-w-11 items-center justify-center rounded-full border border-navy-foreground/20 px-4 text-xs tracking-[0.16em] uppercase ${open ? "border-navy-foreground/45 bg-navy-foreground/10 opacity-100" : "opacity-85"} hover:opacity-100`}
+        className={`utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
       >
         FR
         <span className="sr-only"> — changer de langue</span>
@@ -123,7 +123,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
         </div>
         <button
           type="submit"
-          className="press-z hidden min-h-12 shrink-0 rounded-full border border-navy-foreground/25 bg-navy-foreground/8 px-6 text-xs tracking-[0.16em] uppercase backdrop-blur-md transition-[background-color,border-color,transform,box-shadow] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:-translate-y-px hover:border-navy-foreground/45 hover:bg-navy-foreground/14 hover:shadow-[var(--shadow-float)] sm:inline-flex sm:items-center"
+          className="btn-veil hidden shrink-0 sm:inline-flex"
         >
           Rechercher
         </button>
@@ -367,10 +367,17 @@ export function SiteHeader() {
 
       {menuOpen && (
         <div
+          className={`fixed inset-0 z-70 bg-[color-mix(in_oklab,var(--navy-deep)_55%,transparent)] backdrop-blur-sm md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
+      {menuOpen && (
+        <div
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className={`overlay-navy grain-z fixed inset-0 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          className={`overlay-navy grain-z sheet-z fixed inset-2 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
           <div className="container-z flex items-center justify-between py-4">
             <Link
