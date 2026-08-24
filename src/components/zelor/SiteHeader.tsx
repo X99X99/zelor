@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { Menu, Search, ShoppingBag, User, X, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { NavySurface, NAVY_SURFACE_EXIT_MS } from "@/components/zelor/NavySurface";
 import { BRAND, LANGUAGES, MAIN_NAV } from "@/lib/zelor/content";
 import { useCart } from "@/lib/zelor/cart";
 
@@ -130,9 +131,7 @@ function SearchPanel({
   }, []);
 
   return (
-    <div
-      className={`surface-search grain-z relative overflow-hidden ${closing ? "unfold-out-z" : "unfold-z"}`}
-    >
+    <NavySurface animate closing={closing} className="relative overflow-hidden">
       <form
         className="container-z flex items-center gap-3 py-5"
         onSubmit={(event) => {
@@ -173,7 +172,7 @@ function SearchPanel({
           <X className="size-4" aria-hidden="true" />
         </button>
       </form>
-    </div>
+    </NavySurface>
   );
 }
 
@@ -282,7 +281,7 @@ export function SiteHeader() {
     window.setTimeout(() => {
       setSearchClosing(false);
       setSearchOpen(false);
-    }, 900);
+    }, NAVY_SURFACE_EXIT_MS);
   };
 
 
@@ -341,9 +340,10 @@ export function SiteHeader() {
 
   return (
     <>
-      <header
+      <NavySurface
+        as="header"
         data-hidden={hidden}
-        className={`surface-navy grain-z sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[var(--dur-4)] ease-[var(--ease-lux)] ${
+        className={`sticky top-0 z-50 transition-[transform,opacity,box-shadow,backdrop-filter] duration-[var(--dur-4)] ease-[var(--ease-lux)] ${
           hidden
             ? "pointer-events-none -translate-y-full opacity-0"
             : "translate-y-0 opacity-100"
@@ -435,7 +435,7 @@ export function SiteHeader() {
           <SearchPanel onClose={closeSearch} closing={searchClosing} />
         )}
         <ReadingProgress />
-      </header>
+      </NavySurface>
 
       {menuOpen && (
         <div
