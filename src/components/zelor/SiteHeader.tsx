@@ -333,22 +333,22 @@ export function SiteHeader() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className="veil-in overlay-navy fixed inset-0 z-70 overflow-y-auto md:hidden"
+          className={`overlay-navy fixed inset-0 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
           <div className="container-z flex items-center justify-between py-4">
             <Link
               to="/"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
               aria-label="ZELOR — accueil"
-              className="font-display text-2xl tracking-[0.4em] transition-opacity duration-500 hover:opacity-80"
+              className="wordmark-z font-display text-2xl tracking-[0.4em]"
             >
               {BRAND.name}
             </Link>
             <button
               type="button"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
               aria-label="Fermer le menu"
-              className="-mr-2 flex size-11 items-center justify-center opacity-80 transition-opacity duration-500 hover:opacity-100"
+              className="utility-z -mr-2 flex size-11 items-center justify-center opacity-80 hover:opacity-100"
             >
               <X className="size-5" aria-hidden="true" />
             </button>
@@ -359,9 +359,9 @@ export function SiteHeader() {
               <Link
                 key={item.to}
                 to={item.to}
-                onClick={() => setMenuOpen(false)}
-                style={{ animationDelay: `${60 + index * 55}ms` }}
-                className="menu-row slide-up-lux font-display text-3xl"
+                onClick={closeMenu}
+                style={{ animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms` }}
+                className={`menu-row font-display text-3xl ${menuClosing ? "" : "slide-up-lux"}`}
               >
                 <span>{item.label}</span>
               </Link>
@@ -369,14 +369,14 @@ export function SiteHeader() {
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
             <Link
               to="/compte"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
               className="menu-row text-sm tracking-[0.08em]"
             >
               Compte client
             </Link>
             <Link
               to="/aide"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
               className="menu-row text-sm tracking-[0.08em]"
             >
               Aide et contact
