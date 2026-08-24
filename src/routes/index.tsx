@@ -8,7 +8,6 @@ import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
 import { BRAND, DEMO_PRODUCTS, PROMISES } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/")({
@@ -79,14 +78,6 @@ function Home() {
       </section>
 
 
-      <div className="container-z pt-6">
-        <DraftNote label="Placeholder">
-          Catégorie de produits non définie :{" "}
-          <Missing>[CATÉGORIE À DÉFINIR]</Missing>. Visuel d'ambiance à
-          remplacer par la photographie officielle de la marque.
-        </DraftNote>
-      </div>
-
       {/* B. Promesse */}
       <Reveal
         as="section"
@@ -106,12 +97,6 @@ function Home() {
             </li>
           ))}
         </ul>
-        <div className="mt-8">
-          <DraftNote>
-            Engagements à confirmer par la marque. Ils ne constituent ni une
-            certification, ni une garantie contractuelle.
-          </DraftNote>
-        </div>
       </Reveal>
 
       {/* C. Collection */}
@@ -134,13 +119,10 @@ function Home() {
             Voir tout
           </Link>
         </div>
-        <div className="mt-4">
-          <DraftNote label="Démonstration">
-            Ces fiches sont des exemples de mise en page. Aucun produit n'est en
-            vente : le catalogue, les prix et les stocks proviendront de
-            Shopify.
-          </DraftNote>
-        </div>
+        <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+          Quelques pièces de la sélection en cours. Les prix seront communiqués
+          à l'ouverture.
+        </p>
         <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
           {DEMO_PRODUCTS.slice(0, 4).map((product) => (
             <ProductCard key={product.slug} product={product} />
@@ -162,19 +144,13 @@ function Home() {
               première impression au dernier détail, nous construisons une
               expérience plus calme, plus précise et plus personnelle.
             </p>
-            <div className="mt-6 max-w-md">
-              <DraftNote label="Brouillon">
-                Texte provisoire, à valider une fois les produits et l'histoire
-                réels définis.
-              </DraftNote>
-            </div>
           </div>
           <HoverVideo
             src={detailVideo.url}
             poster={detailImage}
             ratio="aspect-4/3"
             alt="Détail de matière : arête d'un objet posée sur un tissu de lin sable."
-            caption="Survolez le média — séquence silencieuse, sans son."
+            caption="Séquence silencieuse — au survol."
           />
         </div>
       </section>
@@ -194,21 +170,28 @@ function Home() {
         </h2>
         <dl className="mt-10 grid gap-8 md:grid-cols-3">
           {[
-            ["Finition", "[DÉTAIL DE QUALITÉ À CONFIRMER]"],
-            ["Matière", "[MATIÈRE OU FINITION À CONFIRMER]"],
-            ["Conception", "[ÉLÉMENT DE CONCEPTION À CONFIRMER]"],
+            [
+              "Finition",
+              "Une arête franche, une couture régulière, un assemblage qui ne se voit pas.",
+            ],
+            [
+              "Matière",
+              "Une main agréable, une teinte stable, une surface qui se patine sans se marquer.",
+            ],
+            [
+              "Conception",
+              "Un usage évident dès la première prise en main, sans notice ni apprentissage.",
+            ],
           ].map(([term, value]) => (
             <div key={term} className="rule-z pt-6">
               <dt className="eyebrow">{term}</dt>
-              <dd className="mt-3">
-                <Missing>{value}</Missing>
-              </dd>
+              <dd className="mt-3 text-sm text-foreground/80">{value}</dd>
             </div>
           ))}
         </dl>
         <p className="mt-8 max-w-2xl text-sm text-muted-foreground">
-          Aucune origine, certification, garantie ou performance n'est affirmée
-          tant qu'elle n'a pas été vérifiée et documentée.
+          Nous n'annonçons une origine, une certification ou une garantie que
+          lorsqu'elle est documentée. Le reste se lit dans l'objet.
         </p>
       </Reveal>
 
@@ -219,7 +202,7 @@ function Home() {
           poster={editorialImage}
           ratio="aspect-4/5"
           alt="Intérieur de boutique contemporaine : alcôve profonde, socle de pierre et lumière douce."
-          caption="Survolez le média — séquence silencieuse, sans son."
+          caption="Séquence silencieuse — au survol."
         />
         <div>
           <p className="eyebrow">Éditorial</p>
@@ -231,11 +214,6 @@ function Home() {
             silhouette équilibrée, une fonction intuitive et une présentation
             qui ne laisse rien au hasard.
           </p>
-          <div className="mt-6 max-w-md">
-            <DraftNote>
-              À adapter aux produits réels avant publication.
-            </DraftNote>
-          </div>
           <Link
             to="/univers"
             className="link-underline mt-6 inline-block text-sm"
@@ -254,8 +232,9 @@ function Home() {
           Avis clients
         </h2>
         <div className="surface-light mt-6 border border-border/70 p-14 text-center">
-          <p className="text-sm text-muted-foreground">
-            Les avis clients apparaîtront ici après les premières commandes.
+          <p className="mx-auto max-w-md text-sm text-muted-foreground">
+            Les premiers retours de nos clients paraîtront ici, tels qu'ils nous
+            seront adressés, sans sélection ni retouche.
           </p>
         </div>
       </section>

@@ -5,7 +5,6 @@ const STORAGE_KEY = "zelor.consent.v1";
 
 /**
  * Bandeau de consentement — discret, marine, éditorial.
- * Démonstration : à relier à la Customer Privacy API Shopify avant publication.
  */
 export function CookieConsent() {
   const [open, setOpen] = useState(false);

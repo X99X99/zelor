@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { useCart } from "@/lib/zelor/cart";
-import { DEMO_PRODUCTS, PLACEHOLDER } from "@/lib/zelor/content";
+import { DEMO_PRODUCTS, PRICING } from "@/lib/zelor/content";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
-import { DraftNote, ImageSlot, Missing } from "@/components/zelor/Placeholder";
+import { ImageSlot } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({
@@ -12,15 +12,16 @@ export const Route = createFileRoute("/panier")({
       {
         name: "description",
         content:
-          "Votre panier ZELOR. Le paiement est traité par Shopify Checkout.",
+          "Votre panier ZELOR. Paiement sécurisé, livraison en France et dans l'Union européenne.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Panier — ZELOR" },
       {
         property: "og:description",
-        content: "Votre panier ZELOR, paiement sécurisé par Shopify Checkout.",
+        content: "Votre panier ZELOR, paiement sécurisé.",
       },
       { property: "og:url", content: "/panier" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/panier" }],
   }),
@@ -68,7 +69,7 @@ function CartPage() {
                 className="flex gap-4 py-5"
               >
                 <div className="w-20 shrink-0">
-                  <ImageSlot ratio="aspect-4/5" caption="Visuel" />
+                  <ImageSlot ratio="aspect-4/5" caption={line.name} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <Link
@@ -81,8 +82,8 @@ function CartPage() {
                   <p className="mt-1 text-xs text-muted-foreground">
                     {line.variant}
                   </p>
-                  <p className="mt-2 text-sm">
-                    <Missing>{PLACEHOLDER.price}</Missing>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {PRICING.label}
                   </p>
                   <div className="mt-3 flex items-center gap-4">
                     <div className="flex items-center border border-input">
@@ -127,7 +128,7 @@ function CartPage() {
             <div className="rule-z pt-5">
               <div className="flex justify-between text-sm">
                 <span>Sous-total</span>
-                <Missing>{PLACEHOLDER.price}</Missing>
+                <span className="text-muted-foreground">{PRICING.short}</span>
               </div>
               <div className="mt-2 flex justify-between text-sm text-muted-foreground">
                 <span>Livraison</span>
@@ -135,7 +136,7 @@ function CartPage() {
               </div>
               <div className="mt-2 flex justify-between text-sm text-muted-foreground">
                 <span>Taxes</span>
-                <span>Selon la configuration Shopify</span>
+                <span>Incluses pour l'Union européenne</span>
               </div>
             </div>
             <button
@@ -145,13 +146,9 @@ function CartPage() {
             >
               Passer commande
             </button>
-            <DraftNote label="Shopify">
-              Le paiement sera assuré par Shopify Checkout. Aucun paiement n'est
-              simulé ici et aucune donnée bancaire n'est collectée.
-            </DraftNote>
             <p className="text-xs text-muted-foreground">
-              Retours possibles sous <Missing>[DÉLAI À RENSEIGNER]</Missing>.
-              Moyens de paiement acceptés :{" "}
+              La commande ouvrira avec la boutique. Retour possible dans le
+              délai légal. Moyens de paiement acceptés :{" "}
               <Link to="/paiements" className="underline underline-offset-4">
                 voir la page dédiée
               </Link>

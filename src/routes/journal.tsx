@@ -1,12 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell } from "@/components/zelor/Page";
-import { DraftNote, ImageSlot } from "@/components/zelor/Placeholder";
+import { ImageSlot } from "@/components/zelor/Placeholder";
 
-const drafts = [
-  { title: "[TITRE D'ARTICLE À RÉDIGER]", theme: "Sélection" },
-  { title: "[TITRE D'ARTICLE À RÉDIGER]", theme: "Matières" },
-  { title: "[TITRE D'ARTICLE À RÉDIGER]", theme: "Voyage" },
+const entries = [
+  {
+    theme: "Sélection",
+    title: "Ce qu'une pièce doit prouver avant d'entrer au catalogue",
+    body: "Quelques semaines d'usage, trois ou quatre gestes répétés chaque jour : notre méthode d'essai, sans complaisance.",
+  },
+  {
+    theme: "Matière",
+    title: "La patine, cette qualité qui ne se photographie pas",
+    body: "Pourquoi nous préférons les surfaces qui évoluent lentement à celles qui restent neuves un mois puis se fatiguent.",
+  },
+  {
+    theme: "Voyage",
+    title: "Riviera, hors saison",
+    body: "La lumière de fin de journée sur la pierre claire, le bleu dense de la mer en novembre : la palette d'où vient ZELOR.",
+  },
 ];
 
 export const Route = createFileRoute("/journal")({
@@ -16,7 +28,7 @@ export const Route = createFileRoute("/journal")({
       {
         name: "description",
         content:
-          "Le Journal ZELOR : notes sur la sélection, les matières et l'art de choisir. Premiers articles à paraître.",
+          "Le Journal ZELOR : notes sur la sélection, les matières et l'art de choisir. Premiers textes à paraître.",
       },
       { property: "og:title", content: "Journal — ZELOR" },
       {
@@ -24,29 +36,30 @@ export const Route = createFileRoute("/journal")({
         content: "Notes sur la sélection, les matières et l'art de choisir.",
       },
       { property: "og:url", content: "/journal" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/journal" }],
   }),
   component: () => (
     <PageShell
       title="Journal"
-      intro="Des notes courtes sur la sélection, les matières et les lieux qui nourrissent notre regard."
+      intro="Des notes courtes sur la sélection, les matières et les lieux qui nourrissent notre regard. Les premiers textes paraîtront avec l'ouverture de la boutique."
       crumbs={[{ label: "Journal" }]}
     >
-      <DraftNote label="À rédiger">
-        Aucun article n'est publié pour le moment. Les emplacements ci-dessous
-        montrent la mise en page prévue.
-      </DraftNote>
       <ul className="grid gap-8 sm:grid-cols-2">
-        {drafts.map((draft, index) => (
-          <li key={index}>
+        {entries.map((entry, index) => (
+          <li key={entry.title}>
             <ImageSlot
               tone={index % 2 === 0 ? "sand" : "stone"}
               ratio="aspect-4/3"
-              caption="Visuel d'article à fournir"
+              caption={entry.theme}
             />
-            <p className="eyebrow mt-4">{draft.theme}</p>
-            <h2 className="mt-2 font-display text-xl">{draft.title}</h2>
+            <p className="eyebrow mt-4">{entry.theme}</p>
+            <h2 className="mt-2 font-display text-xl">{entry.title}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{entry.body}</p>
+            <p className="mt-3 text-xs tracking-wide text-muted-foreground">
+              À paraître
+            </p>
           </li>
         ))}
       </ul>

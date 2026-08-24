@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell, Section } from "@/components/zelor/Page";
-import { DraftNote } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/compte")({
   head: () => ({
@@ -10,28 +9,25 @@ export const Route = createFileRoute("/compte")({
       {
         name: "description",
         content:
-          "Espace client ZELOR : commandes, adresses et préférences, géré par les comptes clients Shopify.",
+          "Espace client ZELOR : commandes, adresses et préférences de communication.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Compte client — ZELOR" },
       {
         property: "og:description",
-        content: "Espace client ZELOR géré par les comptes clients Shopify.",
+        content: "Commandes, adresses et préférences de communication.",
       },
       { property: "og:url", content: "/compte" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/compte" }],
   }),
   component: () => (
     <PageShell
       title="Compte client"
-      intro="Suivez vos commandes, gérez vos adresses et vos préférences de communication."
+      intro="Suivez vos commandes, gérez vos adresses et vos préférences de communication. L'espace client ouvrira avec la boutique."
       crumbs={[{ label: "Compte" }]}
     >
-      <DraftNote label="À connecter">
-        L'espace client sera assuré par les comptes clients Shopify (connexion
-        par email à usage unique). Aucun identifiant n'est stocké sur ce site.
-      </DraftNote>
       <Section title="Ce que vous y trouverez">
         <ul className="list-disc space-y-1 pl-5">
           <li>Historique et suivi de vos commandes</li>
@@ -39,6 +35,12 @@ export const Route = createFileRoute("/compte")({
           <li>Préférences de langue et de communication</li>
           <li>Demandes de retour</li>
         </ul>
+      </Section>
+      <Section title="Connexion">
+        <p>
+          La connexion se fera par email, à l'aide d'un code à usage unique :
+          aucun mot de passe à retenir, aucun identifiant conservé sur ce site.
+        </p>
       </Section>
     </PageShell>
   ),

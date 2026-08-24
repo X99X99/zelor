@@ -76,10 +76,9 @@ export function SiteFooter() {
       </div>
       <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 py-7 text-xs text-navy-foreground/55 sm:flex-row sm:items-center sm:justify-between">
         <p>
-          © {new Date().getFullYear()} {BRAND.name} — [STATUT JURIDIQUE À
-          RENSEIGNER]
+          © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>
-        <p>Site de préproduction. Contenus provisoires à valider.</p>
+        <p>Maison lifestyle premium — France et Union européenne.</p>
       </div>
     </footer>
   );

@@ -4,7 +4,6 @@ import editorialImage from "@/assets/editorial.jpg";
 import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
 import { PageShell, Section } from "@/components/zelor/Page";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/univers")({
   head: () => ({
@@ -13,15 +12,16 @@ export const Route = createFileRoute("/univers")({
       {
         name: "description",
         content:
-          "L'univers ZELOR : une approche calme et précise du quotidien, entre forme, fonction et présence.",
+          "L'univers ZELOR : une approche calme et précise du quotidien, où la forme, l'usage et la matière comptent autant l'un que l'autre.",
       },
       { property: "og:title", content: "L'univers ZELOR" },
       {
         property: "og:description",
         content:
-          "Une approche calme et précise du quotidien, entre forme, fonction et présence.",
+          "Une approche calme et précise du quotidien, entre forme, usage et matière.",
       },
       { property: "og:url", content: "/univers" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/univers" }],
   }),
@@ -32,7 +32,7 @@ function UniversePage() {
   return (
     <PageShell
       title="Une signature discrète."
-      intro="ZELOR privilégie les détails qui restent : une matière agréable, une silhouette équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard."
+      intro="ZELOR s'intéresse à ce qui reste : une matière agréable en main, une silhouette juste, une fonction évidente, une présentation qui ne laisse rien au hasard."
       crumbs={[{ label: "L'univers ZELOR" }]}
       aside={
         <HoverVideo
@@ -40,37 +40,43 @@ function UniversePage() {
           poster={editorialImage}
           ratio="aspect-4/5"
           alt="Intérieur contemporain aux tons pierre et marine profond, socle et objet unique."
-          caption="Séquence silencieuse — lecture au survol."
+          caption="Séquence silencieuse — au survol."
         />
       }
     >
-      <DraftNote label="Brouillon">
-        Texte de marque provisoire, à valider avec la direction avant
-        publication.
-      </DraftNote>
       <Section title="Notre point de départ">
         <p>
-          Les objets qui nous entourent méritent plus d'attention. Une bonne
-          pièce se reconnaît à l'usage : elle tombe juste, elle se range bien,
-          elle vieillit correctement.
+          Les objets que l'on utilise chaque jour façonnent l'humeur d'une
+          journée. Une pièce juste se reconnaît à l'usage : elle tombe bien, se
+          range sans y penser, se patine au lieu de se fatiguer. C'est cette
+          qualité-là, silencieuse, que la Maison ZELOR cherche à réunir.
         </p>
       </Section>
       <Section title="Notre manière de choisir">
         <p>
-          Nous regardons la forme, la fonction et la finition. Nous demandons
-          les informations précises : composition, provenance, entretien. Nous
-          ne publions rien qui n'ait été vérifié.
+          Nous regardons la forme, l'usage et la finition, dans cet ordre. Une
+          pièce est prise en main, portée, posée, déplacée pendant plusieurs
+          semaines avant d'être retenue. Ce qui séduit en photographie mais
+          déçoit à l'usage n'entre pas au catalogue.
         </p>
         <p>
-          Critères détaillés : <Missing>[À COMPLÉTER PAR LA MARQUE]</Missing>
+          Nous demandons ensuite les informations précises — composition,
+          provenance, entretien — et nous ne publions que ce que le fournisseur
+          peut documenter.
         </p>
       </Section>
-      <Section title="Une marque internationale">
+      <Section title="Une allure européenne">
+        <p>
+          Notre vocabulaire visuel vient de la Riviera et des villes du Sud : la
+          lumière sur la pierre claire, le bleu dense de la fin de journée, le
+          calme des intérieurs sobres. Rien de démonstratif, une présence.
+        </p>
+      </Section>
+      <Section title="Une maison internationale">
         <p>
           ZELOR s'adresse à des clients en France, en Europe et au-delà. Le site
-          est pensé pour le français au lancement, avec une structure prête pour
-          l'anglais, le russe, l'italien, l'espagnol, l'allemand, le japonais et
-          l'arabe.
+          ouvre en français, avec une structure prête pour l'anglais, le russe,
+          l'italien, l'espagnol, l'allemand, le japonais et l'arabe.
         </p>
       </Section>
     </PageShell>

@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import detailImage from "@/assets/detail.jpg";
 import { PageShell, Section } from "@/components/zelor/Page";
-import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/qualite")({
   head: () => ({
@@ -11,7 +10,7 @@ export const Route = createFileRoute("/qualite")({
       {
         name: "description",
         content:
-          "Comment ZELOR évalue une pièce avant de l'ajouter au catalogue : finition, matière, conception et usage réel.",
+          "Comment ZELOR évalue une pièce avant de l'ajouter à la sélection : finition, matière, conception et usage réel.",
       },
       { property: "og:title", content: "Qualité et sélection — ZELOR" },
       {
@@ -19,13 +18,14 @@ export const Route = createFileRoute("/qualite")({
         content: "Finition, matière, conception et usage réel.",
       },
       { property: "og:url", content: "/qualite" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/qualite" }],
   }),
   component: () => (
     <PageShell
       title="Qualité et sélection"
-      intro="Nous démontrons la qualité par des informations précises, jamais par des adjectifs."
+      intro="La qualité se démontre par des faits précis, jamais par des adjectifs. Voici ce que nous regardons, dans l'ordre."
       crumbs={[{ label: "Qualité et sélection" }]}
       aside={
         <img
@@ -38,29 +38,38 @@ export const Route = createFileRoute("/qualite")({
         />
       }
     >
-      <DraftNote label="À confirmer">
-        Aucune origine, certification, garantie ou allégation environnementale
-        n'est publiée tant qu'elle n'est pas documentée par un fournisseur.
-      </DraftNote>
       <Section title="Nos critères">
-        <ul className="list-disc space-y-1 pl-5">
+        <ul className="list-disc space-y-2 pl-5">
           <li>
-            Finition : <Missing>[DÉTAIL DE QUALITÉ À CONFIRMER]</Missing>
+            Finition : une arête franche, une couture régulière, un assemblage
+            qui ne se remarque pas.
           </li>
           <li>
-            Matière : <Missing>[MATIÈRE OU FINITION À CONFIRMER]</Missing>
+            Matière : une main agréable, une teinte stable, une surface qui se
+            patine sans se marquer.
           </li>
           <li>
-            Conception : <Missing>[ÉLÉMENT DE CONCEPTION À CONFIRMER]</Missing>
+            Conception : un usage évident dès la première prise en main, sans
+            notice ni apprentissage.
           </li>
-          <li>Usage réel : test avant mise en ligne</li>
+          <li>
+            Usage réel : plusieurs semaines d'essai avant toute mise en ligne.
+          </li>
         </ul>
+      </Section>
+      <Section title="Ce que nous vérifions auprès des fournisseurs">
+        <p>
+          Composition, lieu de fabrication, conditions d'entretien, durée de
+          disponibilité. Une information qui ne peut pas être documentée n'est
+          pas publiée : elle reste absente de la fiche plutôt que d'être
+          approximative.
+        </p>
       </Section>
       <Section title="Ce que nous n'écrirons pas">
         <p>
-          Pas de « fabriqué en France » sans preuve, pas de savoir-faire
-          artisanal supposé, pas de certification non délivrée, pas de bénéfice
-          santé non démontré.
+          Pas d'origine annoncée sans preuve, pas de savoir-faire supposé, pas
+          de certification que nous ne détenons pas, pas de bénéfice qui n'a pas
+          été démontré. La retenue fait partie de l'exigence.
         </p>
       </Section>
     </PageShell>

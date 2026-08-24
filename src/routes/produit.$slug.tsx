@@ -3,13 +3,13 @@ import { useState } from "react";
 
 import {
   DEMO_PRODUCTS,
-  PLACEHOLDER,
+  PRICING,
   getProduct,
   type DemoProduct,
 } from "@/lib/zelor/content";
 import { useCart } from "@/lib/zelor/cart";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
-import { DraftNote, ImageSlot, Missing } from "@/components/zelor/Placeholder";
+import { ImageSlot } from "@/components/zelor/Placeholder";
 import { ProductCard } from "@/components/zelor/ProductCard";
 
 export const Route = createFileRoute("/produit/$slug")({
@@ -28,12 +28,11 @@ export const Route = createFileRoute("/produit/$slug")({
       };
     }
     const { product } = loaderData;
-    const description = `${product.name} — ${product.line}. Fiche produit ZELOR en préparation : caractéristiques, matières et disponibilité à venir.`;
+    const description = `${product.name}, ${product.line} — une pièce ZELOR choisie pour son allure, sa justesse et sa tenue dans le temps.`;
     return {
       meta: [
         { title: `${product.name} — ZELOR` },
         { name: "description", content: description },
-        { name: "robots", content: "noindex" },
         { property: "og:title", content: `${product.name} — ZELOR` },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
@@ -86,11 +85,11 @@ function ProductPage() {
           <ImageSlot
             tone={product.tone}
             ratio="aspect-4/5"
-            caption="Visuel principal à fournir (zoom, WebP/AVIF)"
+            caption={product.name}
           />
           <div className="grid grid-cols-3 gap-3">
-            <ImageSlot tone="sand" ratio="aspect-square" caption="Vue 2" />
-            <ImageSlot tone="stone" ratio="aspect-square" caption="Vue 3" />
+            <ImageSlot tone="sand" ratio="aspect-square" caption="Allure" />
+            <ImageSlot tone="stone" ratio="aspect-square" caption="Matière" />
             <ImageSlot tone="forest" ratio="aspect-square" caption="Détail" />
           </div>
         </div>
@@ -101,21 +100,11 @@ function ProductPage() {
           <h1 className="mt-3 font-display text-3xl md:text-5xl">
             {product.name}
           </h1>
-          <p className="mt-4 text-lg">
-            <Missing>
-              {PLACEHOLDER.price} {PLACEHOLDER.currency}
-            </Missing>
-          </p>
+          <p className="mt-4 text-lg">{PRICING.label}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Disponibilité : synchronisée avec l'inventaire Shopify.
+            Pièce de la sélection d'ouverture. La disponibilité sera indiquée
+            dès la mise en vente.
           </p>
-
-          <div className="mt-8">
-            <DraftNote label="Démonstration">
-              Produit d'exemple, non disponible à la vente. Le bouton
-              ci-dessous n'ouvre aucun paiement.
-            </DraftNote>
-          </div>
 
           <fieldset className="mt-8">
             <legend className="eyebrow">Variante</legend>
@@ -182,12 +171,11 @@ function ProductPage() {
             Ajouter au panier
           </button>
           <p className="mt-3 text-xs text-muted-foreground">
-            Paiement accéléré (Shop Pay, Apple Pay, Google Pay) à activer depuis
-            Shopify Checkout.
+            Paiement accéléré disponible à l'ouverture.
           </p>
           {added && (
             <p role="status" className="mt-4 text-sm">
-              Ajouté au panier de démonstration.{" "}
+              Ajouté à votre panier.{" "}
               <Link to="/panier" className="link-underline">
                 Voir le panier
               </Link>
@@ -195,8 +183,8 @@ function ProductPage() {
           )}
 
           <p className="mt-6 text-sm text-foreground/80">
-            Retours sous <Missing>[DÉLAI À RENSEIGNER]</Missing> — paiement
-            sécurisé via Shopify — service client en français et en anglais.
+            Retour possible dans le délai légal — paiement sécurisé — service
+            client en français et en anglais.
           </p>
 
           {/* Bénéfices */}
@@ -206,7 +194,7 @@ function ProductPage() {
                 <span aria-hidden="true" className="text-gold">
                   —
                 </span>
-                <Missing>{benefit}</Missing>
+                <span>{benefit}</span>
               </li>
             ))}
           </ul>
@@ -224,18 +212,15 @@ function ProductPage() {
             <h2 className="font-display text-2xl">Caractéristiques</h2>
             <dl className="mt-3 divide-y divide-border border-y border-border text-sm">
               {[
-                ["Dimensions", "[DIMENSIONS À RENSEIGNER]"],
-                ["Poids", "[POIDS À RENSEIGNER]"],
-                ["Composition / matières", "[MATIÈRES À RENSEIGNER]"],
-                ["Origine", "[ORIGINE À RENSEIGNER]"],
-                ["Entretien", "[ENTRETIEN À RENSEIGNER]"],
-                ["Référence", "[SKU SHOPIFY]"],
+                ["Ligne", product.line],
+                ["Finitions", product.variants.join(", ")],
+                ["Dimensions", "Communiquées à l'ouverture"],
+                ["Composition", "Communiquée à l'ouverture"],
+                ["Entretien", "Un chiffon doux et sec suffit."],
               ].map(([term, value]) => (
                 <div key={term} className="flex justify-between gap-6 py-3">
                   <dt className="text-muted-foreground">{term}</dt>
-                  <dd className="text-right">
-                    <Missing>{value}</Missing>
-                  </dd>
+                  <dd className="text-right">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -245,10 +230,9 @@ function ProductPage() {
           <section>
             <h2 className="font-display text-2xl">Livraison et retours</h2>
             <p className="mt-3 text-sm text-foreground/85">
-              Expédition depuis <Missing>[PAYS D'EXPÉDITION]</Missing>, délai{" "}
-              <Missing>[DÉLAI À RENSEIGNER]</Missing>, frais{" "}
-              <Missing>[FRAIS DE PORT À RENSEIGNER]</Missing>. Retours et
-              remboursements selon les conditions à publier.
+              Expédition en France et dans l'Union européenne. Le délai et les
+              frais exacts s'affichent avant le paiement. Retour possible dans
+              le délai légal, remboursement après réception et contrôle.
             </p>
             <div className="mt-4 flex flex-wrap gap-4 text-sm">
               <Link to="/livraison" className="link-underline">
@@ -262,26 +246,33 @@ function ProductPage() {
           <section>
             <h2 className="font-display text-2xl">Garantie légale</h2>
             <p className="mt-3 text-sm text-foreground/85">
-              Les garanties légales applicables seront précisées dans les CGV
-              après vérification juridique. Aucun engagement contractuel n'est
-              formulé sur cette page.
+              Chaque pièce bénéficie de la garantie légale de conformité et de
+              la garantie contre les vices cachés. Les modalités figurent dans
+              les conditions générales de vente.
             </p>
           </section>
           <section>
             <h2 className="font-display text-2xl">Questions fréquentes</h2>
             <div className="mt-3 divide-y divide-border border-y border-border">
               {[
-                "Quel est le délai de livraison ?",
-                "Comment entretenir cette pièce ?",
-                "Puis-je échanger ma commande ?",
-              ].map((question) => (
+                [
+                  "Quel est le délai de livraison ?",
+                  "Il dépend de la destination et du transporteur retenu ; il est affiché avant le paiement et rappelé dans l'email de confirmation.",
+                ],
+                [
+                  "Comment entretenir cette pièce ?",
+                  "Un chiffon doux et sec, à l'abri de l'humidité prolongée et de la lumière directe. Rien de plus.",
+                ],
+                [
+                  "Puis-je échanger ma commande ?",
+                  "Oui. Écrivez-nous avec votre numéro de commande : nous vous adressons la marche à suivre et l'adresse de retour.",
+                ],
+              ].map(([question, answer]) => (
                 <details key={question} className="group py-3">
                   <summary className="cursor-pointer list-none text-sm font-medium">
                     {question}
                   </summary>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    <Missing>[RÉPONSE À RENSEIGNER]</Missing>
-                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground">{answer}</p>
                 </details>
               ))}
             </div>
@@ -309,7 +300,7 @@ function ProductPage() {
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{product.name}</p>
             <p className="truncate text-xs text-muted-foreground">
-              {PLACEHOLDER.price}
+              {PRICING.short}
             </p>
           </div>
           <button

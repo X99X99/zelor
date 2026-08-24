@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { DEMO_PRODUCTS } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
-import { DraftNote } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/nouveautes")({
   head: () => ({
@@ -12,7 +11,7 @@ export const Route = createFileRoute("/nouveautes")({
       {
         name: "description",
         content:
-          "Les dernières pièces entrées dans la sélection ZELOR. Collection en préparation, arrivées annoncées prochainement.",
+          "Les dernières pièces entrées dans la sélection ZELOR : arrivées récentes de la Maison.",
       },
       { property: "og:title", content: "Nouveautés — ZELOR" },
       {
@@ -20,6 +19,7 @@ export const Route = createFileRoute("/nouveautes")({
         content: "Les dernières pièces entrées dans la sélection ZELOR.",
       },
       { property: "og:url", content: "/nouveautes" },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/nouveautes" }],
   }),
@@ -35,14 +35,9 @@ function NewPage() {
       <header className="container-z pt-10 pb-8 md:pt-14">
         <h1 className="font-display text-4xl md:text-6xl">Nouveautés</h1>
         <p className="mt-5 max-w-2xl text-base text-muted-foreground">
-          Les dernières pièces entrées dans la sélection. Cette page se remplira
-          automatiquement à partir de la collection « Nouveautés » de Shopify.
+          Les dernières pièces entrées dans la sélection, présentées dès leur
+          arrivée. Peu d'annonces, et seulement lorsqu'elles comptent.
         </p>
-        <div className="mt-6 max-w-2xl">
-          <DraftNote label="Démonstration">
-            Exemples de mise en page. Aucun produit n'est en vente.
-          </DraftNote>
-        </div>
       </header>
       <div className="container-z pb-24">
         {products.length === 0 ? (
