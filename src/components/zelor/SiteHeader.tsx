@@ -254,7 +254,8 @@ export function SiteHeader() {
     body.style.overflow = "hidden";
     return () => {
       body.style.cssText = previous;
-      window.scrollTo({ top: scrollY });
+      // Restitution exacte, sans animation : la position ne doit pas « glisser ».
+      window.scrollTo({ top: scrollY, left: 0, behavior: "instant" as ScrollBehavior });
     };
   }, [menuOpen]);
 
