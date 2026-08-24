@@ -42,7 +42,7 @@ function mockSystem(dark: boolean) {
 
 /** Rejoue le script bloquant exactement comme le navigateur le ferait. */
 function runInitScript() {
-  // eslint-disable-next-line no-new-func
+  
   new Function(THEME_INIT_SCRIPT)();
 }
 
