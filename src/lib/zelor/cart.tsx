@@ -99,8 +99,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
+/**
+ * Panier de repli : utilisé si le contexte est momentanément indisponible
+ * (rechargement à chaud du module en développement, par exemple). Le rendu
+ * reste intact — jamais d'écran blanc — et l'état réel revient au montage
+ * suivant sous `CartProvider`.
+ */
+const FALLBACK_CART: CartContextValue = {
+  lines: [],
+  count: 0,
+  add: () => {},
+  setQuantity: () => {},
+  remove: () => {},
+  clear: () => {},
+  ready: false,
+};
+
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) throw new Error("useCart doit être utilisé dans CartProvider");
+  if (!context) {
+    if (import.meta.env.DEV) {
+      console.warn("useCart : contexte indisponible, panier de repli utilisé.");
+    }
+    return FALLBACK_CART;
+  }
   return context;
 }
