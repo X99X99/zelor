@@ -87,7 +87,7 @@ function CollectionPage() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Rechercher"
-              className="min-h-11 w-full border border-input bg-transparent px-3 text-sm outline-none sm:w-56"
+              className="min-h-11 w-full field-z border border-input bg-transparent px-3 text-sm outline-none sm:w-56"
             />
           </div>
           <div>
@@ -98,7 +98,7 @@ function CollectionPage() {
               id="collection-line"
               value={line}
               onChange={(event) => setLine(event.target.value)}
-              className="min-h-11 w-full border border-input bg-transparent px-3 text-sm sm:w-48"
+              className="min-h-11 w-full field-z border border-input bg-transparent px-3 text-sm sm:w-48"
             >
               {lines.map((option) => (
                 <option key={option} value={option}>
@@ -116,7 +116,7 @@ function CollectionPage() {
             id="collection-sort"
             value={sort}
             onChange={(event) => setSort(event.target.value)}
-            className="min-h-11 border border-input bg-transparent px-3 text-sm"
+            className="min-h-11 field-z border border-input bg-transparent px-3 text-sm"
           >
             <option value="nouveaute">Nouveautés</option>
             <option value="prix-asc" disabled>
