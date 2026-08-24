@@ -306,8 +306,70 @@
   --sidebar-accent-foreground: var(--foreground);
     --sidebar-border: oklch(0.332 0.028 258);
     --sidebar-ring: oklch(0.72 0.03 256);
+}
+
+/* Bascule de thème : seules les couleurs et les surfaces traversent, jamais
+ * une géométrie — aucune animation du header n'est rejouée. */
+@media (prefers-reduced-motion: no-preference) {
+  :root.light,
+  :root.dark {
+    --theme-fade: color var(--dur-3) var(--ease-lux),
+      background-color var(--dur-3) var(--ease-lux),
+      border-color var(--dur-3) var(--ease-lux);
+  }
+  body,
+  body :where(main, section, article, aside, footer, p, h1, h2, h3, h4, li, a, span, button, input, textarea) {
+    transition: var(--theme-fade, none);
   }
 }
+
+/* ————— Capsule jour / nuit ————— */
+@utility theme-toggle-z {
+  display: grid;
+  place-items: center;
+  & > .theme-icon-z {
+    grid-area: 1 / 1;
+    transition:
+      opacity var(--dur-3) var(--ease-lux),
+      rotate var(--dur-4) var(--ease-back),
+      scale var(--dur-3) var(--ease-back);
+  }
+  & > .theme-icon-day-z {
+    opacity: 0;
+    rotate: -70deg;
+    scale: 0.6;
+  }
+  & > .theme-icon-night-z {
+    opacity: 1;
+    rotate: 0deg;
+    scale: 1;
+  }
+  &:hover {
+    box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 16%, transparent);
+  }
+}
+
+:root.dark .theme-toggle-z > .theme-icon-day-z {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}
+
+:root.dark .theme-toggle-z > .theme-icon-night-z {
+  opacity: 0;
+  rotate: 70deg;
+  scale: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-z > .theme-icon-z {
+    transition-duration: 1ms !important;
+    rotate: none !important;
+    scale: none !important;
+  }
+}
+
+
 
 
 
