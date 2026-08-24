@@ -229,9 +229,18 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* Défilement instantané par défaut : le lissage global transformait
+     * la restauration de scroll et les changements de route en faux
+     * déplacements animés. Le lissage reste réservé aux ancres. */
+    scroll-behavior: auto;
     /* Le header couvre les ancres : on réserve sa hauteur. */
     scroll-padding-top: 7.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html:has(:target) {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
