@@ -3,8 +3,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImage from "@/assets/hero.jpg";
 import editorialImage from "@/assets/editorial.jpg";
 import detailImage from "@/assets/detail.jpg";
+import detailVideo from "@/assets/video-detail.mp4.asset.json";
+import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
 import { BRAND, DEMO_PRODUCTS, PROMISES } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { DraftNote, Missing } from "@/components/zelor/Placeholder";
 
 export const Route = createFileRoute("/")({

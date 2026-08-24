@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/lib/zelor/cart";
 import { SiteHeader } from "@/components/zelor/SiteHeader";
 import { SiteFooter } from "@/components/zelor/SiteFooter";
+import { CookieConsent } from "@/components/zelor/CookieConsent";
 
 function NotFoundComponent() {
   return (
@@ -167,6 +168,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <SiteFooter />
+        <CookieConsent />
       </CartProvider>
     </QueryClientProvider>
   );
