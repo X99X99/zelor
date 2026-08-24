@@ -198,11 +198,19 @@ function ReadingProgress() {
   return (
     <span
       aria-hidden="true"
-      className="progress-z pointer-events-none absolute inset-x-0 bottom-0 h-px"
-      style={{ transform: `scaleX(${ratio})`, opacity: ratio > 0.004 ? 0.9 : 0 }}
-    />
+      className="progress-track-z pointer-events-none absolute inset-x-0 bottom-0 block h-0.5 overflow-visible"
+    >
+      <span
+        className="progress-z block h-full"
+        style={{
+          width: `${ratio * 100}%`,
+          opacity: ratio > 0.004 ? 1 : 0,
+        }}
+      />
+    </span>
   );
 }
+
 
 /** Masque le header au défilement vers le bas, le révèle au défilement vers le haut. */
 function useHideOnScroll(locked: boolean) {
