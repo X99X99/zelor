@@ -352,7 +352,7 @@ export function SiteHeader() {
 
           <nav
             aria-label="Navigation principale"
-            className="hidden flex-1 items-center gap-7 md:flex"
+            className="-ml-3 hidden flex-1 items-center gap-1 md:flex"
           >
             {MAIN_NAV.map((item) => (
               <NavLink
@@ -365,6 +365,7 @@ export function SiteHeader() {
               </NavLink>
             ))}
           </nav>
+
 
           <BrandLink
             onNavigate={closeMenu}
