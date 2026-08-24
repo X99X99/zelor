@@ -176,9 +176,33 @@ function useHideOnScroll(locked: boolean) {
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuClosing, setMenuClosing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [bump, setBump] = useState(false);
   const { count, ready } = useCart();
   const { hidden, scrolled } = useHideOnScroll(menuOpen || searchOpen);
+
+  // Fermeture aussi soignée que l'ouverture : le voile se retire, puis démonte.
+  const closeMenu = () => {
+    if (!menuOpen || menuClosing) return;
+    setMenuClosing(true);
+    window.setTimeout(() => {
+      setMenuClosing(false);
+      setMenuOpen(false);
+    }, 380);
+  };
+
+  // Le panier respire lorsqu'une pièce est ajoutée.
+  const firstCount = useRef(true);
+  useEffect(() => {
+    if (firstCount.current) {
+      firstCount.current = false;
+      return;
+    }
+    setBump(true);
+    const t = setTimeout(() => setBump(false), 620);
+    return () => clearTimeout(t);
+  }, [count]);
 
   // Blocage total du défilement de fond lorsque le menu est ouvert.
   useEffect(() => {
