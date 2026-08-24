@@ -63,9 +63,39 @@ describe("système de mouvement ZELOR", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("garde la continuité chromatique du header et de la recherche", () => {
-    const search = css.slice(css.indexOf("@utility surface-search"));
-    expect(search.slice(0, 1200)).toContain("var(--gradient-header)");
-    expect(search.slice(0, 1200)).toContain("saturate(135%)");
+  it("header et recherche partagent une source de matière unique", () => {
+    for (const utility of ["@utility surface-navy", "@utility surface-search"]) {
+      const block = css.slice(css.indexOf(utility), css.indexOf(utility) + 600);
+      expect(block, `${utility} doit réutiliser le token de fond`).toContain(
+        "var(--surface-navy-bg)",
+      );
+      expect(block, `${utility} doit réutiliser le token de voile`).toContain(
+        "var(--surface-navy-veil)",
+      );
+    }
+    // La recherche ne doit redéfinir aucune couleur propre.
+    const search = css.slice(
+      css.indexOf("@utility surface-search"),
+      css.indexOf("@utility surface-search") + 600,
+    );
+    expect(search).not.toMatch(/radial-gradient|linear-gradient/);
+  });
+
+  it("centralise les easings boomerang et respiration", () => {
+    expect(css).toContain("--ease-back:");
+    expect(css).toContain("--ease-breathe:");
+    const progress = css.slice(
+      css.indexOf("@utility progress-z"),
+      css.indexOf("@keyframes zelor-progress-sheen"),
+    );
+    expect(progress).toContain("width var(--dur-3) var(--ease-back)");
+  });
+
+  it("factorise la surface marine dans un composant unique", () => {
+    const header = readFileSync("src/components/zelor/SiteHeader.tsx", "utf8");
+    expect(header).toContain("NavySurface");
+    expect(header).not.toContain("surface-search");
+    expect(header).not.toContain("surface-navy");
   });
 });
+

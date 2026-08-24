@@ -32,6 +32,16 @@
 | `progress-track-z` / `progress-z` | filet de progression joaillier |
 | `reveal-z` | apparition au défilement (`Reveal`, option `replay`) |
 
+### Composants factorisés
+
+| Source unique | Ce qu'elle verrouille |
+| --- | --- |
+| `NavySurface` (`src/components/zelor/NavySurface.tsx`) | header **et** recherche : même matière, même entrée/sortie, même durée (`NAVY_SURFACE_EXIT_MS`) |
+| `--surface-navy-bg` / `--surface-navy-veil` | fond et voile marine : aucune surface ne redéfinit sa couleur |
+| `--ease-back` | boomerang (progression, capsules, contours ronds) |
+| `--ease-breathe` | respiration : survols du menu, capsules, halos |
+| `discover-bar-z` | capsule flottante « Découvrir », compacte et centrée |
+
 ## 3. Continuité chromatique
 
 Header, barre d'annonce et recherche partagent `--gradient-header`,
@@ -46,6 +56,8 @@ Header, barre d'annonce et recherche partagent `--gradient-header`,
 - ✅ Aucune micro-interaction basée sur `transform:` dans les primitives tactiles.
 - ✅ Chaque animation d'entrée a sa sortie déclarée.
 - ✅ `discover-bar-z`, `seam-z`, `focal-list`, `progress-z` présents.
+- Barre de progression : dépassement léger puis retour exact (`--ease-back`).
+- Recherche : couleur strictement identique au header (mêmes tokens).
 - Header : la loupe pivote de façon continue (ouverture ET survol simultanés).
 - Recherche : ouverture et fermeture de durée identique, sans saut de scroll.
 - Menu mobile : tous les items (Collection, Compte, Aide, Langue) portent
