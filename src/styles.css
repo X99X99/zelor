@@ -1110,20 +1110,28 @@
   & > [data-focal] {
     transition:
       opacity var(--dur-4) var(--ease-breathe),
-      scale var(--dur-4) var(--ease-breathe),
-      letter-spacing var(--dur-4) var(--ease-breathe),
+      scale var(--dur-5) var(--ease-breathe),
+      letter-spacing var(--dur-5) var(--ease-breathe),
       color var(--dur-4) var(--ease-breathe);
   }
-  &:hover > [data-focal],
   &:focus-within > [data-focal] {
     opacity: 0.42;
     scale: 0.985;
   }
-  & > [data-focal]:hover,
   & > [data-focal]:focus-visible,
   & > [data-focal]:focus-within {
     opacity: 1;
     scale: 1.015;
+  }
+  @media (hover: hover) {
+    &:hover > [data-focal] {
+      opacity: 0.42;
+      scale: 0.985;
+    }
+    & > [data-focal]:hover {
+      opacity: 1;
+      scale: 1.015;
+    }
   }
 }
 
