@@ -56,6 +56,18 @@ export function useSameRouteTop(to: string) {
   return { active, onClick };
 }
 
+/**
+ * Capsule partagée. Les variantes de navigation (header, feuille mobile,
+ * footer) portent littéralement la même primitive `menu-row` ; seules les
+ * proportions changent via `menu-row-inline`. La variante `prose` reste un
+ * lien de lecture discret, pour ne pas casser un paragraphe.
+ */
+const CAPSULE: Record<string, string> = {
+  header: "menu-row menu-row-inline",
+  footer: "menu-row menu-row-inline",
+  sheet: "menu-row",
+};
+
 export function NavLink({
   to,
   children,
@@ -70,16 +82,20 @@ export function NavLink({
   className?: string;
   activeClassName?: string;
   onNavigate?: () => void;
-  variant?: "header" | "footer" | "sheet";
+  variant?: "header" | "footer" | "sheet" | "prose";
 } & Record<string, unknown>) {
   const { active, onClick } = useSameRouteTop(to);
+  const capsule = CAPSULE[variant];
 
   return (
     <Link
       to={to}
       aria-current={active ? "page" : undefined}
       data-variant={variant}
-      className={`nav-link-z ${className} ${active ? activeClassName : ""}`.trim()}
+      data-capsule={capsule ? "" : undefined}
+      className={`nav-link-z ${capsule ?? ""} ${className} ${active ? activeClassName : ""}`
+        .replace(/\s+/g, " ")
+        .trim()}
       onClick={(event) => {
         onNavigate?.();
         onClick(event as unknown as MouseEvent & { preventDefault: () => void });
@@ -90,6 +106,7 @@ export function NavLink({
     </Link>
   );
 }
+
 
 /**
  * Logo ZELOR — lien d'accueil partout, retour en haut lorsqu'on est déjà
