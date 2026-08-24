@@ -131,7 +131,13 @@ function SearchPanel({
   }, []);
 
   return (
-    <NavySurface animate closing={closing} className="relative overflow-hidden">
+    <NavySurface
+      animate
+      closing={closing}
+      material={false}
+      className="relative overflow-hidden"
+    >
+
       <form
         className="container-z flex items-center gap-3 py-5"
         onSubmit={(event) => {
@@ -430,8 +436,15 @@ export function SiteHeader() {
         </div>
 
         {searchOpen && (
-          <SearchPanel onClose={closeSearch} closing={searchClosing} />
+          <div
+            className={`slot-z ${searchClosing ? "slot-out-z" : "slot-in-z"}`}
+          >
+            <div>
+              <SearchPanel onClose={closeSearch} closing={searchClosing} />
+            </div>
+          </div>
         )}
+
         <ReadingProgress />
       </NavySurface>
 
