@@ -159,6 +159,8 @@ test.describe("garde-fou apparence : astre correct dans les quatre états", () =
       await page.goto("/", { waitUntil: "load" });
       const button = page.locator('header button[aria-label^="Apparence"]');
       await expect(button).toHaveCount(1);
+      // Hydratation terminée : avant elle, le libellé est encore générique.
+      await expect(button).toHaveAttribute("aria-label", /Apparence : /);
       const state = await button.evaluate((el) => ({
         dark: document.documentElement.classList.contains("dark"),
         sun: getComputedStyle(el.querySelector(".theme-icon-day-z")!).opacity,
