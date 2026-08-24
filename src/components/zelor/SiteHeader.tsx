@@ -367,10 +367,17 @@ export function SiteHeader() {
 
       {menuOpen && (
         <div
+          className={`fixed inset-0 z-70 bg-[color-mix(in_oklab,var(--navy-deep)_55%,transparent)] backdrop-blur-sm md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
+      {menuOpen && (
+        <div
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className={`overlay-navy grain-z fixed inset-0 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          className={`overlay-navy grain-z sheet-z fixed inset-2 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
           <div className="container-z flex items-center justify-between py-4">
             <Link
