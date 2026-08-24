@@ -431,10 +431,15 @@
   transition:
     border-color var(--dur-2) var(--ease-lux),
     background-color var(--dur-2) var(--ease-lux),
+    transform var(--dur-2) var(--ease-lux),
     box-shadow var(--dur-2) var(--ease-lux);
   &:hover {
     border-color: color-mix(in oklab, currentColor 30%, transparent);
     background-color: color-mix(in oklab, currentColor 6%, transparent);
+    transform: translateY(var(--lift-1));
+  }
+  &:focus-within {
+    transform: translateY(var(--lift-1));
   }
   &:focus,
   &:focus-visible,
