@@ -57,14 +57,15 @@ export function useSameRouteTop(to: string) {
 }
 
 /**
- * Capsule partagée. Les variantes de navigation (header, feuille mobile,
- * footer) portent littéralement la même primitive `menu-row` ; seules les
- * proportions changent via `menu-row-inline`. La variante `prose` reste un
- * lien de lecture discret, pour ne pas casser un paragraphe.
+ * Capsule partagée. Toutes les variantes de lien visible (header, feuille
+ * mobile, footer, lecture) portent littéralement la même primitive
+ * `menu-row` ; seules les proportions changent via `menu-row-inline`.
+ * Aucun lien visible ne sort de cette famille.
  */
 const CAPSULE: Record<string, string> = {
   header: "menu-row menu-row-inline",
   footer: "menu-row menu-row-inline",
+  prose: "menu-row menu-row-inline",
   sheet: "menu-row",
 };
 

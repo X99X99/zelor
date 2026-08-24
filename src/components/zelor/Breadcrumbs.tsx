@@ -7,7 +7,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
     <nav aria-label="Fil d'Ariane" className="container-z pt-6">
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
         <li>
-          <Link to="/" className="underline-offset-4 hover:underline">
+          <Link to="/" className="link-underline">
             Accueil
           </Link>
         </li>
@@ -15,7 +15,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
           <li key={item.label} className="flex items-center gap-2">
             <span aria-hidden="true">/</span>
             {item.to ? (
-              <Link to={item.to} className="underline-offset-4 hover:underline">
+              <Link to={item.to} className="link-underline">
                 {item.label}
               </Link>
             ) : (

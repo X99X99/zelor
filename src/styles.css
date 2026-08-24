@@ -506,107 +506,74 @@
  * Un filet se déploie depuis la gauche, se replie vers la droite à la sortie.
  * Même grammaire pour la navigation, le footer et les liens éditoriaux.
  */
+/* Lien de lecture — aucune famille graphique parallèle.
+ * `link-underline` n'est plus qu'un alias de la capsule ZELOR validée :
+ * même matière, même arrondi, même profondeur, même halo, même soulignement
+ * interne, même retour. Les liens des paragraphes, des pages juridiques et
+ * des sections éditoriales appartiennent donc exactement à la même famille
+ * que ceux du header, du menu mobile et du footer. */
 @utility link-underline {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 3px;
-  transition: opacity var(--dur-2) var(--ease-lux);
-  &::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 1px;
-    background-color: currentColor;
-    transform: scaleX(0);
-    transform-origin: right center;
-    opacity: 0.65;
-    transition:
-      transform var(--dur-2) var(--ease-lux),
-      opacity var(--dur-2) var(--ease-lux);
-  }
-  &:hover::after,
-  &:focus-visible::after {
-    transform: scaleX(1);
-    transform-origin: left center;
-    opacity: 1;
-  }
-  /* Enrichissement minimal : une micro-profondeur du texte, jamais un fond. */
-  &:hover,
-  &:focus-visible {
-    text-shadow: 0 0 14px color-mix(in oklab, currentColor 18%, transparent);
-  }
+  @apply menu-row menu-row-inline nav-link-z;
+  /* Seule adaptation autorisée : la capsule se resserre pour s'inscrire dans
+   * une ligne de texte, sans changer de famille (mêmes tokens, même filet). */
+  --cap-pad: 0.5rem;
+  --cap-underline-bottom: 0.22rem;
+  padding-block: 0.14rem;
+  vertical-align: baseline;
 }
 
-/* Élément de marque : le mot ZELOR respire à l'approche */
+/* Élément de marque : signature lumineuse unique, partagée par tous les
+ * logos ZELOR interactifs (header desktop, header mobile, footer).
+ * Au repos : rien. À l'interaction : la lumière monte, puis se retire
+ * exactement à la même vitesse. Aucune animation automatique. */
 @utility wordmark-z {
   position: relative;
   display: inline-block;
   isolation: isolate;
-  /* Le scintillement démarre au contact, sans latence : la lumière est
-   * immédiate (dur-1), la respiration typographique reste lente. */
+  text-shadow: 0 0 0 transparent;
   transition:
     letter-spacing var(--dur-4) var(--ease-lux),
-    text-shadow var(--dur-1) var(--ease-breathe),
+    text-shadow var(--dur-3) var(--ease-breathe),
     opacity var(--dur-2) var(--ease-lux);
   &::after {
     content: "";
     position: absolute;
-    /* Le halo doit respirer : il s'éteint bien avant les limites de sa zone,
-     * et de façon strictement symétrique à gauche comme à droite. */
-    inset: -0.85em -1.1em;
+    /* Le halo s'éteint bien avant les limites de sa zone, symétriquement. */
+    inset: -0.7em -0.95em;
     z-index: -1;
     pointer-events: none;
     border-radius: var(--radius-pill);
     opacity: 0;
     background: radial-gradient(
-      52% 82% at 50% 50%,
-      color-mix(in oklab, currentColor 15%, transparent) 0%,
-      color-mix(in oklab, currentColor 7%, transparent) 42%,
-      transparent 78%
+      50% 78% at 50% 50%,
+      color-mix(in oklab, currentColor 9%, transparent) 0%,
+      color-mix(in oklab, currentColor 4%, transparent) 45%,
+      transparent 76%
     );
-    transition: opacity var(--dur-2) var(--ease-breathe);
+    transition: opacity var(--dur-3) var(--ease-breathe);
   }
-  &:hover {
-    text-shadow:
-      0 0 6px color-mix(in oklab, currentColor 52%, transparent),
-      0 0 20px color-mix(in oklab, currentColor 30%, transparent),
-      0 0 46px color-mix(in oklab, currentColor 15%, transparent);
-    /* Respiration lente de la lumière : jamais un clignotement. */
-    animation: zelor-wordmark-breathe 6.5s var(--ease-breathe) 0.45s infinite;
-  }
-  &:hover::after {
-    opacity: 1;
-    animation: zelor-wordmark-halo 6.5s var(--ease-breathe) 0.45s infinite;
-  }
+  /* Montée de lumière : pointeur fin, clavier, et activation tactile. */
+  &:hover,
+  &:focus-visible,
   &:active {
-    opacity: 0.85;
-  }
-}
-
-@keyframes zelor-wordmark-breathe {
-  0%,
-  100% {
     text-shadow:
-      0 0 6px color-mix(in oklab, currentColor 52%, transparent),
-      0 0 20px color-mix(in oklab, currentColor 30%, transparent),
-      0 0 46px color-mix(in oklab, currentColor 15%, transparent);
+      0 0 5px color-mix(in oklab, currentColor 30%, transparent),
+      0 0 16px color-mix(in oklab, currentColor 14%, transparent);
   }
-  50% {
-    text-shadow:
-      0 0 5px color-mix(in oklab, currentColor 38%, transparent),
-      0 0 18px color-mix(in oklab, currentColor 20%, transparent),
-      0 0 42px color-mix(in oklab, currentColor 10%, transparent);
-  }
-}
-
-@keyframes zelor-wordmark-halo {
-  0%,
-  100% {
+  &:hover::after,
+  &:focus-visible::after,
+  &:active::after {
     opacity: 1;
   }
-  50% {
-    opacity: 0.72;
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-z,
+  .wordmark-z::after {
+    transition-duration: 1ms !important;
   }
 }
 
@@ -1662,9 +1629,9 @@
    * Les deux couches internes sont peintes en `background`, elles ne peuvent
    * pas déborder de la largeur réelle de progression. */
   overflow: visible;
-  box-shadow:
-    0 0 8px color-mix(in oklab, var(--gold) 55%, transparent),
-    0 0 20px -4px color-mix(in oklab, var(--gold) 38%, transparent);
+  /* Aucune ombre portée : le filet doit rester net. Le seul point lumineux
+   * autorisé est la tête de lecture (::after), peinte, jamais diffusée. */
+  box-shadow: none;
   /* Boomerang : le filet dépasse d'un souffle la valeur atteinte,
    * puis revient se poser exactement dessus. */
   transition:
@@ -1704,19 +1671,19 @@
     position: absolute;
     top: 50%;
     right: 0;
-    width: 26px;
-    height: 10px;
+    width: 14px;
+    height: 6px;
     transform: translate(50%, -50%);
     pointer-events: none;
     border-radius: 999px;
+    /* Marqueur de lecture : resserré et net, il reste plus intense que la
+     * ligne sans diffuser de halo autour de la zone. */
     background: radial-gradient(
       closest-side,
-      color-mix(in oklab, white 96%, transparent),
-      color-mix(in oklab, var(--gold) 78%, transparent) 42%,
-      color-mix(in oklab, var(--gold) 28%, transparent) 68%,
+      color-mix(in oklab, white 98%, transparent),
+      color-mix(in oklab, var(--gold) 82%, transparent) 55%,
       transparent 100%
     );
-    box-shadow: 0 0 12px color-mix(in oklab, var(--gold) 60%, transparent);
     /* Respiration très courte d'amplitude : lisible, jamais clignotante. */
     animation: zelor-progress-pulse 4.4s var(--ease-breathe) infinite alternate;
   }
@@ -1997,12 +1964,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .wordmark-z:hover,
-  .wordmark-z:hover::after {
-    animation: none !important;
-  }
-}
 
 /* ————— Lien de navigation ZELOR —————
  * Une seule primitive pour le header, le menu et le footer. Les liens de
@@ -2017,7 +1978,7 @@
   border-radius: 2px;
   /* Lien de lecture : il porte sa propre géométrie minimale.
    * Lien-capsule : il n'en porte aucune, `menu-row` pilote tout. */
-  &:not([data-capsule]) {
+  &:not(:where([data-capsule], .link-underline)) {
     display: inline-block;
     padding-bottom: 3px;
     transition:
@@ -2040,7 +2001,7 @@
   }
   /* Le filet épouse la largeur utile interne de la bulle : même marge que
    * la respiration de la capsule, même coins, même rythme. */
-  &[data-capsule]::after {
+  &:where([data-capsule], .link-underline)::after {
     inset-inline: var(--cap-pad);
     bottom: var(--cap-underline-bottom);
     height: 1px;
@@ -2055,8 +2016,8 @@
   }
   /* Activation au doigt et au clavier : même révélation que sur pointeur fin,
    * même sens de lecture, même durée. Aucune entrée ne réagit autrement. */
-  &[data-capsule]:focus-within::after,
-  &[data-capsule]:active::after {
+  &:where([data-capsule], .link-underline):focus-within::after,
+  &:where([data-capsule], .link-underline):active::after {
     scale: 1 1;
     transform-origin: left center;
     opacity: 1;
@@ -2065,12 +2026,12 @@
     outline: none;
     box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 45%, transparent);
   }
-  &[data-capsule]:focus-visible {
+  &:where([data-capsule], .link-underline):focus-visible {
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 8%, transparent),
       0 0 0 1px color-mix(in oklab, currentColor 30%, transparent);
   }
-  &:not([data-capsule]):active {
+  &:not(:where([data-capsule], .link-underline)):active {
     opacity: 0.75;
   }
   /* Page consultée : le filet reste posé, la présence est plus dense. */
@@ -2082,30 +2043,36 @@
     transform-origin: left center;
     opacity: 0.9;
   }
-  &[data-capsule][aria-current="page"]::after {
+  &:where([data-capsule], .link-underline)[aria-current="page"]::after {
     opacity: 0.6;
   }
-  &[data-capsule][aria-current="page"] {
+  &:where([data-capsule], .link-underline)[aria-current="page"] {
     background-color: color-mix(in oklab, var(--navy-foreground) 5%, transparent);
   }
 }
 
 @media (hover: hover) and (pointer: fine) {
   .nav-link-z:hover::after,
-  .nav-link-z:focus-visible::after {
+  .nav-link-z:focus-visible::after,
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
     scale: 1 1;
     transform-origin: left center;
     opacity: 1;
   }
   .nav-link-z:hover,
-  .nav-link-z:focus-visible {
+  .nav-link-z:focus-visible,
+  .link-underline:hover,
+  .link-underline:focus-visible {
     text-shadow: 0 0 14px color-mix(in oklab, currentColor 18%, transparent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .nav-link-z,
-  .nav-link-z::after {
+  .nav-link-z::after,
+  .link-underline,
+  .link-underline::after {
     transition-duration: 1ms !important;
   }
 }
