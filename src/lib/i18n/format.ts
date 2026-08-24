@@ -30,10 +30,7 @@ export function formatPrice(
   }).format(zeroDecimal ? amountMinor : amountMinor / 100);
 }
 
-export function formatList(
-  items: string[],
-  locale: LocaleCode = DEFAULT_LOCALE,
-): string {
+export function formatList(items: string[], locale: LocaleCode = DEFAULT_LOCALE): string {
   return new Intl.ListFormat(locale, {
     style: "long",
     type: "conjunction",

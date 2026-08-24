@@ -42,4 +42,3 @@ export function NavySurface({
 
 /** Durée exacte du retrait partagé, alignée sur --dur-4. */
 export const NAVY_SURFACE_EXIT_MS = 900;
-

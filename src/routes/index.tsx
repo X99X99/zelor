@@ -60,16 +60,10 @@ function Home() {
               {BRAND.heroSubtitle}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
-              <Link
-                to="/collection"
-                className="btn-lux ring-1 ring-navy-foreground/20"
-              >
+              <Link to="/collection" className="btn-lux ring-1 ring-navy-foreground/20">
                 Découvrir la collection
               </Link>
-              <Link
-                to="/univers"
-                className="link-underline text-sm text-navy-foreground/90"
-              >
+              <Link to="/univers" className="link-underline text-sm text-navy-foreground/90">
                 L'univers ZELOR
               </Link>
             </div>
@@ -77,13 +71,8 @@ function Home() {
         </div>
       </section>
 
-
       {/* B. Promesse */}
-      <Reveal
-        as="section"
-        aria-labelledby="promesse-title"
-        className="container-z py-24 md:py-32"
-      >
+      <Reveal as="section" aria-labelledby="promesse-title" className="container-z py-24 md:py-32">
         <h2 id="promesse-title" className="sr-only">
           Nos engagements
         </h2>
@@ -91,9 +80,7 @@ function Home() {
           {PROMISES.map((promise) => (
             <li key={promise.title} className="rule-z pt-6">
               <h3 className="font-display text-2xl">{promise.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">
-                {promise.body}
-              </p>
+              <p className="mt-3 text-sm text-muted-foreground">{promise.body}</p>
             </li>
           ))}
         </ul>
@@ -108,10 +95,7 @@ function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Sélection</p>
-            <h2
-              id="collection-title"
-              className="mt-2 font-display text-3xl md:text-4xl"
-            >
+            <h2 id="collection-title" className="mt-2 font-display text-3xl md:text-4xl">
               La collection
             </h2>
           </div>
@@ -120,8 +104,7 @@ function Home() {
           </Link>
         </div>
         <p className="mt-4 max-w-xl text-sm text-muted-foreground">
-          Quelques pièces de la sélection en cours. Les prix seront communiqués
-          à l'ouverture.
+          Quelques pièces de la sélection en cours. Les prix seront communiqués à l'ouverture.
         </p>
         <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
           {DEMO_PRODUCTS.slice(0, 4).map((product) => (
@@ -134,15 +117,12 @@ function Home() {
       <Reveal as="section" replay className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
-            <h2 className="font-display text-3xl md:text-5xl">
-              Le goût des choses bien choisies.
-            </h2>
+            <h2 className="font-display text-3xl md:text-5xl">Le goût des choses bien choisies.</h2>
             <p className="mt-6 max-w-md text-base text-foreground/80">
-              ZELOR est née d'une idée simple : les objets qui nous entourent
-              méritent plus d'attention. Chaque pièce est pensée ou sélectionnée
-              pour son équilibre entre forme, fonction et présence. De la
-              première impression au dernier détail, nous construisons une
-              expérience plus calme, plus précise et plus personnelle.
+              ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
+              d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
+              fonction et présence. De la première impression au dernier détail, nous construisons
+              une expérience plus calme, plus précise et plus personnelle.
             </p>
           </div>
           <HoverVideo
@@ -155,18 +135,10 @@ function Home() {
         </div>
       </Reveal>
 
-
       {/* E. Qualité */}
-      <Reveal
-        as="section"
-        aria-labelledby="qualite-title"
-        className="container-z py-24 md:py-32"
-      >
+      <Reveal as="section" aria-labelledby="qualite-title" className="container-z py-24 md:py-32">
         <p className="eyebrow">Qualité</p>
-        <h2
-          id="qualite-title"
-          className="mt-2 max-w-2xl font-display text-3xl md:text-4xl"
-        >
+        <h2 id="qualite-title" className="mt-2 max-w-2xl font-display text-3xl md:text-4xl">
           Ce que nous regardons avant de sélectionner une pièce.
         </h2>
         <dl className="mt-10 grid gap-8 md:grid-cols-3">
@@ -191,8 +163,8 @@ function Home() {
           ))}
         </dl>
         <p className="mt-8 max-w-2xl text-sm text-muted-foreground">
-          Nous n'annonçons une origine, une certification ou une garantie que
-          lorsqu'elle est documentée. Le reste se lit dans l'objet.
+          Nous n'annonçons une origine, une certification ou une garantie que lorsqu'elle est
+          documentée. Le reste se lit dans l'objet.
         </p>
       </Reveal>
 
@@ -202,7 +174,6 @@ function Home() {
         replay
         className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28"
       >
-
         <HoverVideo
           src={editorialVideo.url}
           poster={editorialImage}
@@ -212,36 +183,26 @@ function Home() {
         />
         <div>
           <p className="eyebrow">Éditorial</p>
-          <h2 className="mt-2 font-display text-3xl md:text-5xl">
-            Une signature discrète.
-          </h2>
+          <h2 className="mt-2 font-display text-3xl md:text-5xl">Une signature discrète.</h2>
           <p className="mt-6 max-w-md text-base text-foreground/80">
-            ZELOR privilégie les détails qui restent : une matière agréable, une
-            silhouette équilibrée, une fonction intuitive et une présentation
-            qui ne laisse rien au hasard.
+            ZELOR privilégie les détails qui restent : une matière agréable, une silhouette
+            équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard.
           </p>
-          <Link
-            to="/univers"
-            className="link-underline mt-6 inline-block text-sm"
-          >
+          <Link to="/univers" className="link-underline mt-6 inline-block text-sm">
             Lire l'univers ZELOR
           </Link>
         </div>
       </Reveal>
 
-
       {/* G. Avis */}
-      <section
-        aria-labelledby="avis-title"
-        className="container-z pb-4"
-      >
+      <section aria-labelledby="avis-title" className="container-z pb-4">
         <h2 id="avis-title" className="font-display text-3xl md:text-4xl">
           Avis clients
         </h2>
         <div className="surface-light aura-z mt-6 rounded-3xl border border-border/70 p-14 text-center">
           <p className="mx-auto max-w-md text-sm text-muted-foreground">
-            Les premiers retours de nos clients paraîtront ici, tels qu'ils nous
-            seront adressés, sans sélection ni retouche.
+            Les premiers retours de nos clients paraîtront ici, tels qu'ils nous seront adressés,
+            sans sélection ni retouche.
           </p>
         </div>
       </section>

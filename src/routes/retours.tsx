@@ -29,10 +29,9 @@ export const Route = createFileRoute("/retours")({
     >
       <Section title="Délai de rétractation">
         <p>
-          Vous disposez du délai légal de rétractation prévu par le droit
-          européen à compter de la réception de votre commande. Le délai précis
-          applicable à votre pays est rappelé dans l'email de confirmation et
-          dans les conditions générales de vente.
+          Vous disposez du délai légal de rétractation prévu par le droit européen à compter de la
+          réception de votre commande. Le délai précis applicable à votre pays est rappelé dans
+          l'email de confirmation et dans les conditions générales de vente.
         </p>
       </Section>
       <Section title="Procédure">
@@ -45,29 +44,24 @@ export const Route = createFileRoute("/retours")({
             en indiquant votre numéro de commande.
           </li>
           <li>Vous recevez la marche à suivre et l'adresse de retour.</li>
+          <li>Renvoyez la pièce dans son emballage d'origine, complète et non utilisée.</li>
           <li>
-            Renvoyez la pièce dans son emballage d'origine, complète et non
-            utilisée.
-          </li>
-          <li>
-            Le remboursement est effectué sur le moyen de paiement d'origine,
-            après réception et contrôle de la pièce.
+            Le remboursement est effectué sur le moyen de paiement d'origine, après réception et
+            contrôle de la pièce.
           </li>
         </ol>
       </Section>
       <Section title="Pièces abîmées ou non conformes">
         <p>
-          Si une pièce vous parvient endommagée ou ne correspond pas à votre
-          commande, signalez-le dès la réception avec quelques photographies :
-          nous organisons le retour à nos frais et procédons à l'échange ou au
-          remboursement.
+          Si une pièce vous parvient endommagée ou ne correspond pas à votre commande, signalez-le
+          dès la réception avec quelques photographies : nous organisons le retour à nos frais et
+          procédons à l'échange ou au remboursement.
         </p>
       </Section>
       <Section title="Formulaire de rétractation">
         <p>
-          Un modèle de formulaire de rétractation sera mis à disposition en
-          téléchargement dès l'ouverture de la boutique. Une demande écrite
-          claire suffit en attendant.
+          Un modèle de formulaire de rétractation sera mis à disposition en téléchargement dès
+          l'ouverture de la boutique. Une demande écrite claire suffit en attendant.
         </p>
       </Section>
     </PageShell>

@@ -8,8 +8,7 @@ export const Route = createFileRoute("/compte")({
       { title: "Compte client — ZELOR" },
       {
         name: "description",
-        content:
-          "Espace client ZELOR : commandes, adresses et préférences de communication.",
+        content: "Espace client ZELOR : commandes, adresses et préférences de communication.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Compte client — ZELOR" },
@@ -38,8 +37,8 @@ export const Route = createFileRoute("/compte")({
       </Section>
       <Section title="Connexion">
         <p>
-          La connexion se fera par email, à l'aide d'un code à usage unique :
-          aucun mot de passe à retenir, aucun identifiant conservé sur ce site.
+          La connexion se fera par email, à l'aide d'un code à usage unique : aucun mot de passe à
+          retenir, aucun identifiant conservé sur ce site.
         </p>
       </Section>
     </PageShell>

@@ -36,7 +36,6 @@ export function CookieConsent() {
     };
   }, []);
 
-
   // Le bandeau se retire avec le même soin qu'il apparaît.
   const dismiss = () => {
     if (closing) return;
@@ -65,17 +64,13 @@ export function CookieConsent() {
       aria-label="Préférences de confidentialité"
       style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
       className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 z-60 md:inset-x-auto md:right-8 md:max-w-md`}
-
     >
       <div className="panel-navy p-6 md:p-7">
         <p className="eyebrow text-navy-foreground/60">Confidentialité</p>
-        <h2 className="mt-2 font-display text-2xl text-navy-foreground">
-          Une expérience mesurée.
-        </h2>
+        <h2 className="mt-2 font-display text-2xl text-navy-foreground">Une expérience mesurée.</h2>
         <p className="mt-3 text-sm text-navy-foreground/75">
-          Nous n'activons aucune mesure d'audience ni cookie marketing sans
-          votre accord. Les cookies nécessaires assurent seulement le
-          fonctionnement du site et du panier.
+          Nous n'activons aucune mesure d'audience ni cookie marketing sans votre accord. Les
+          cookies nécessaires assurent seulement le fonctionnement du site et du panier.
         </p>
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
           <button
@@ -85,11 +80,7 @@ export function CookieConsent() {
           >
             Tout accepter
           </button>
-          <button
-            type="button"
-            onClick={() => decide("essential")}
-            className="btn-veil flex-1"
-          >
+          <button type="button" onClick={() => decide("essential")} className="btn-veil flex-1">
             Essentiels
           </button>
         </div>

@@ -30,10 +30,7 @@ export const Route = createFileRoute("/livraison")({
       <Section title="Zones desservies">
         <dl className="divide-y divide-border border-y border-border text-sm">
           {[
-            [
-              "France",
-              "Desservie à l'ouverture · délai et frais affichés avant paiement",
-            ],
+            ["France", "Desservie à l'ouverture · délai et frais affichés avant paiement"],
             [
               "Union européenne",
               "Desservie à l'ouverture · délai et frais affichés avant paiement",
@@ -53,22 +50,21 @@ export const Route = createFileRoute("/livraison")({
       </Section>
       <Section title="Délais et frais">
         <p>
-          Le délai et le montant exacts dépendent de la destination et du
-          transporteur retenu. Ils s'affichent avant le paiement, sans surprise
-          à l'étape suivante, et sont rappelés dans l'email de confirmation.
+          Le délai et le montant exacts dépendent de la destination et du transporteur retenu. Ils
+          s'affichent avant le paiement, sans surprise à l'étape suivante, et sont rappelés dans
+          l'email de confirmation.
         </p>
       </Section>
       <Section title="Douanes et taxes">
         <p>
-          Pour les commandes hors Union européenne, des droits et taxes peuvent
-          s'ajouter au montant réglé. Les modalités applicables à chaque
-          destination seront précisées à son ouverture.
+          Pour les commandes hors Union européenne, des droits et taxes peuvent s'ajouter au montant
+          réglé. Les modalités applicables à chaque destination seront précisées à son ouverture.
         </p>
       </Section>
       <Section title="Emballage">
         <p>
-          Chaque commande est emballée avec soin, dans une présentation sobre
-          qui protège la pièce sans excès de matière.
+          Chaque commande est emballée avec soin, dans une présentation sobre qui protège la pièce
+          sans excès de matière.
         </p>
       </Section>
     </PageShell>

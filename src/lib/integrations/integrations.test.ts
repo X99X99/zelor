@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  INTEGRATIONS,
-  integrationStatus,
-  isIntegrationConfigured,
-} from "./registry";
+import { INTEGRATIONS, integrationStatus, isIntegrationConfigured } from "./registry";
 
 describe("couche d'intégrations", () => {
   it("n'expose aucun secret dans le dépôt", () => {
@@ -13,9 +9,7 @@ describe("couche d'intégrations", () => {
         expect(key.startsWith("VITE_"), `${key} doit être publiable`).toBe(true);
       }
       for (const key of spec.serverEnv) {
-        expect(key.startsWith("VITE_"), `${key} ne doit jamais être public`).toBe(
-          false,
-        );
+        expect(key.startsWith("VITE_"), `${key} ne doit jamais être public`).toBe(false);
       }
     }
   });

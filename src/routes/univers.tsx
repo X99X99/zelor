@@ -17,8 +17,7 @@ export const Route = createFileRoute("/univers")({
       { property: "og:title", content: "L'univers ZELOR" },
       {
         property: "og:description",
-        content:
-          "Une approche calme et précise du quotidien, entre forme, usage et matière.",
+        content: "Une approche calme et précise du quotidien, entre forme, usage et matière.",
       },
       { property: "og:url", content: "/univers" },
       { property: "og:type", content: "website" },
@@ -46,37 +45,34 @@ function UniversePage() {
     >
       <Section title="Notre point de départ">
         <p>
-          Les objets que l'on utilise chaque jour façonnent l'humeur d'une
-          journée. Une pièce juste se reconnaît à l'usage : elle tombe bien, se
-          range sans y penser, se patine au lieu de se fatiguer. C'est cette
-          qualité-là, silencieuse, que la Maison ZELOR cherche à réunir.
+          Les objets que l'on utilise chaque jour façonnent l'humeur d'une journée. Une pièce juste
+          se reconnaît à l'usage : elle tombe bien, se range sans y penser, se patine au lieu de se
+          fatiguer. C'est cette qualité-là, silencieuse, que la Maison ZELOR cherche à réunir.
         </p>
       </Section>
       <Section title="Notre manière de choisir">
         <p>
-          Nous regardons la forme, l'usage et la finition, dans cet ordre. Une
-          pièce est prise en main, portée, posée, déplacée pendant plusieurs
-          semaines avant d'être retenue. Ce qui séduit en photographie mais
-          déçoit à l'usage n'entre pas au catalogue.
+          Nous regardons la forme, l'usage et la finition, dans cet ordre. Une pièce est prise en
+          main, portée, posée, déplacée pendant plusieurs semaines avant d'être retenue. Ce qui
+          séduit en photographie mais déçoit à l'usage n'entre pas au catalogue.
         </p>
         <p>
-          Nous demandons ensuite les informations précises — composition,
-          provenance, entretien — et nous ne publions que ce que le fournisseur
-          peut documenter.
+          Nous demandons ensuite les informations précises — composition, provenance, entretien — et
+          nous ne publions que ce que le fournisseur peut documenter.
         </p>
       </Section>
       <Section title="Une allure européenne">
         <p>
-          Notre vocabulaire visuel vient de la Riviera et des villes du Sud : la
-          lumière sur la pierre claire, le bleu dense de la fin de journée, le
-          calme des intérieurs sobres. Rien de démonstratif, une présence.
+          Notre vocabulaire visuel vient de la Riviera et des villes du Sud : la lumière sur la
+          pierre claire, le bleu dense de la fin de journée, le calme des intérieurs sobres. Rien de
+          démonstratif, une présence.
         </p>
       </Section>
       <Section title="Une maison internationale">
         <p>
-          ZELOR s'adresse à des clients en France, en Europe et au-delà. Le site
-          ouvre en français, avec une structure prête pour l'anglais, le russe,
-          l'italien, l'espagnol, l'allemand, le japonais et l'arabe.
+          ZELOR s'adresse à des clients en France, en Europe et au-delà. Le site ouvre en français,
+          avec une structure prête pour l'anglais, le russe, l'italien, l'espagnol, l'allemand, le
+          japonais et l'arabe.
         </p>
       </Section>
     </PageShell>

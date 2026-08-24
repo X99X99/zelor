@@ -15,8 +15,7 @@ export function Newsletter() {
           Entrez dans l'univers ZELOR.
         </h2>
         <p className="mt-3 max-w-md text-sm text-navy-foreground/75">
-          Recevez nos nouveautés, nos histoires et nos sélections directement
-          dans votre boîte mail.
+          Recevez nos nouveautés, nos histoires et nos sélections directement dans votre boîte mail.
         </p>
       </div>
       <form
@@ -70,8 +69,8 @@ export function Newsletter() {
           </p>
         )}
         <p className="mt-3 text-xs text-navy-foreground/60">
-          Vous pouvez vous désinscrire à tout moment. Vos données sont utilisées
-          uniquement pour vous envoyer nos communications.
+          Vous pouvez vous désinscrire à tout moment. Vos données sont utilisées uniquement pour
+          vous envoyer nos communications.
         </p>
       </form>
     </section>

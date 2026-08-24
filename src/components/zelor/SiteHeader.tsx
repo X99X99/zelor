@@ -2,12 +2,11 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { Menu, Search, ShoppingBag, User, X, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { NavLink } from "@/components/zelor/NavLink";
+import { BrandLink, NavLink } from "@/components/zelor/NavLink";
 import { NavySurface, NAVY_SURFACE_EXIT_MS } from "@/components/zelor/NavySurface";
 import { ThemeToggle } from "@/components/zelor/ThemeToggle";
 import { BRAND, LANGUAGES, MAIN_NAV } from "@/lib/zelor/content";
 import { useCart } from "@/lib/zelor/cart";
-
 
 function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
@@ -40,8 +39,6 @@ function AnnouncementBar() {
     </div>
   );
 }
-
-
 
 function LanguageMenu() {
   const [open, setOpen] = useState(false);
@@ -116,13 +113,7 @@ function LanguageMenu() {
   );
 }
 
-function SearchPanel({
-  onClose,
-  closing,
-}: {
-  onClose: () => void;
-  closing: boolean;
-}) {
+function SearchPanel({ onClose, closing }: { onClose: () => void; closing: boolean }) {
   const [query, setQuery] = useState("");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -134,13 +125,7 @@ function SearchPanel({
   }, []);
 
   return (
-    <NavySurface
-      animate
-      closing={closing}
-      material={false}
-      className="relative overflow-hidden"
-    >
-
+    <NavySurface animate closing={closing} material={false} className="relative overflow-hidden">
       <form
         className="container-z flex items-center gap-3 py-5"
         onSubmit={(event) => {
@@ -166,10 +151,7 @@ function SearchPanel({
             className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/45"
           />
         </div>
-        <button
-          type="submit"
-          className="btn-veil hidden shrink-0 sm:inline-flex"
-        >
+        <button type="submit" className="btn-veil hidden shrink-0 sm:inline-flex">
           Rechercher
         </button>
         <button
@@ -225,7 +207,6 @@ function ReadingProgress() {
     </span>
   );
 }
-
 
 /** Masque le header au défilement vers le bas, le révèle au défilement vers le haut. */
 function useHideOnScroll(locked: boolean) {
@@ -293,7 +274,6 @@ export function SiteHeader() {
     }, NAVY_SURFACE_EXIT_MS);
   };
 
-
   // Le panier respire lorsqu'une pièce est ajoutée.
   const firstCount = useRef(true);
   useEffect(() => {
@@ -356,7 +336,6 @@ export function SiteHeader() {
           scrolled ? "shadow-[var(--shadow-elegant)]" : "shadow-none"
         }`}
       >
-
         <AnnouncementBar />
         <div className="container-z flex items-center justify-between gap-4 py-4">
           <div className="flex flex-1 items-center gap-1 md:hidden">
@@ -387,14 +366,12 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <Link
-            to="/"
-            onClick={closeMenu}
+          <BrandLink
+            onNavigate={closeMenu}
             className="wordmark-z font-display text-2xl tracking-[0.4em] md:text-[1.75rem]"
-            aria-label="ZELOR — accueil"
           >
             {BRAND.name}
-          </Link>
+          </BrandLink>
 
           <div className="flex flex-1 items-center justify-end gap-0.5">
             <button
@@ -441,9 +418,7 @@ export function SiteHeader() {
         </div>
 
         {searchOpen && (
-          <div
-            className={`slot-z ${searchClosing ? "slot-out-z" : "slot-in-z"}`}
-          >
+          <div className={`slot-z ${searchClosing ? "slot-out-z" : "slot-in-z"}`}>
             <div>
               <SearchPanel onClose={closeSearch} closing={searchClosing} />
             </div>
@@ -468,14 +443,12 @@ export function SiteHeader() {
           className={`overlay-navy grain-z sheet-z fixed inset-2 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
           <div className="container-z flex items-center justify-between py-4">
-            <Link
-              to="/"
-              onClick={closeMenu}
-              aria-label="ZELOR — accueil"
+            <BrandLink
+              onNavigate={closeMenu}
               className="wordmark-z font-display text-2xl tracking-[0.4em]"
             >
               {BRAND.name}
-            </Link>
+            </BrandLink>
             <button
               type="button"
               onClick={closeMenu}

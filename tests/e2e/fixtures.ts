@@ -54,13 +54,15 @@ export async function openPage(page: Page, path: string, theme: ThemeName = "lig
   await page.evaluate(async () => {
     await document.fonts.ready;
   });
-  // Données dynamiques neutralisées : l'année courante ne doit pas dater une baseline.
+  // Données dynamiques neutralisées : l'année courante ne doit pas dater une
+  // baseline. La retouche intervient après l'hydratation complète, sinon React
+  // compare son rendu à un DOM déjà modifié et signale un faux écart.
+  await page.waitForTimeout(250);
   await page.evaluate(() => {
     document.querySelectorAll("footer p").forEach((node) => {
       if (node.textContent?.includes("©")) node.textContent = "© 2000 ZELOR. Tous droits réservés.";
     });
   });
-  await page.waitForTimeout(250);
 }
 
 /** Signature structurelle d'une page : hiérarchie, zones cliquables, états. */

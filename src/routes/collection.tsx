@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
-
 import { DEMO_PRODUCTS } from "@/lib/zelor/content";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
@@ -26,8 +25,7 @@ export const Route = createFileRoute("/collection")({
       { property: "og:title", content: "Collection — ZELOR" },
       {
         property: "og:description",
-        content:
-          "Des pièces choisies pour leur équilibre entre forme, fonction et présence.",
+        content: "Des pièces choisies pour leur équilibre entre forme, fonction et présence.",
       },
       { property: "og:url", content: "/collection" },
       { property: "og:type", content: "website" },
@@ -43,24 +41,17 @@ function CollectionPage() {
   const [line, setLine] = useState("Toutes");
   const [sort, setSort] = useState("nouveaute");
 
-  const lines = useMemo(
-    () => ["Toutes", ...new Set(DEMO_PRODUCTS.map((p) => p.line))],
-    [],
-  );
+  const lines = useMemo(() => ["Toutes", ...new Set(DEMO_PRODUCTS.map((p) => p.line))], []);
 
   const products = useMemo(() => {
     const term = query.trim().toLowerCase();
     let list = DEMO_PRODUCTS.filter(
       (p) =>
         (line === "Toutes" || p.line === line) &&
-        (!term ||
-          p.name.toLowerCase().includes(term) ||
-          p.line.toLowerCase().includes(term)),
+        (!term || p.name.toLowerCase().includes(term) || p.line.toLowerCase().includes(term)),
     );
     if (sort === "nouveaute") {
-      list = [...list].sort(
-        (a, b) => Number(Boolean(b.isNew)) - Number(Boolean(a.isNew)),
-      );
+      list = [...list].sort((a, b) => Number(Boolean(b.isNew)) - Number(Boolean(a.isNew)));
     } else if (sort === "alpha") {
       list = [...list].sort((a, b) => a.name.localeCompare(b.name, "fr"));
     } else if (sort === "ligne") {
@@ -71,17 +62,15 @@ function CollectionPage() {
     return list;
   }, [query, line, sort]);
 
-
   return (
     <>
       <Breadcrumbs items={[{ label: "Collection" }]} />
       <Reveal as="header" className="container-z pt-10 pb-8 md:pt-14">
         <h1 className="font-display text-4xl md:text-6xl">Collection</h1>
         <p className="mt-5 max-w-2xl text-base text-muted-foreground">
-          La collection ZELOR réunit des pièces choisies pour leur équilibre
-          entre forme, fonction et finition. Chaque référence est décrite avec
-          précision : matière, usage, entretien et livraison, sans promesse
-          approximative.
+          La collection ZELOR réunit des pièces choisies pour leur équilibre entre forme, fonction
+          et finition. Chaque référence est décrite avec précision : matière, usage, entretien et
+          livraison, sans promesse approximative.
         </p>
       </Reveal>
 
@@ -183,7 +172,6 @@ function CollectionPage() {
           </Reveal>
         )}
       </div>
-
     </>
   );
 }

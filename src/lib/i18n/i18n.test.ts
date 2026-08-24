@@ -1,13 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { formatDate, formatPrice, textDirection } from "./format";
-import {
-  DEFAULT_LOCALE,
-  LOCALES,
-  isPublicLocale,
-  publicLocales,
-  resolveLocale,
-} from "./locales";
+import { DEFAULT_LOCALE, LOCALES, isPublicLocale, publicLocales, resolveLocale } from "./locales";
 import { t, UI_DICTIONARIES } from "./ui";
 
 describe("architecture d'internationalisation", () => {

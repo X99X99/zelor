@@ -59,37 +59,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const add = useCallback((line: CartLine) => {
     setLines((current) => {
-      const index = current.findIndex(
-        (l) => l.slug === line.slug && l.variant === line.variant,
-      );
+      const index = current.findIndex((l) => l.slug === line.slug && l.variant === line.variant);
       if (index === -1) return [...current, line];
       return current.map((existing, i) =>
-        i === index
-          ? { ...existing, quantity: existing.quantity + line.quantity }
-          : existing,
+        i === index ? { ...existing, quantity: existing.quantity + line.quantity } : existing,
       );
     });
   }, []);
 
-  const setQuantity = useCallback(
-    (slug: string, variant: string, quantity: number) => {
-      setLines((current) =>
-        current
-          .map((l) =>
-            l.slug === slug && l.variant === variant
-              ? { ...l, quantity: Math.max(0, quantity) }
-              : l,
-          )
-          .filter((l) => l.quantity > 0),
-      );
-    },
-    [],
-  );
+  const setQuantity = useCallback((slug: string, variant: string, quantity: number) => {
+    setLines((current) =>
+      current
+        .map((l) =>
+          l.slug === slug && l.variant === variant ? { ...l, quantity: Math.max(0, quantity) } : l,
+        )
+        .filter((l) => l.quantity > 0),
+    );
+  }, []);
 
   const remove = useCallback((slug: string, variant: string) => {
-    setLines((current) =>
-      current.filter((l) => !(l.slug === slug && l.variant === variant)),
-    );
+    setLines((current) => current.filter((l) => !(l.slug === slug && l.variant === variant)));
   }, []);
 
   const clear = useCallback(() => setLines([]), []);

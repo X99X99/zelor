@@ -27,6 +27,35 @@ export function isActivePath(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
+/**
+ * Logique partagée « lien vers la page déjà active ».
+ * Header, menu mobile, footer et logo passent tous par ici : aucun de ces
+ * points d'entrée ne peut diverger dans le futur.
+ */
+export function useSameRouteTop(to: string) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const active = isActivePath(pathname, to);
+
+  const onClick = (event: {
+    metaKey: boolean;
+    ctrlKey: boolean;
+    shiftKey: boolean;
+    altKey: boolean;
+    button?: number;
+    preventDefault: () => void;
+  }) => {
+    if (!active) return;
+    // Clic modifié ou secondaire : on laisse le navigateur faire son travail.
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (event.button ?? 0) > 0)
+      return;
+    // Même page : aucune navigation, aucun ajout d'historique.
+    event.preventDefault();
+    scrollToTop();
+  };
+
+  return { active, onClick };
+}
+
 export function NavLink({
   to,
   children,
@@ -43,8 +72,7 @@ export function NavLink({
   onNavigate?: () => void;
   variant?: "header" | "footer" | "sheet";
 } & Record<string, unknown>) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const active = isActivePath(pathname, to);
+  const { active, onClick } = useSameRouteTop(to);
 
   return (
     <Link
@@ -54,18 +82,41 @@ export function NavLink({
       className={`nav-link-z ${className} ${active ? activeClassName : ""}`.trim()}
       onClick={(event) => {
         onNavigate?.();
-        if (!active) return;
-        // Même page : aucune navigation, aucun ajout d'historique.
-        if (
-          event.metaKey ||
-          event.ctrlKey ||
-          event.shiftKey ||
-          event.altKey ||
-          (event as unknown as MouseEvent).button > 0
-        )
-          return;
-        event.preventDefault();
-        scrollToTop();
+        onClick(event as unknown as MouseEvent & { preventDefault: () => void });
+      }}
+      {...rest}
+    >
+      {children}
+    </Link>
+  );
+}
+
+/**
+ * Logo ZELOR — lien d'accueil partout, retour en haut lorsqu'on est déjà
+ * sur la homepage. Même primitive que les liens de navigation.
+ */
+export function BrandLink({
+  children,
+  className = "",
+  onNavigate,
+  ...rest
+}: {
+  children: ReactNode;
+  className?: string;
+  onNavigate?: () => void;
+} & Record<string, unknown>) {
+  const { active, onClick } = useSameRouteTop("/");
+
+  return (
+    <Link
+      to="/"
+      aria-label="ZELOR — accueil"
+      aria-current={active ? "page" : undefined}
+      data-brand-home={active ? "current" : undefined}
+      className={className}
+      onClick={(event) => {
+        onNavigate?.();
+        onClick(event as unknown as MouseEvent & { preventDefault: () => void });
       }}
       {...rest}
     >

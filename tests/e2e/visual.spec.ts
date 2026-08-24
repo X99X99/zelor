@@ -34,7 +34,18 @@ for (const theme of themes) {
     test("footer et fin de page", async ({ page }) => {
       await openPage(page, "/", theme);
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await page.waitForTimeout(200);
+      // Le défilement doit être posé : on attend une position stable avant capture.
+      await page.waitForFunction(
+        () => {
+          const w = window as unknown as { __y?: number };
+          const settled = w.__y === window.scrollY;
+          w.__y = window.scrollY;
+          return settled;
+        },
+        undefined,
+        { polling: 150 },
+      );
+      await page.waitForTimeout(400);
       await expect(page.locator("footer")).toHaveScreenshot(`footer-${theme}.png`);
     });
 
@@ -54,4 +65,46 @@ test("parité structurelle clair / sombre", async ({ browser }) => {
   await openPage(darkPage, "/collection", "dark");
   expect(await structuralSignature(darkPage)).toEqual(await structuralSignature(lightPage));
   await Promise.all(contexts.map((c) => c.close()));
+});
+
+for (const theme of themes) {
+  test.describe(`menu mobile — états critiques (${theme})`, () => {
+    test("entrée focus clavier", async ({ page, isMobile }) => {
+      test.skip(!isMobile, "menu plein écran réservé au mobile");
+      await openPage(page, "/", theme);
+      await page.getByRole("button", { name: "Ouvrir le menu" }).click();
+      const dialog = page.getByRole("dialog");
+      await dialog.locator("a.nav-link-z").first().focus();
+      await page.waitForTimeout(200);
+      await expect(dialog).toHaveScreenshot(`menu-mobile-focus-${theme}.png`);
+    });
+
+    test("entrée active (page consultée)", async ({ page, isMobile }) => {
+      test.skip(!isMobile, "menu plein écran réservé au mobile");
+      await openPage(page, "/collection", theme);
+      await page.getByRole("button", { name: "Ouvrir le menu" }).click();
+      const dialog = page.getByRole("dialog");
+      await expect(dialog.locator('a[aria-current="page"]')).toHaveCount(1);
+      await expect(dialog).toHaveScreenshot(`menu-mobile-active-${theme}.png`);
+    });
+  });
+}
+
+test("continuité marine annonce → header → recherche", async ({ page }) => {
+  await openPage(page, "/", "light");
+  const signature = () =>
+    page.evaluate(() => {
+      const header = document.querySelector("header")!;
+      return Array.from(header.querySelectorAll<HTMLElement>("*"))
+        .map((el) => getComputedStyle(el).backgroundImage)
+        .filter((v) => v.includes("gradient"))
+        .sort();
+    });
+  const closed = await signature();
+  await page.getByRole("button", { name: "Rechercher" }).first().click();
+  await expect(page.locator("#site-search")).toBeFocused();
+  const open = await signature();
+  // La recherche hérite de la matière du header : elle ne peint jamais
+  // un second gradient concurrent.
+  expect(open).toEqual(closed);
 });

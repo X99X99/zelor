@@ -28,9 +28,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           {product.isNew && <span className="eyebrow">Nouveauté</span>}
         </div>
         <p className="mt-1 text-xs text-muted-foreground">{product.line}</p>
-        <p className="mt-2 text-xs tracking-wide text-muted-foreground">
-          {PRICING.label}
-        </p>
+        <p className="mt-2 text-xs tracking-wide text-muted-foreground">{PRICING.label}</p>
       </Link>
     </article>
   );
