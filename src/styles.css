@@ -1105,8 +1105,16 @@
   }
 }
 
-/* Ligne de menu statutaire */
+/* ————— Capsule de navigation ZELOR —————
+ * Primitive unique : menu mobile, header desktop et footer partagent
+ * littéralement cette matière, cette profondeur et cette chorégraphie.
+ * `--cap-pad` est la seule source de vérité de la géométrie interne :
+ * la respiration au survol ET le soulignement en dérivent.
+ */
 @utility menu-row {
+  --cap-pad: 0.75rem;
+  --cap-underline-bottom: 0.55rem;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1124,14 +1132,14 @@
     opacity var(--dur-4) var(--ease-breathe),
     scale var(--dur-5) var(--ease-breathe);
   &:focus-within {
-    padding-inline: 0.75rem;
+    padding-inline: var(--cap-pad);
     background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
   }
   /* Sur tactile, aucun état de survol fantôme : seul l'appui répond. */
   @media (hover: hover) {
     &:hover {
-      padding-inline: 0.75rem;
+      padding-inline: var(--cap-pad);
       background-color: color-mix(in oklab, var(--navy-foreground) 6%, transparent);
       box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
     }
@@ -1141,6 +1149,29 @@
     transition-duration: var(--dur-2);
   }
 }
+
+/* Même capsule, posée à l'horizontale (header) ou en colonne serrée (footer).
+ * Seules les proportions changent : la matière, le halo, la courbe et le
+ * soulignement restent ceux de `menu-row`. La largeur ne bouge pas au survol
+ * pour ne jamais faire tressaillir la ligne de navigation. */
+@utility menu-row-inline {
+  --cap-underline-bottom: 0.32rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-block: 0.5rem;
+  padding-inline: var(--cap-pad);
+  border-bottom: none;
+  &:focus-within,
+  &:hover {
+    padding-inline: var(--cap-pad);
+    translate: 0 -1px;
+  }
+  &:active {
+    translate: 0 0;
+    scale: 0.985;
+  }
+}
+
 
 @utility skeleton-lux {
   background: linear-gradient(
