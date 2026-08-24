@@ -1657,7 +1657,11 @@
   );
   background-size: 100% 100%;
   border-radius: 999px;
-  overflow: hidden;
+  /* La tête d'éclat déborde volontairement du filet : elle marque le point de
+   * lecture. Un `overflow: hidden` la tronquait — le halo doit rester entier.
+   * Les deux couches internes sont peintes en `background`, elles ne peuvent
+   * pas déborder de la largeur réelle de progression. */
+  overflow: visible;
   box-shadow:
     0 0 8px color-mix(in oklab, var(--gold) 55%, transparent),
     0 0 20px -4px color-mix(in oklab, var(--gold) 38%, transparent);
