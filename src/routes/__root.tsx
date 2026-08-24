@@ -71,7 +71,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             router.invalidate();
             reset();
           }}
-          className="min-h-12 bg-primary px-6 text-sm tracking-[0.14em] text-primary-foreground uppercase"
+          className="btn-lux"
         >
           Réessayer
         </button>

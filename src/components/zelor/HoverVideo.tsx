@@ -77,7 +77,7 @@ export function HoverVideo({
         onFocus={play}
         onBlur={pause}
         tabIndex={-1}
-        className={`group relative overflow-hidden ${ratio} w-full bg-secondary/50`}
+        className={`group relative overflow-hidden ${ratio} w-full bg-navy/6`}
       >
         <img
           src={poster}

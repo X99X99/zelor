@@ -46,7 +46,7 @@ function NewPage() {
       </header>
       <div className="container-z pb-24">
         {products.length === 0 ? (
-          <div className="border border-dashed border-border px-6 py-20 text-center">
+          <div className="surface-light border border-border/70 px-6 py-24 text-center">
             <h2 className="font-display text-2xl">
               Les prochaines pièces arrivent bientôt.
             </h2>

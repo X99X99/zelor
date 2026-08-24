@@ -55,7 +55,7 @@ function ProductNotFound() {
       </p>
       <Link
         to="/collection"
-        className="mt-8 inline-flex min-h-12 items-center bg-primary px-6 text-sm tracking-[0.14em] text-primary-foreground uppercase"
+        className="btn-lux mt-8"
       >
         Voir la collection
       </Link>
@@ -128,7 +128,7 @@ function ProductPage() {
                   aria-pressed={variant === option}
                   className={`min-h-11 border px-4 text-sm transition-colors ${
                     variant === option
-                      ? "border-foreground bg-primary text-primary-foreground"
+                      ? "border-navy bg-navy text-navy-foreground"
                       : "border-input hover:bg-accent"
                   }`}
                 >
@@ -177,7 +177,7 @@ function ProductPage() {
               });
               setAdded(true);
             }}
-            className="mt-8 flex min-h-13 w-full items-center justify-center bg-primary px-6 text-sm tracking-[0.14em] text-primary-foreground uppercase transition-opacity hover:opacity-85"
+            className="btn-lux mt-8 w-full"
           >
             Ajouter au panier
           </button>
@@ -318,7 +318,7 @@ function ProductPage() {
               add({ slug: product.slug, name: product.name, variant, quantity });
               setAdded(true);
             }}
-            className="min-h-12 shrink-0 bg-primary px-5 text-xs tracking-[0.14em] text-primary-foreground uppercase"
+            className="btn-lux shrink-0 px-5"
           >
             Ajouter
           </button>

@@ -42,18 +42,18 @@ function CartPage() {
 
       {!ready ? (
         <div className="container-z pb-24" aria-live="polite">
-          <div className="h-24 animate-pulse bg-muted" />
+          <div className="skeleton-lux h-24" />
         </div>
       ) : lines.length === 0 ? (
         <div className="container-z pb-24">
-          <div className="border border-dashed border-border px-6 py-20 text-center">
+          <div className="surface-light border border-border/70 px-6 py-24 text-center">
             <h2 className="font-display text-2xl">Votre panier est vide.</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Parcourez la collection pour y ajouter une pièce.
             </p>
             <Link
               to="/collection"
-              className="mt-8 inline-flex min-h-12 items-center bg-primary px-6 text-sm tracking-[0.14em] text-primary-foreground uppercase"
+              className="btn-lux mt-8"
             >
               Voir la collection
             </Link>
@@ -141,7 +141,7 @@ function CartPage() {
             <button
               type="button"
               disabled
-              className="min-h-13 w-full bg-primary px-6 text-sm tracking-[0.14em] text-primary-foreground uppercase disabled:opacity-60"
+              className="btn-lux w-full disabled:opacity-60"
             >
               Passer commande
             </button>
