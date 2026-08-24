@@ -49,6 +49,13 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
     };
   });
 
+  // Le libellé dépend d'une donnée client (choix mémorisé) : on ne l'écrit
+  // qu'après l'hydratation, sinon l'attribut rendu par le serveur reste figé.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const activeLabel = OPTIONS.find((o) => o.value === choice)?.label ?? "Suivre le système";
+  const buttonLabel = mounted ? `Apparence : ${activeLabel}` : "Apparence";
+
   return (
     <div className={`relative ${className}`.trim()} ref={ref}>
       <button
@@ -56,10 +63,10 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
         onClick={() => (open && !closing ? close() : setOpen(true))}
         aria-expanded={open && !closing}
         aria-haspopup="listbox"
-        aria-label="Apparence"
-        title="Apparence"
+        aria-label={buttonLabel}
+        title={mounted ? activeLabel : undefined}
         suppressHydrationWarning
-        className="utility-z utility-icon-z theme-toggle-z flex size-11 items-center justify-center opacity-90 hover:opacity-100"
+        className="utility-z utility-icon-z theme-toggle-z size-11 opacity-90 hover:opacity-100"
       >
         {/* Les deux astres coexistent : seul le CSS décide lequel se montre. */}
         <Sun className="theme-icon-z theme-icon-day-z size-4.5" aria-hidden="true" />

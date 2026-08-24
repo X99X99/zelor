@@ -350,15 +350,17 @@
       rotate var(--dur-4) var(--ease-back),
       scale var(--dur-3) var(--ease-back);
   }
+  /* Règle définitive : soleil en clair, lune en sombre.
+   * L'état par défaut du document est clair → le soleil est visible. */
   & > .theme-icon-day-z {
-    opacity: 0;
-    rotate: -70deg;
-    scale: 0.6;
-  }
-  & > .theme-icon-night-z {
     opacity: 1;
     rotate: 0deg;
     scale: 1;
+  }
+  & > .theme-icon-night-z {
+    opacity: 0;
+    rotate: 70deg;
+    scale: 0.6;
   }
   &:hover {
     box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 16%, transparent);
@@ -366,15 +368,15 @@
 }
 
 :root.dark .theme-toggle-z > .theme-icon-day-z {
-  opacity: 1;
-  rotate: 0deg;
-  scale: 1;
+  opacity: 0;
+  rotate: -70deg;
+  scale: 0.6;
 }
 
 :root.dark .theme-toggle-z > .theme-icon-night-z {
-  opacity: 0;
-  rotate: 70deg;
-  scale: 0.6;
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1118,8 +1120,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  white-space: nowrap;
   gap: 1.5rem;
   padding-block: 1.15rem;
+
   border-radius: var(--radius-field);
   border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 14%, transparent);
   /* Même chorégraphie, davantage d'inertie : le déplacement glisse au lieu
@@ -1156,7 +1160,12 @@
  * pour ne jamais faire tressaillir la ligne de navigation. */
 @utility menu-row-inline {
   --cap-underline-bottom: 0.32rem;
+  /* La capsule épouse son libellé réel : jamais la largeur du conteneur. */
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
   justify-content: center;
+  white-space: nowrap;
   gap: 0.5rem;
   padding-block: 0.5rem;
   padding-inline: var(--cap-pad);
@@ -1171,7 +1180,6 @@
     scale: 0.985;
   }
 }
-
 
 @utility skeleton-lux {
   background: linear-gradient(
@@ -1975,7 +1983,6 @@
     background-color: color-mix(in oklab, var(--navy-foreground) 5%, transparent);
   }
 }
-
 
 @media (hover: hover) and (pointer: fine) {
   .nav-link-z:hover::after,

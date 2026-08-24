@@ -107,7 +107,6 @@ export function NavLink({
   );
 }
 
-
 /**
  * Logo ZELOR — lien d'accueil partout, retour en haut lorsqu'on est déjà
  * sur la homepage. Même primitive que les liens de navigation.
