@@ -88,9 +88,15 @@ export function SiteFooter() {
           <p>Maison lifestyle premium — France et Union européenne.</p>
           <button
             type="button"
-            onClick={() =>
-              window.scrollTo({ top: 0, behavior: "smooth" })
-            }
+            onClick={() => {
+              const reduced = window.matchMedia(
+                "(prefers-reduced-motion: reduce)",
+              ).matches;
+              window.scrollTo({
+                top: 0,
+                behavior: (reduced ? "auto" : "smooth") as ScrollBehavior,
+              });
+            }}
             className="link-underline press-z text-navy-foreground/70 hover:text-navy-foreground"
           >
             Haut de page
