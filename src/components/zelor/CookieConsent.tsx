@@ -8,6 +8,7 @@ const STORAGE_KEY = "zelor.consent.v1";
  */
 export function CookieConsent() {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
 
   useEffect(() => {
     try {
@@ -21,13 +22,23 @@ export function CookieConsent() {
     return;
   }, []);
 
+  // Le bandeau se retire avec le même soin qu'il apparaît.
+  const dismiss = () => {
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(() => {
+      setClosing(false);
+      setOpen(false);
+    }, 480);
+  };
+
   const decide = (value: "all" | "essential") => {
     try {
       localStorage.setItem(STORAGE_KEY, value);
     } catch {
       /* ignore */
     }
-    setOpen(false);
+    dismiss();
   };
 
   if (!open) return null;
@@ -37,7 +48,7 @@ export function CookieConsent() {
       role="dialog"
       aria-modal="false"
       aria-label="Préférences de confidentialité"
-      className="slide-up-lux fixed inset-x-4 bottom-4 z-60 md:inset-x-auto md:right-8 md:bottom-8 md:max-w-md"
+      className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 bottom-4 z-60 md:inset-x-auto md:right-8 md:bottom-8 md:max-w-md`}
     >
       <div className="panel-navy p-6 md:p-7">
         <p className="eyebrow text-navy-foreground/60">Confidentialité</p>
@@ -67,7 +78,7 @@ export function CookieConsent() {
         </div>
         <Link
           to="/cookies"
-          onClick={() => setOpen(false)}
+          onClick={dismiss}
           className="link-underline mt-4 text-xs tracking-wide text-navy-foreground/70 hover:text-navy-foreground"
         >
           Personnaliser mes préférences
