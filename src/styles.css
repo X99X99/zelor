@@ -582,3 +582,90 @@
     transform: none !important;
   }
 }
+
+/* ————— Matière flottante unifiée : menus, panneaux, surfaces système ————— */
+@utility panel-navy {
+  background-color: color-mix(in oklab, var(--navy-deep) 88%, transparent);
+  background-image: radial-gradient(
+    120% 90% at 50% 0%,
+    color-mix(in oklab, var(--navy-soft) 45%, transparent),
+    transparent 70%
+  );
+  backdrop-filter: blur(var(--blur-panel)) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--navy-foreground) 12%, transparent);
+  box-shadow: var(--shadow-float);
+  color: var(--navy-foreground);
+}
+
+/* Apparition de panneau : voile + profondeur, jamais brutal */
+@keyframes zelor-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@utility panel-in {
+  animation: zelor-panel-in var(--dur-3) var(--ease-enter) both;
+}
+
+@keyframes zelor-overlay-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(var(--blur-veil));
+  }
+}
+
+@utility overlay-in {
+  animation: zelor-overlay-in var(--dur-4) var(--ease-enter) both;
+}
+
+@keyframes zelor-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@utility overlay-out {
+  animation: zelor-overlay-out var(--dur-3) var(--ease-exit) both;
+}
+
+/* Réponse tactile commune à tous les boutons de matière claire */
+@utility press-z {
+  transition:
+    transform var(--dur-1) var(--ease-lux),
+    opacity var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+  &:active {
+    transform: scale(0.985);
+  }
+}
+
+/* Médias éditoriaux : même logique de survol que les vidéos */
+@utility media-z {
+  overflow: hidden;
+  & img,
+  & video {
+    transition:
+      transform var(--dur-5) var(--ease-lux),
+      opacity var(--dur-4) var(--ease-lux);
+  }
+  &:hover img,
+  &:hover video {
+    transform: scale(1.035);
+  }
+}
