@@ -81,7 +81,7 @@ Tout est centralisé dans ce fichier, dans cet ordre :
   capsule flottante « Découvrir » (`discover-bar-z`) sur les cartes produit.
 - **Pied de page** : `shoreline-z` assure la montée progressive du marine —
   la couleur finale du dégradé doit rester `--surface-floor`.
-- **Thème** (`src/lib/zelor/theme.ts` + `ThemeToggle.tsx`) : voir ci-dessous.
+- **Thème** (`src/lib/zelor/theme.ts` + `AppearanceControl.tsx`) : voir ci-dessous.
 
 ## 5. Mode clair / sombre
 
@@ -91,9 +91,13 @@ Tout est centralisé dans ce fichier, dans cet ordre :
   par `__root.tsx` : il lit `localStorage["zelor-theme"]`, sinon la préférence
   système, et pose la classe **avant le premier rendu** → aucun flash.
   `<html>` porte `suppressHydrationWarning` pour cette raison.
-- `useTheme()` (`useSyncExternalStore`) fournit un état unique partagé : un seul
-  bouton dans le header, identique sur desktop, tablette et mobile — aucune
-  variante à synchroniser.
+- `useTheme()` (`useSyncExternalStore`) fournit un état unique partagé. Le
+  header ne porte **qu'un seul** contrôle visible d'apparence,
+  `AppearanceControl` : soleil en clair, lune en sombre, icône centrée, cible
+  44 px. Il ouvre une liste à trois états — « Lumière claire »,
+  « Profondeur marine », « Suivre le système » — fermable au clic extérieur ou
+  à Échap. Ne jamais ajouter un second bouton concurrent (ex. retour au mode
+  système) : tout passe par ce composant.
 - Le choix manuel est persistant et prioritaire ; la préférence système ne sert
   qu'au premier chargement.
 - Les icônes soleil/lune sont pilotées en CSS (`theme-toggle-z`), jamais par un
@@ -151,6 +155,9 @@ année du pied de page neutralisée.
 Baselines : `tests/e2e/baselines/`. Elles se mettent à jour **volontairement**
 via `bun run test:visual:update`, après vérification visuelle du diff — jamais
 pour faire taire un échec.
+
+Parallélisme : `playwright.config.ts` fixe `workers: 2`. Au-delà, la contention
+CPU altère le rendu du texte et rendait les captures de fin de page instables.
 
 Chromium : si le binaire téléchargé par Playwright manque de bibliothèques
 système, pointer `ZELOR_CHROMIUM_PATH` vers un Chromium compatible.
