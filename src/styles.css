@@ -450,3 +450,40 @@
 @utility slide-up-lux {
   animation: zelor-slide-up 0.7s var(--ease-lux) both;
 }
+
+/* ————— Reveals progressifs au scroll ————— */
+@utility reveal-z {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 1.1s var(--ease-lux),
+    transform 1.1s var(--ease-lux);
+  will-change: opacity, transform;
+  &[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Élévation très subtile pour cartes et médias */
+@utility lift-z {
+  transition:
+    transform 0.7s var(--ease-lux),
+    box-shadow 0.7s var(--ease-lux);
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-float);
+  }
+}
+
+/* Filet lumineux de séparation, ton argent */
+@utility hairline-z {
+  border-top: 1px solid color-mix(in oklab, var(--navy) 14%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-z {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
