@@ -277,9 +277,12 @@
 }
 
 @utility overlay-navy {
-  background:
-    radial-gradient(120% 90% at 50% 0%, color-mix(in oklab, var(--navy-soft) 55%, transparent), transparent 70%),
-    color-mix(in oklab, var(--navy-deep) 92%, transparent);
+  background-color: var(--navy-deep);
+  background-image: radial-gradient(
+    120% 90% at 50% 0%,
+    color-mix(in oklab, var(--navy-soft) 55%, transparent),
+    transparent 70%
+  );
   backdrop-filter: blur(10px);
   color: var(--navy-foreground);
 }
