@@ -621,7 +621,9 @@
   animation: zelor-unfold var(--dur-4) var(--ease-enter) both;
 }
 
-/* … et se replie avec le même soin : jamais de retrait brut. */
+/* … et se replie exactement comme il s'est déployé : même matière, même
+ * durée, courbe strictement miroir de --ease-enter. La sortie est l'inverse
+ * naturel de l'entrée, jamais un retrait plus sec. */
 @keyframes zelor-unfold-out {
   from {
     opacity: 1;
@@ -636,8 +638,9 @@
 }
 
 @utility unfold-out-z {
-  animation: zelor-unfold-out var(--dur-3) var(--ease-exit) both;
+  animation: zelor-unfold-out var(--dur-4) var(--ease-enter-mirror) both;
 }
+
 
 @utility overlay-navy {
   background-color: var(--navy-deep);
