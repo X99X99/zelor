@@ -12,15 +12,30 @@ export function CookieConsent() {
 
   useEffect(() => {
     try {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        const t = setTimeout(() => setOpen(true), 900);
-        return () => clearTimeout(t);
-      }
+      if (localStorage.getItem(STORAGE_KEY)) return;
     } catch {
       /* stockage indisponible */
     }
-    return;
+    // Le bandeau ne coupe jamais la première impression : il attend que la
+    // lecture soit engagée, ou un court silence, avant de se présenter.
+    let done = false;
+    const show = () => {
+      if (done) return;
+      done = true;
+      window.removeEventListener("scroll", onScroll);
+      setOpen(true);
+    };
+    const onScroll = () => {
+      if (window.scrollY > 280) show();
+    };
+    const t = window.setTimeout(show, 3200);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
+
 
   // Le bandeau se retire avec le même soin qu'il apparaît.
   const dismiss = () => {
