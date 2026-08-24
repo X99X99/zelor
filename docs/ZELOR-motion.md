@@ -26,7 +26,8 @@
 | `panel-in` / `panel-out` | panneaux flottants (langue) |
 | `overlay-in` / `overlay-out` | menu mobile, voiles |
 | `collapse-out-z` | repli d'une bande (barre d'annonce) |
-| `discover-bar-z` | bulle « Découvrir » |
+| `discover-bar-z` | bulle « Découvrir » (dilatation / rétractation floutée) |
+| `header-motion-z` | dissolution et retour du header (`data-hidden`) |
 | `focal-list` + `data-focal` | lecture focale d'une liste |
 | `seam-z` | césure lumineuse entre couches marine |
 | `progress-track-z` / `progress-z` | filet de progression joaillier |
