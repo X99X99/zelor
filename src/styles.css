@@ -634,6 +634,39 @@
   box-shadow: var(--shadow-elegant);
 }
 
+/* Effacement du header : la sortie est de la même famille que l'entrée —
+ * la surface se dissout (opacité + voile) puis se retire, jamais l'inverse. */
+@utility header-motion-z {
+  translate: 0 0;
+  opacity: 1;
+  transition:
+    translate var(--dur-4) var(--ease-enter),
+    opacity var(--dur-3) var(--ease-breathe),
+    filter var(--dur-3) var(--ease-breathe),
+    box-shadow var(--dur-4) var(--ease-breathe);
+  &[data-hidden="true"] {
+    pointer-events: none;
+    translate: 0 -100%;
+    opacity: 0;
+    filter: blur(5px);
+    transition:
+      translate var(--dur-4) var(--ease-enter-mirror),
+      opacity var(--dur-4) var(--ease-breathe),
+      filter var(--dur-4) var(--ease-breathe),
+      box-shadow var(--dur-4) var(--ease-breathe);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-motion-z,
+  .header-motion-z[data-hidden="true"] {
+    translate: none !important;
+    filter: none !important;
+  }
+}
+
+
+
 /* Voile atmosphérique posé au-dessus du header : fondu progressif */
 @utility veil-top {
   background-image: linear-gradient(
