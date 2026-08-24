@@ -806,6 +806,15 @@
   animation: zelor-slide-up 0.7s var(--ease-lux) both;
 }
 
+@keyframes zelor-slide-down-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(18px) scale(0.99); }
+}
+
+@utility slide-down-out {
+  animation: zelor-slide-down-out var(--dur-3) var(--ease-exit) both;
+}
+
 /* ————— Reveals progressifs au scroll ————— */
 @utility reveal-z {
   opacity: 0;
