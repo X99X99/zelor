@@ -115,12 +115,20 @@ function LanguageMenu() {
   );
 }
 
-function SearchPanel({ onClose }: { onClose: () => void }) {
+function SearchPanel({
+  onClose,
+  closing,
+}: {
+  onClose: () => void;
+  closing: boolean;
+}) {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
   return (
-    <div className="surface-search grain-z unfold-z relative overflow-hidden">
+    <div
+      className={`surface-search grain-z relative overflow-hidden ${closing ? "unfold-out-z" : "unfold-z"}`}
+    >
       <form
         className="container-z flex items-center gap-3 py-5"
         onSubmit={(event) => {
@@ -239,6 +247,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchClosing, setSearchClosing] = useState(false);
   const [bump, setBump] = useState(false);
   const { count, ready } = useCart();
   const { hidden, scrolled } = useHideOnScroll(menuOpen || searchOpen);
@@ -251,6 +260,16 @@ export function SiteHeader() {
       setMenuClosing(false);
       setMenuOpen(false);
     }, 380);
+  };
+
+  // La recherche se replie avec le même soin qu'elle se déploie.
+  const closeSearch = () => {
+    if (!searchOpen || searchClosing) return;
+    setSearchClosing(true);
+    window.setTimeout(() => {
+      setSearchClosing(false);
+      setSearchOpen(false);
+    }, 420);
   };
 
   // Le panier respire lorsqu'une pièce est ajoutée.
@@ -298,13 +317,13 @@ export function SiteHeader() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setMenuOpen(false);
-        setSearchOpen(false);
+        closeMenu();
+        closeSearch();
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, []);
+  });
 
   return (
     <>
@@ -359,13 +378,13 @@ export function SiteHeader() {
           <div className="flex flex-1 items-center justify-end gap-0.5">
             <button
               type="button"
-              onClick={() => setSearchOpen((v) => !v)}
-              aria-expanded={searchOpen}
+              onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+              aria-expanded={searchOpen && !searchClosing}
               aria-label="Rechercher"
-              className={`utility-z flex size-11 items-center justify-center ${searchOpen ? "opacity-100" : "opacity-90"} hover:opacity-100`}
+              className={`utility-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
             >
               <Search
-                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen ? "rotate-90 scale-90" : ""}`}
+                className={`size-4.5 transition-transform duration-[var(--dur-3)] ease-[var(--ease-lux)] ${searchOpen && !searchClosing ? "rotate-90 scale-90" : ""}`}
                 aria-hidden="true"
               />
             </button>
@@ -397,7 +416,9 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {searchOpen && <SearchPanel onClose={() => setSearchOpen(false)} />}
+        {searchOpen && (
+          <SearchPanel onClose={closeSearch} closing={searchClosing} />
+        )}
         <ReadingProgress />
       </header>
 
@@ -433,13 +454,17 @@ export function SiteHeader() {
               <X className="size-5" aria-hidden="true" />
             </button>
           </div>
-          <nav aria-label="Navigation mobile" className="container-z flex flex-col pt-6 pb-16">
+          <nav
+            aria-label="Navigation mobile"
+            className="focal-list container-z flex flex-col pt-6 pb-16"
+          >
             <p className="eyebrow mb-2 text-navy-foreground/50">Collection</p>
             {MAIN_NAV.map((item, index) => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={closeMenu}
+                data-focal=""
                 style={{ animationDelay: menuClosing ? "0ms" : `${60 + index * 55}ms` }}
                 className={`menu-row font-display text-3xl ${menuClosing ? "" : "slide-up-lux"}`}
               >
