@@ -3,8 +3,10 @@ import { Menu, Search, ShoppingBag, User, X, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { NavySurface, NAVY_SURFACE_EXIT_MS } from "@/components/zelor/NavySurface";
+import { ThemeToggle } from "@/components/zelor/ThemeToggle";
 import { BRAND, LANGUAGES, MAIN_NAV } from "@/lib/zelor/content";
 import { useCart } from "@/lib/zelor/cart";
+
 
 function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
