@@ -121,6 +121,13 @@ function SearchPanel({
 }) {
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // La prise de focus ne doit jamais déplacer la lecture : le panneau
+  // s'ouvre sous un header collant, la page reste exactement où elle est.
+  useEffect(() => {
+    inputRef.current?.focus({ preventScroll: true });
+  }, []);
 
   return (
     <div
@@ -144,7 +151,7 @@ function SearchPanel({
           <Search className="size-4 shrink-0 opacity-70" aria-hidden="true" />
           <input
             id="site-search"
-            autoFocus
+            ref={inputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Rechercher une pièce, une ligne…"
