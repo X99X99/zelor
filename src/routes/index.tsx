@@ -248,7 +248,7 @@ function Home() {
       {/* G. Avis */}
       <section
         aria-labelledby="avis-title"
-        className="container-z pb-20 md:pb-28"
+        className="container-z pb-4"
       >
         <h2 id="avis-title" className="font-display text-3xl md:text-4xl">
           Avis clients

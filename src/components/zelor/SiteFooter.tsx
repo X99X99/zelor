@@ -45,7 +45,7 @@ const columns = [
 
 export function SiteFooter() {
   return (
-    <footer className="overlay-navy mt-28 text-navy-foreground">
+    <footer className="overlay-navy mt-20 text-navy-foreground">
       <Newsletter />
       <div className="container-z grid gap-10 border-t border-navy-foreground/12 py-16 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-1">
