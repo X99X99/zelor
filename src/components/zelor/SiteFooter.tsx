@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { BRAND } from "@/lib/zelor/content";
+import { NavLink, scrollToTop } from "@/components/zelor/NavLink";
 import { Newsletter } from "./Newsletter";
 
 const columns = [
@@ -68,12 +69,14 @@ export function SiteFooter() {
             <ul className="mt-5 space-y-3">
               {column.links.map((link) => (
                 <li key={link.to}>
-                  <Link
+                  <NavLink
                     to={link.to}
-                    className="link-underline text-sm text-navy-foreground/80 hover:text-navy-foreground"
+                    variant="footer"
+                    className="text-sm text-navy-foreground/80 hover:text-navy-foreground"
+                    activeClassName="text-navy-foreground"
                   >
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -88,15 +91,7 @@ export function SiteFooter() {
           <p>Maison lifestyle premium — France et Union européenne.</p>
           <button
             type="button"
-            onClick={() => {
-              const reduced = window.matchMedia(
-                "(prefers-reduced-motion: reduce)",
-              ).matches;
-              window.scrollTo({
-                top: 0,
-                behavior: (reduced ? "auto" : "smooth") as ScrollBehavior,
-              });
-            }}
+            onClick={scrollToTop}
             className="link-underline press-z text-navy-foreground/70 hover:text-navy-foreground"
           >
             Haut de page

@@ -1834,3 +1834,68 @@
     animation: none !important;
   }
 }
+
+/* ————— Lien de navigation ZELOR —————
+ * Une seule primitive pour le header, le menu et le footer. Elle n'invente
+ * aucune matière : elle ajoute au filet `link-underline` l'état actif, le
+ * focus visible et la réponse tactile des contrôles premium du site.
+ */
+@utility nav-link-z {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 3px;
+  border-radius: 2px;
+  transition:
+    opacity var(--dur-2) var(--ease-lux),
+    color var(--dur-2) var(--ease-lux);
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    scale: 0 1;
+    transform-origin: right center;
+    opacity: 0.65;
+    transition:
+      scale var(--dur-2) var(--ease-lux),
+      opacity var(--dur-2) var(--ease-lux);
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 45%, transparent);
+  }
+  &:active {
+    opacity: 0.75;
+  }
+  /* Page consultée : le filet reste posé, la présence est plus dense. */
+  &[aria-current="page"] {
+    opacity: 1;
+  }
+  &[aria-current="page"]::after {
+    scale: 1 1;
+    transform-origin: left center;
+    opacity: 0.9;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-link-z:hover::after,
+  .nav-link-z:focus-visible::after {
+    scale: 1 1;
+    transform-origin: left center;
+    opacity: 1;
+  }
+  .nav-link-z:hover,
+  .nav-link-z:focus-visible {
+    text-shadow: 0 0 14px color-mix(in oklab, currentColor 18%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link-z,
+  .nav-link-z::after {
+    transition-duration: 1ms !important;
+  }
+}

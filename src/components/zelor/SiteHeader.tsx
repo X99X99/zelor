@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { Menu, Search, ShoppingBag, User, X, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { NavLink } from "@/components/zelor/NavLink";
 import { NavySurface, NAVY_SURFACE_EXIT_MS } from "@/components/zelor/NavySurface";
 import { ThemeToggle } from "@/components/zelor/ThemeToggle";
 import { BRAND, LANGUAGES, MAIN_NAV } from "@/lib/zelor/content";
@@ -375,14 +376,14 @@ export function SiteHeader() {
             className="hidden flex-1 items-center gap-7 md:flex"
           >
             {MAIN_NAV.map((item) => (
-              <Link
+              <NavLink
                 key={item.to}
                 to={item.to}
-                className="link-underline text-[0.8125rem] tracking-[0.08em] opacity-85 hover:opacity-100"
-                activeProps={{ className: "opacity-100 font-semibold" }}
+                className="text-[0.8125rem] tracking-[0.08em] opacity-85 hover:opacity-100"
+                activeClassName="opacity-100 font-semibold"
               >
                 {item.label}
-              </Link>
+              </NavLink>
             ))}
           </nav>
 
@@ -490,10 +491,11 @@ export function SiteHeader() {
           >
             <p className="eyebrow mb-2 text-navy-foreground/50">Collection</p>
             {MAIN_NAV.map((item, index) => (
-              <Link
+              <NavLink
                 key={item.to}
                 to={item.to}
-                onClick={closeMenu}
+                variant="sheet"
+                onNavigate={closeMenu}
                 data-focal=""
                 className="menu-row font-display text-3xl"
               >
@@ -508,25 +510,27 @@ export function SiteHeader() {
                 >
                   {item.label}
                 </span>
-              </Link>
+              </NavLink>
             ))}
             <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
-            <Link
+            <NavLink
               to="/compte"
-              onClick={closeMenu}
+              variant="sheet"
+              onNavigate={closeMenu}
               data-focal=""
               className="menu-row text-sm tracking-[0.08em]"
             >
               <span>Compte client</span>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/aide"
-              onClick={closeMenu}
+              variant="sheet"
+              onNavigate={closeMenu}
               data-focal=""
               className="menu-row text-sm tracking-[0.08em]"
             >
               <span>Aide et contact</span>
-            </Link>
+            </NavLink>
 
             <div data-focal="" className="menu-row text-sm tracking-[0.08em]">
               <span>Langue</span>

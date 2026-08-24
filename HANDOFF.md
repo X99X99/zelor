@@ -126,3 +126,34 @@ Tout est centralisé dans ce fichier, dans cet ordre :
    entrées.
 6. Responsive intégral (mobile → desktop) et accessibilité : cibles ≥ 44 px,
    `aria-label` sur les boutons-icônes, `prefers-reduced-motion` respecté.
+
+## 8. Tests et non-régression
+
+Deux suites, deux outils, aucune superposition :
+
+- **Unitaires** — `bun run test` (Vitest, `src/**/*.test.ts`) : thème, i18n,
+  intégrations, grammaire de motion.
+- **Navigateur** — `bun run test:e2e` (Playwright, `tests/e2e/*.spec.ts`),
+  projets `desktop` (1280×900) et `mobile` (Pixel 7) :
+  - `visual.spec.ts` : non-régression visuelle du header (fermé / recherche
+    ouverte), du footer et du menu mobile, en thème clair **et** sombre, plus
+    une comparaison de parité structurelle clair / sombre.
+  - `interactions.spec.ts` : lien de page active (remontée sans nouvelle
+    entrée d'historique), navigation, recherche, persistance et réglage
+    « Système » du thème, menu mobile et restitution du scroll, accès panier,
+    absence d'erreur console, premier `Tab` sur le lien d'évitement.
+
+Déterminisme des captures (`tests/e2e/fixtures.ts`) : animations et transitions
+figées, `prefers-reduced-motion: reduce`, thème imposé avant le premier rendu,
+consentement cookies pré-accordé, attente de l'hydratation et des polices,
+année du pied de page neutralisée.
+
+Baselines : `tests/e2e/baselines/`. Elles se mettent à jour **volontairement**
+via `bun run test:visual:update`, après vérification visuelle du diff — jamais
+pour faire taire un échec.
+
+Chromium : si le binaire téléchargé par Playwright manque de bibliothèques
+système, pointer `ZELOR_CHROMIUM_PATH` vers un Chromium compatible.
+
+Contrôle complet avant mise en ligne : `bun run preflight`
+(lint → typecheck → tests unitaires → build → tests navigateur).
