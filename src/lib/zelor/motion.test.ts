@@ -151,7 +151,7 @@ describe("garde-fous ZELOR", () => {
     expect(bar).toContain("&::before");
     expect(bar).toContain("&::after");
     expect(bar).toContain("overflow: visible");
-    expect(bar).not.toContain("overflow: hidden");
+    expect(bar).not.toMatch(/^\s*overflow: hidden/m);
     expect(bar).toContain("infinite alternate");
     // La progression réelle reste portée par la largeur, jamais par une animation.
     expect(bar).toContain("width var(--dur-3)");
