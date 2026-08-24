@@ -114,6 +114,10 @@
   --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
   /* Miroir strict de --ease-enter : une sortie qui est l'inverse de l'entrée. */
   --ease-enter-mirror: cubic-bezier(0.72, 0, 0.84, 0.16);
+  /* Boomerang : dépasse légèrement la cible, puis revient s'y poser. */
+  --ease-back: cubic-bezier(0.34, 1.42, 0.64, 1);
+  /* Respiration : entrée et sortie d'une même famille, jamais mécanique. */
+  --ease-breathe: cubic-bezier(0.32, 0.72, 0.24, 1);
   --blur-veil: 22px;
   --blur-panel: 16px;
   --lift-1: -1px;
@@ -181,6 +185,10 @@
     color-mix(in oklab, var(--navy) 88%, transparent) 58%,
     color-mix(in oklab, var(--navy-soft) 78%, transparent) 100%
   );
+  /* Source unique de la matière marine : header, recherche, panneaux.
+   * Toute surface qui doit « être le header » réutilise ces deux tokens. */
+  --surface-navy-bg: var(--gradient-header);
+  --surface-navy-veil: blur(var(--blur-veil)) saturate(135%);
   --gradient-cta: linear-gradient(
     120deg,
     var(--navy-deep) 0%,
@@ -361,20 +369,47 @@
     transform-origin: left center;
     opacity: 1;
   }
+  /* Enrichissement minimal : une micro-profondeur du texte, jamais un fond. */
+  &:hover,
+  &:focus-visible {
+    text-shadow: 0 0 14px color-mix(in oklab, currentColor 18%, transparent);
+  }
 }
 
 /* Élément de marque : le mot ZELOR respire à l'approche */
 @utility wordmark-z {
   position: relative;
   display: inline-block;
+  isolation: isolate;
+  /* Le scintillement démarre au contact, sans latence : la lumière est
+   * immédiate (dur-1), la respiration typographique reste lente. */
   transition:
     letter-spacing var(--dur-4) var(--ease-lux),
-    text-shadow var(--dur-4) var(--ease-lux),
-    opacity var(--dur-3) var(--ease-lux);
+    text-shadow var(--dur-1) var(--ease-breathe),
+    opacity var(--dur-2) var(--ease-lux);
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -0.35em -0.6em;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: var(--radius-pill);
+    opacity: 0;
+    background: radial-gradient(
+      60% 120% at 50% 50%,
+      color-mix(in oklab, currentColor 14%, transparent),
+      transparent 72%
+    );
+    transition: opacity var(--dur-1) var(--ease-breathe);
+  }
   &:hover {
     text-shadow:
-      0 0 18px color-mix(in oklab, currentColor 32%, transparent),
-      0 0 42px color-mix(in oklab, currentColor 14%, transparent);
+      0 0 6px color-mix(in oklab, currentColor 55%, transparent),
+      0 0 20px color-mix(in oklab, currentColor 34%, transparent),
+      0 0 46px color-mix(in oklab, currentColor 18%, transparent);
+  }
+  &:hover::after {
+    opacity: 1;
   }
   &:active {
     opacity: 0.85;
@@ -388,15 +423,16 @@
   /* translate / scale plutôt que transform : ces propriétés se composent avec
    * une rotation portée ailleurs, donc aucune animation n'en écrase une autre. */
   transition:
-    background-color var(--dur-2) var(--ease-lux),
-    translate var(--dur-2) var(--ease-lux),
-    scale var(--dur-2) var(--ease-lux),
-    box-shadow var(--dur-2) var(--ease-lux),
-    opacity var(--dur-2) var(--ease-lux);
+    background-color var(--dur-3) var(--ease-breathe),
+    translate var(--dur-3) var(--ease-breathe),
+    scale var(--dur-3) var(--ease-back),
+    box-shadow var(--dur-3) var(--ease-breathe),
+    opacity var(--dur-3) var(--ease-breathe);
   &:hover {
     background-color: color-mix(in oklab, currentColor 9%, transparent);
     box-shadow: 0 0 0 1px color-mix(in oklab, currentColor 12%, transparent);
     translate: 0 var(--lift-1);
+    scale: 1.045;
     opacity: 1;
   }
   &:focus-visible {
@@ -469,13 +505,13 @@
   transition:
     background-color var(--dur-2) var(--ease-lux),
     border-color var(--dur-2) var(--ease-lux),
-    color var(--dur-2) var(--ease-lux),
-    transform var(--dur-1) var(--ease-lux),
-    box-shadow var(--dur-2) var(--ease-lux);
+    color var(--dur-3) var(--ease-breathe),
+    transform var(--dur-3) var(--ease-back),
+    box-shadow var(--dur-3) var(--ease-breathe);
   &:hover {
     background-color: color-mix(in oklab, currentColor 8%, transparent);
     border-color: color-mix(in oklab, currentColor 38%, transparent);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.03);
     box-shadow: 0 8px 24px -18px color-mix(in oklab, var(--navy) 80%, transparent);
   }
   &:active {
@@ -548,8 +584,8 @@
 
 /* Couche marine translucide : header, overlays, panneaux système */
 @utility surface-navy {
-  background-image: var(--gradient-header);
-  backdrop-filter: blur(22px) saturate(135%);
+  background-image: var(--surface-navy-bg);
+  backdrop-filter: var(--surface-navy-veil);
   color: var(--navy-foreground);
   border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 10%, transparent);
   box-shadow: var(--shadow-elegant);
@@ -583,36 +619,12 @@
  * logique de profondeur d'eau — la lumière reste en haut et sur les bords,
  * la densité descend vers le bas. Aucune teinte étrangère au header. */
 @utility surface-search {
+  /* Aucune valeur propre : la recherche EST la matière du header.
+   * Même token de fond, même voile, même densité — par construction. */
   color: var(--navy-foreground);
-  background-image:
-    /* lumière rasante haute, comme sous le header */
-    radial-gradient(
-      130% 120% at 50% -25%,
-      color-mix(in oklab, var(--navy-soft) 46%, transparent),
-      transparent 70%
-    ),
-    /* clarté douce sur les bords latéraux */
-    linear-gradient(
-      90deg,
-      color-mix(in oklab, var(--navy-soft) 20%, transparent) 0%,
-      transparent 22%,
-      transparent 78%,
-      color-mix(in oklab, var(--navy-soft) 20%, transparent) 100%
-    ),
-    /* densification progressive vers le fond */
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      color-mix(in oklab, var(--navy-deep) 45%, transparent) 62%,
-      color-mix(in oklab, var(--navy-deep) 82%, transparent) 100%
-    ),
-    var(--gradient-header);
-  /* Exactement la matière du header : même flou, même saturation. */
-  backdrop-filter: blur(var(--blur-veil)) saturate(135%);
+  background-image: var(--surface-navy-bg);
+  backdrop-filter: var(--surface-navy-veil);
   border-top: 0;
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--navy-foreground) 10%, transparent),
-    0 30px 70px -46px color-mix(in oklab, var(--navy-deep) 85%, transparent);
 }
 
 
@@ -664,24 +676,30 @@
 @utility discover-bar-z {
   pointer-events: none;
   position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  padding-block: 0.75rem;
-  text-align: center;
-  font-size: 0.6875rem;
+  left: 50%;
+  bottom: 0.85rem;
+  translate: -50% 0.6rem;
+  padding: 0.5rem 1.15rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in oklab, var(--navy-foreground) 22%, transparent);
+  font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--navy-foreground);
-  background-color: color-mix(in oklab, var(--navy) 85%, transparent);
+  background-color: color-mix(in oklab, var(--navy) 72%, transparent);
   backdrop-filter: blur(12px) saturate(135%);
-  translate: 0 100%;
+  box-shadow: 0 18px 40px -26px color-mix(in oklab, var(--navy-deep) 90%, transparent);
   opacity: 0;
+  scale: 0.94;
   transition:
-    translate var(--dur-3) var(--ease-lux),
-    opacity var(--dur-3) var(--ease-lux);
+    translate var(--dur-3) var(--ease-breathe),
+    scale var(--dur-3) var(--ease-back),
+    opacity var(--dur-3) var(--ease-breathe);
   .group:hover &,
   .group:focus-within & {
-    translate: 0 0;
+    translate: -50% 0;
+    scale: 1;
     opacity: 1;
   }
 }
@@ -808,11 +826,11 @@
   border-radius: var(--radius-field);
   border-bottom: 1px solid color-mix(in oklab, var(--navy-foreground) 14%, transparent);
   transition:
-    padding-inline var(--dur-3) var(--ease-lux),
-    background-color var(--dur-3) var(--ease-lux),
-    box-shadow var(--dur-3) var(--ease-lux),
-    opacity var(--dur-3) var(--ease-lux),
-    scale var(--dur-3) var(--ease-lux);
+    padding-inline var(--dur-4) var(--ease-breathe),
+    background-color var(--dur-4) var(--ease-breathe),
+    box-shadow var(--dur-4) var(--ease-breathe),
+    opacity var(--dur-4) var(--ease-breathe),
+    scale var(--dur-4) var(--ease-breathe);
   &:hover,
   &:focus-within {
     padding-inline: 0.75rem;
@@ -978,10 +996,10 @@
 @utility focal-list {
   & > [data-focal] {
     transition:
-      opacity var(--dur-3) var(--ease-lux),
-      scale var(--dur-3) var(--ease-lux),
-      letter-spacing var(--dur-3) var(--ease-lux),
-      color var(--dur-3) var(--ease-lux);
+      opacity var(--dur-4) var(--ease-breathe),
+      scale var(--dur-4) var(--ease-breathe),
+      letter-spacing var(--dur-4) var(--ease-breathe),
+      color var(--dur-4) var(--ease-breathe);
   }
   &:hover > [data-focal],
   &:focus-within > [data-focal] {
@@ -1204,9 +1222,11 @@
     0 0 8px color-mix(in oklab, var(--gold) 55%, transparent),
     0 0 20px -4px color-mix(in oklab, var(--gold) 38%, transparent);
   animation: zelor-progress-sheen 5.5s linear infinite;
+  /* Boomerang : le filet dépasse d'un souffle la valeur atteinte,
+   * puis revient se poser exactement dessus. */
   transition:
-    width 140ms linear,
-    opacity var(--dur-3) var(--ease-lux);
+    width var(--dur-3) var(--ease-back),
+    opacity var(--dur-3) var(--ease-breathe);
   /* Tête d'éclat : la lumière se concentre au point de lecture. */
   &::after {
     content: "";
@@ -1409,49 +1429,50 @@
  * Un filet fin traversé, très lentement, par une lueur mobile. */
 @utility seam-z {
   position: relative;
+  /* Deux demi-césures partant du centre vers des limites latérales
+   * réduites : la lumière naît au milieu et s'éteint bien avant les bords. */
+  &::before,
   &::after {
     content: "";
     position: absolute;
-    inset-inline: 0;
     bottom: 0;
+    left: 50%;
+    width: 26%;
     height: 1px;
     pointer-events: none;
-    /* Presque rien aux extrémités, une présence nette au centre :
-     * une césure de lumière, jamais une barre. */
+    opacity: 0.5;
+    animation: zelor-seam-spread 7s var(--ease-breathe) infinite;
+  }
+  &::before {
+    transform-origin: right center;
+    translate: -100% 0;
+    background-image: linear-gradient(
+      270deg,
+      color-mix(in oklab, white 34%, transparent) 0%,
+      color-mix(in oklab, var(--navy-foreground) 10%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  &::after {
+    transform-origin: left center;
     background-image: linear-gradient(
       90deg,
-      transparent 0%,
-      color-mix(in oklab, var(--navy-foreground) 6%, transparent) 30%,
-      color-mix(in oklab, white 30%, transparent) 50%,
-      color-mix(in oklab, var(--navy-foreground) 6%, transparent) 70%,
+      color-mix(in oklab, white 34%, transparent) 0%,
+      color-mix(in oklab, var(--navy-foreground) 10%, transparent) 55%,
       transparent 100%
     );
-    -webkit-mask-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      black 34%,
-      black 66%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      black 34%,
-      black 66%,
-      transparent 100%
-    );
-    background-size: 220% 100%;
-    opacity: 0.42;
-    animation: zelor-seam-drift 14s linear infinite;
   }
 }
 
-@keyframes zelor-seam-drift {
-  from {
-    background-position: -60% 50%;
+@keyframes zelor-seam-spread {
+  0%,
+  100% {
+    scale: 0.55 1;
+    opacity: 0.3;
   }
-  to {
-    background-position: 160% 50%;
+  50% {
+    scale: 1 1;
+    opacity: 0.62;
   }
 }
 
@@ -1478,6 +1499,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .seam-z::before,
   .seam-z::after {
     animation: none;
   }
