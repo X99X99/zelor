@@ -254,14 +254,14 @@
  * primitive, aucun composant, aucune animation n'est redéfini ici : seuls
  * les jetons de fond, de texte et de filet changent de niveau.
  * Le thème suit la préférence système : aucun sélecteur décoratif, aucun
- * comportement incomplet. La classe `.dark` active la même nuit, ce qui
- * laisse la porte ouverte à un vrai contrôle le jour où il aura un sens.
+ * comportement incomplet. `:root.light` force le jour si un contrôle réel
+ * devient un jour utile.
  */
-:root.dark,
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
+    color-scheme: dark;
+    --background: oklch(0.188 0.028 262);
 
-  --background: oklch(0.188 0.028 262);
   --ivory: oklch(0.228 0.03 262);
   --cream: oklch(0.206 0.029 262);
   --foreground: oklch(0.958 0.005 88);
