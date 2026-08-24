@@ -2,18 +2,25 @@ import { useEffect, useRef, useState, type ElementType, type ReactNode } from "r
 
 /**
  * Apparition douce au défilement : jamais d'élément qui « pop ».
- * Fondu + micro-déplacement, une seule fois, puis l'observateur se détache.
+ *
+ * Deux régimes, volontairement distincts :
+ * — par défaut, l'apparition est définitive ; l'observateur se détache.
+ * — `replay`, réservé aux séquences éditoriales majeures : la section se
+ *   retire lorsqu'elle quitte largement le champ, puis se rejoue au retour.
+ *   À n'utiliser que là où le rejeu ajoute du désir, jamais par réflexe.
  */
 export function Reveal({
   children,
   as: Tag = "div",
   delay = 0,
+  replay = false,
   className = "",
   ...rest
 }: {
   children: ReactNode;
   as?: ElementType;
   delay?: number;
+  replay?: boolean;
   className?: string;
   [key: string]: unknown;
 }) {
@@ -27,20 +34,34 @@ export function Reveal({
       setVisible(true);
       return;
     }
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setVisible(true);
-            observer.disconnect();
+            if (!replay) observer.disconnect();
+          } else if (replay) {
+            // On ne retire la section que lorsqu'elle a franchement quitté
+            // le champ : aucun clignotement en bordure d'écran.
+            setVisible(false);
           }
         }
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
+      replay
+        ? { rootMargin: "22% 0px 22% 0px", threshold: 0 }
+        : { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [replay]);
 
   return (
     <Tag
