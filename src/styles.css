@@ -145,11 +145,10 @@
    * Profondeur marine — elle retrouve exactement la matière validée.
    */
   --cap-ink: var(--navy);
-  --cap-rest-bg: color-mix(in oklab, var(--cap-ink) 4%, transparent);
-  /* Au repos, la capsule reste calme et discrète : seul un filet très fin
-   * la distingue du fond. Le relief premium apparaît à l'interaction. */
-  --cap-rest-shadow:
-    inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 5%, transparent);
+  /* Au repos, aucune capsule n'est visible : seul le texte du lien apparaît.
+   * Le relief premium complet est révélé au survol / focus / press. */
+  --cap-rest-bg: transparent;
+  --cap-rest-shadow: none;
   --cap-hover-bg: color-mix(in oklab, var(--cap-ink) 7.5%, transparent);
   /* Survol / focus : on révèle exactement le relief premium existant
    * (arête haute lumineuse, retour d'ombre bas, filet net, ombres courtes). */
@@ -163,7 +162,9 @@
   --cap-active-shadow:
     inset 0 1px 2px color-mix(in oklab, var(--cap-ink) 16%, transparent),
     inset 0 0 0 1px color-mix(in oklab, var(--cap-ink) 14%, transparent);
-  --cap-current-bg: color-mix(in oklab, var(--cap-ink) 6%, transparent);
+  /* Page consultée : le filet reste visible, mais la capsule reste invisible
+   * au repos ; elle se révèle à l'interaction comme les autres. */
+  --cap-current-bg: transparent;
 
 
 
