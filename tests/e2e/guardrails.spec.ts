@@ -178,13 +178,14 @@ test.describe("garde-fou apparence : astre correct dans les quatre états", () =
     await openPage(page, "/");
     await expect(page.locator('header button[aria-label^="Apparence"]')).toHaveCount(1);
     await expect(page.locator("header")).not.toContainText("Apparence");
-    const visibleLabels = await page.evaluate(() =>
-      [...document.querySelectorAll("header *")].filter(
-        (el) =>
-          el.children.length === 0 &&
-          (el.textContent ?? "").trim().toLowerCase() === "apparence" &&
-          getComputedStyle(el).visibility !== "hidden",
-      ).length,
+    const visibleLabels = await page.evaluate(
+      () =>
+        [...document.querySelectorAll("header *")].filter(
+          (el) =>
+            el.children.length === 0 &&
+            (el.textContent ?? "").trim().toLowerCase() === "apparence" &&
+            getComputedStyle(el).visibility !== "hidden",
+        ).length,
     );
     expect(visibleLabels).toBe(0);
   });
@@ -201,9 +202,7 @@ test.describe("garde-fou filet de progression", () => {
         const after = getComputedStyle(el, "::after");
         return {
           ratio: r.width / track.width,
-          scrolled:
-            window.scrollY /
-            (document.documentElement.scrollHeight - window.innerHeight),
+          scrolled: window.scrollY / (document.documentElement.scrollHeight - window.innerHeight),
           headRight: after.right,
           clipped: getComputedStyle(el).overflow,
         };

@@ -12,7 +12,9 @@ import { existsSync, readFileSync } from "node:fs";
  */
 type Lock = { browserVersionPrefix: string; candidates: string[] };
 
-const lock = JSON.parse(readFileSync(new URL("./browser-lock.json", import.meta.url), "utf8")) as Lock;
+const lock = JSON.parse(
+  readFileSync(new URL("./browser-lock.json", import.meta.url), "utf8"),
+) as Lock;
 
 function versionOf(path: string): string | null {
   try {

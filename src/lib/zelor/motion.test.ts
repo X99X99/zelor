@@ -146,7 +146,10 @@ describe("garde-fous ZELOR", () => {
 
   it("le filet doré garde ses trois couches et n'est jamais tronqué", () => {
     expect(css).toContain("@utility progress-track-z");
-    const bar = css.slice(css.indexOf("@utility progress-z"), css.indexOf("@keyframes zelor-progress-drift"));
+    const bar = css.slice(
+      css.indexOf("@utility progress-z"),
+      css.indexOf("@keyframes zelor-progress-drift"),
+    );
     // Piste, progression réelle, lumière voyageuse, tête d'éclat.
     expect(bar).toContain("&::before");
     expect(bar).toContain("&::after");
