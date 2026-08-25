@@ -5,13 +5,13 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/retours")({
   head: () => ({
     meta: [
-      { title: "Retours et remboursements — ZELOR" },
+      { title: "Retours et remboursements — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Conditions de retour, délai de rétractation et remboursement des commandes ZELOR.",
       },
-      { property: "og:title", content: "Retours et remboursements — ZELOR" },
+      { property: "og:title", content: "Retours et remboursements — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Conditions de retour, rétractation et remboursement.",

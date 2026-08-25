@@ -18,13 +18,13 @@ export const Route = createFileRoute("/collection")({
   },
   head: () => ({
     meta: [
-      { title: "Collection — ZELOR" },
+      { title: "Collection — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Découvrez la collection ZELOR : des pièces choisies pour leur forme, leur fonction et leur finition.",
       },
-      { property: "og:title", content: "Collection — ZELOR" },
+      { property: "og:title", content: "Collection — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Des pièces choisies pour leur équilibre entre forme, fonction et présence.",

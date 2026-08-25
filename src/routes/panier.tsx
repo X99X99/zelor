@@ -9,14 +9,14 @@ import { Reveal } from "@/components/zelor/Reveal";
 export const Route = createFileRoute("/panier")({
   head: () => ({
     meta: [
-      { title: "Panier — ZELOR" },
+      { title: "Panier — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Votre panier ZELOR. Paiement sécurisé, livraison en France et dans l'Union européenne.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Panier — ZELOR" },
+      { property: "og:title", content: "Panier — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Votre panier ZELOR, paiement sécurisé.",

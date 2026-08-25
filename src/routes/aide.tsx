@@ -32,13 +32,13 @@ const faq = [
 export const Route = createFileRoute("/aide")({
   head: () => ({
     meta: [
-      { title: "Aide et questions fréquentes — ZELOR" },
+      { title: "Aide et questions fréquentes — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Livraison, retours, paiement, suivi de commande : les réponses aux questions les plus fréquentes posées à ZELOR.",
       },
-      { property: "og:title", content: "Aide et questions fréquentes — ZELOR" },
+      { property: "og:title", content: "Aide et questions fréquentes — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Livraison, retours, paiement et suivi de commande.",

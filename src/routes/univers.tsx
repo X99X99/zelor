@@ -8,7 +8,7 @@ import { HoverVideo } from "@/components/zelor/HoverVideo";
 export const Route = createFileRoute("/univers")({
   head: () => ({
     meta: [
-      { title: "L'univers ZELOR — une signature discrète" },
+      { title: "L'univers ZELOR — Maison éditoriale — une signature discrète" },
       {
         name: "description",
         content:

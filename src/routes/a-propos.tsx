@@ -5,13 +5,13 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/a-propos")({
   head: () => ({
     meta: [
-      { title: "À propos — ZELOR" },
+      { title: "À propos — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "ZELOR, maison lifestyle premium internationale : notre approche, notre exigence et notre manière de travailler.",
       },
-      { property: "og:title", content: "À propos — ZELOR" },
+      { property: "og:title", content: "À propos — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Notre approche, notre exigence et notre manière de travailler.",

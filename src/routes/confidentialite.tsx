@@ -5,14 +5,14 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/confidentialite")({
   head: () => ({
     meta: [
-      { title: "Politique de confidentialité — ZELOR" },
+      { title: "Politique de confidentialité — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Traitement des données personnelles chez ZELOR : finalités, bases légales, durées de conservation et droits des personnes.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Politique de confidentialité — ZELOR" },
+      { property: "og:title", content: "Politique de confidentialité — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Finalités, durées de conservation et droits des personnes.",

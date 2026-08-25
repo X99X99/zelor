@@ -5,13 +5,13 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/suivi-commande")({
   head: () => ({
     meta: [
-      { title: "Suivi de commande — ZELOR" },
+      { title: "Suivi de commande — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Suivez votre commande ZELOR à partir de l'email de confirmation d'expédition ou depuis votre espace client.",
       },
-      { property: "og:title", content: "Suivi de commande — ZELOR" },
+      { property: "og:title", content: "Suivi de commande — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Suivez votre commande à partir de l'email d'expédition.",

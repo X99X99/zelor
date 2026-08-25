@@ -5,13 +5,13 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/paiements")({
   head: () => ({
     meta: [
-      { title: "Moyens de paiement — ZELOR" },
+      { title: "Moyens de paiement — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Paiement sécurisé des commandes ZELOR : moyens acceptés, devises et sécurité des transactions.",
       },
-      { property: "og:title", content: "Moyens de paiement — ZELOR" },
+      { property: "og:title", content: "Moyens de paiement — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Moyens acceptés, devises et sécurité des transactions.",
