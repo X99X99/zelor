@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { DEMO_PRODUCTS } from "@/lib/zelor/content";
+import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { Reveal } from "@/components/zelor/Reveal";
 
@@ -20,7 +22,7 @@ export const Route = createFileRoute("/collection")({
       {
         name: "description",
         content:
-          "Découvrez la collection ZELOR : des pièces choisies pour leur forme, leur fonction et leur finition. Catalogue en préparation.",
+          "Découvrez la collection ZELOR : des pièces choisies pour leur forme, leur fonction et leur finition.",
       },
       { property: "og:title", content: "Collection — ZELOR" },
       {
@@ -41,26 +43,36 @@ function CollectionPage() {
   const [line, setLine] = useState("Toutes");
   const [sort, setSort] = useState("nouveaute");
 
-  const lines = useMemo(() => ["Toutes", ...new Set(DEMO_PRODUCTS.map((p) => p.line))], []);
+  const { data, isLoading } = useQuery(productsQueryOptions(50));
+  const all = useMemo(() => data ?? [], [data]);
+
+  const lines = useMemo(
+    () => ["Toutes", ...new Set(all.map((p) => p.node.productType).filter(Boolean))],
+    [all],
+  );
 
   const products = useMemo(() => {
     const term = query.trim().toLowerCase();
-    let list = DEMO_PRODUCTS.filter(
+    let list = all.filter(
       (p) =>
-        (line === "Toutes" || p.line === line) &&
-        (!term || p.name.toLowerCase().includes(term) || p.line.toLowerCase().includes(term)),
+        (line === "Toutes" || p.node.productType === line) &&
+        (!term ||
+          p.node.title.toLowerCase().includes(term) ||
+          (p.node.productType ?? "").toLowerCase().includes(term)),
     );
     if (sort === "nouveaute") {
-      list = [...list].sort((a, b) => Number(Boolean(b.isNew)) - Number(Boolean(a.isNew)));
+      list = [...list].sort((a, b) => b.node.createdAt.localeCompare(a.node.createdAt));
     } else if (sort === "alpha") {
-      list = [...list].sort((a, b) => a.name.localeCompare(b.name, "fr"));
+      list = [...list].sort((a, b) => a.node.title.localeCompare(b.node.title, "fr"));
     } else if (sort === "ligne") {
       list = [...list].sort(
-        (a, b) => a.line.localeCompare(b.line, "fr") || a.name.localeCompare(b.name, "fr"),
+        (a, b) =>
+          (a.node.productType ?? "").localeCompare(b.node.productType ?? "", "fr") ||
+          a.node.title.localeCompare(b.node.title, "fr"),
       );
     }
     return list;
-  }, [query, line, sort]);
+  }, [all, query, line, sort]);
 
   return (
     <>
@@ -77,7 +89,6 @@ function CollectionPage() {
       <Reveal delay={80} className="container-z pb-10">
         <hr className="glowline-z mb-6" />
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          {/* Lignes : des capsules éditoriales, pas un menu déroulant */}
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
             <span className="eyebrow mr-2">Lignes</span>
             {lines.map((option) => {
@@ -143,23 +154,20 @@ function CollectionPage() {
         <p className="sr-only" role="status">
           {products.length} produit(s) affiché(s)
         </p>
-        {products.length === 0 ? (
-          <Reveal className="surface-light aura-z rounded-3xl border border-border/70 px-6 py-24 text-center">
-            <h2 className="font-display text-2xl">Aucun résultat</h2>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Essayez un autre terme ou revenez à la collection complète.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setQuery("");
-                setLine("Toutes");
-              }}
-              className="btn-lux mt-6"
-            >
-              Voir toute la collection
-            </button>
-          </Reveal>
+        {isLoading ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="skeleton-lux aspect-[4/5] rounded-[var(--radius-media)]" />
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <EmptyCatalog
+            body={
+              all.length === 0
+                ? "Le catalogue Shopify ne contient encore aucune pièce."
+                : "Essayez un autre terme ou revenez à la collection complète."
+            }
+          />
         ) : (
           <Reveal
             key={`${line}-${sort}-${query}`}
@@ -167,7 +175,7 @@ function CollectionPage() {
             className="stagger-z grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4"
           >
             {products.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard key={product.node.id} product={product} />
             ))}
           </Reveal>
         )}
