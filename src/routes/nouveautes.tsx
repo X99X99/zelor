@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 
-import { DEMO_PRODUCTS } from "@/lib/zelor/content";
+import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { Reveal } from "@/components/zelor/Reveal";
 
@@ -28,7 +30,10 @@ export const Route = createFileRoute("/nouveautes")({
 });
 
 function NewPage() {
-  const products = DEMO_PRODUCTS.filter((p) => p.isNew);
+  const { data, isLoading } = useQuery(productsQueryOptions(12));
+  const products = [...(data ?? [])]
+    .sort((a, b) => b.node.createdAt.localeCompare(a.node.createdAt))
+    .slice(0, 8);
 
   return (
     <>
@@ -41,20 +46,26 @@ function NewPage() {
         </p>
       </Reveal>
       <div className="container-z pb-24">
-        {products.length === 0 ? (
-          <Reveal className="surface-light aura-z rounded-3xl border border-border/70 px-6 py-24 text-center">
-            <h2 className="font-display text-2xl">Les prochaines pièces arrivent bientôt.</h2>
+        {isLoading ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="skeleton-lux aspect-[4/5] rounded-[var(--radius-media)]" />
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <>
+            <EmptyCatalog body="Le catalogue Shopify ne contient encore aucune pièce." />
             <Link to="/collection" className="link-underline mt-4 inline-block text-sm">
               Voir la collection
             </Link>
-          </Reveal>
+          </>
         ) : (
           <Reveal
             delay={100}
             className="stagger-z grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4"
           >
             {products.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard key={product.node.id} product={product} />
             ))}
           </Reveal>
         )}
