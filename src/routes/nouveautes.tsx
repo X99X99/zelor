@@ -10,13 +10,13 @@ import { Reveal } from "@/components/zelor/Reveal";
 export const Route = createFileRoute("/nouveautes")({
   head: () => ({
     meta: [
-      { title: "Nouveautés — ZELOR" },
+      { title: "Nouveautés — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Les dernières pièces entrées dans la sélection ZELOR : arrivées récentes de la Maison.",
       },
-      { property: "og:title", content: "Nouveautés — ZELOR" },
+      { property: "og:title", content: "Nouveautés — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Les dernières pièces entrées dans la sélection ZELOR.",

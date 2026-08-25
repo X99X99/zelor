@@ -17,7 +17,7 @@ import { Reveal } from "@/components/zelor/Reveal";
 
 export const Route = createFileRoute("/produit/$slug")({
   head: ({ params }) => {
-    const title = `${params.slug} — ZELOR`;
+    const title = `${params.slug} — ZELOR — Maison éditoriale`;
     return {
       meta: [
         { title },

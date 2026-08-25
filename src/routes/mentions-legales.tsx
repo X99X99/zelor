@@ -5,14 +5,14 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/mentions-legales")({
   head: () => ({
     meta: [
-      { title: "Mentions légales — ZELOR" },
+      { title: "Mentions légales — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Éditeur, directeur de la publication, hébergement et propriété intellectuelle du site ZELOR.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Mentions légales — ZELOR" },
+      { property: "og:title", content: "Mentions légales — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Éditeur, hébergement et propriété intellectuelle du site.",

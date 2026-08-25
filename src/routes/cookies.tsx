@@ -27,14 +27,14 @@ const categories = [
 export const Route = createFileRoute("/cookies")({
   head: () => ({
     meta: [
-      { title: "Préférences cookies — ZELOR" },
+      { title: "Préférences cookies — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Gérez vos préférences de cookies sur le site ZELOR : mesure d'audience et marketing désactivés par défaut.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Préférences cookies — ZELOR" },
+      { property: "og:title", content: "Préférences cookies — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Gérez vos préférences de cookies sur le site ZELOR.",

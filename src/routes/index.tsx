@@ -16,17 +16,17 @@ import { Reveal } from "@/components/zelor/Reveal";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ZELOR — L'élégance dans chaque détail" },
+      { title: "ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
-          "ZELOR sélectionne des pièces élégantes et fonctionnelles pour un quotidien plus raffiné. Livraison en France et dans l'Union européenne.",
+          "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
       },
-      { property: "og:title", content: "ZELOR — L'élégance dans chaque détail" },
+      { property: "og:title", content: "ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content:
-          "Marque lifestyle premium internationale. Des pièces choisies pour leur équilibre entre forme, fonction et présence.",
+          "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
       },
       { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },

@@ -6,13 +6,13 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/qualite")({
   head: () => ({
     meta: [
-      { title: "Qualité et sélection — ZELOR" },
+      { title: "Qualité et sélection — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Comment ZELOR évalue une pièce avant de l'ajouter à la sélection : finition, matière, conception et usage réel.",
       },
-      { property: "og:title", content: "Qualité et sélection — ZELOR" },
+      { property: "og:title", content: "Qualité et sélection — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Finition, matière, conception et usage réel.",

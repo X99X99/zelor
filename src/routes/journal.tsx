@@ -24,13 +24,13 @@ const entries = [
 export const Route = createFileRoute("/journal")({
   head: () => ({
     meta: [
-      { title: "Journal — ZELOR" },
+      { title: "Journal — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Le Journal ZELOR : notes sur la sélection, les matières et l'art de choisir. Premiers textes à paraître.",
       },
-      { property: "og:title", content: "Journal — ZELOR" },
+      { property: "og:title", content: "Journal — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Notes sur la sélection, les matières et l'art de choisir.",

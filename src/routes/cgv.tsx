@@ -5,14 +5,14 @@ import { PageShell, Section } from "@/components/zelor/Page";
 export const Route = createFileRoute("/cgv")({
   head: () => ({
     meta: [
-      { title: "Conditions générales de vente — ZELOR" },
+      { title: "Conditions générales de vente — ZELOR — Maison éditoriale" },
       {
         name: "description",
         content:
           "Conditions générales de vente ZELOR : commandes, prix, paiement, livraison, rétractation et garanties.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Conditions générales de vente — ZELOR" },
+      { property: "og:title", content: "Conditions générales de vente — ZELOR — Maison éditoriale" },
       {
         property: "og:description",
         content: "Commandes, prix, livraison, rétractation et garanties.",
