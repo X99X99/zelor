@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 
 import heroImage from "@/assets/hero.jpg";
 import editorialImage from "@/assets/editorial.jpg";
 import detailImage from "@/assets/detail.jpg";
 import detailVideo from "@/assets/video-detail.mp4.asset.json";
 import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
-import { BRAND, DEMO_PRODUCTS, PROMISES } from "@/lib/zelor/content";
+import { BRAND, PROMISES } from "@/lib/zelor/content";
+import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
+import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { Reveal } from "@/components/zelor/Reveal";
 
@@ -34,6 +37,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data } = useQuery(productsQueryOptions(4));
+  const products = data ?? [];
+
   return (
     <>
       {/* A. Hero */}
@@ -112,11 +118,17 @@ function Home() {
         <p className="mt-4 max-w-xl text-sm text-muted-foreground">
           Quelques pièces de la sélection en cours. Les prix seront communiqués à l'ouverture.
         </p>
-        <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
-          {DEMO_PRODUCTS.slice(0, 4).map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
+            {products.map((product) => (
+              <ProductCard key={product.node.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10">
+            <EmptyCatalog />
+          </div>
+        )}
       </Reveal>
 
       {/* D. Storytelling */}
