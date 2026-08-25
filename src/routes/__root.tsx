@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "ZELOR, marque lifestyle premium internationale. Des pièces choisies pour un quotidien plus raffiné.",
+          "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
       },
       { name: "author", content: "ZELOR" },
       { property: "og:site_name", content: "ZELOR" },

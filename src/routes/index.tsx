@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Marque lifestyle premium internationale. Des pièces choisies pour leur équilibre entre forme, fonction et présence.",
+          "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
       },
       { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
