@@ -36,6 +36,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data } = useQuery(productsQueryOptions(4));
+  const products = data ?? [];
+
   return (
     <>
       {/* A. Hero */}
