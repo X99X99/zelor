@@ -114,11 +114,17 @@ function Home() {
         <p className="mt-4 max-w-xl text-sm text-muted-foreground">
           Quelques pièces de la sélection en cours. Les prix seront communiqués à l'ouverture.
         </p>
-        <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
-          {DEMO_PRODUCTS.slice(0, 4).map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
+            {products.map((product) => (
+              <ProductCard key={product.node.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10">
+            <EmptyCatalog />
+          </div>
+        )}
       </Reveal>
 
       {/* D. Storytelling */}
