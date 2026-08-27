@@ -17,17 +17,18 @@ import { absoluteUrl } from "@/lib/zelor/site";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ZELOR — Maison éditoriale" },
+      { title: "ZELOR | L'élégance dans chaque détail" },
       {
         name: "description",
         content:
-          "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
+          "Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs matières et leur tenue dans le temps. Maison éditoriale française.",
       },
-      { property: "og:title", content: "ZELOR — Maison éditoriale" },
+      { property: "og:title", content: "ZELOR | L'élégance dans chaque détail" },
+      { name: "twitter:title", content: "ZELOR | L'élégance dans chaque détail" },
       {
         property: "og:description",
         content:
-          "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
+          "Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs matières et leur tenue dans le temps. Maison éditoriale française.",
       },
       { property: "og:url", content: absoluteUrl("/") },
       { property: "og:type", content: "website" },
