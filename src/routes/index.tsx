@@ -46,26 +46,49 @@ function Home() {
     <>
       {/* A. Hero */}
       <section className="relative isolate">
-        <img
-          src={heroImage}
-          width={1920}
-          height={1200}
-          fetchPriority="high"
-          alt="Atmosphère ZELOR : lumière naturelle sur une composition en pierre, céramique et lin."
-          className="h-[68vh] min-h-[26rem] w-full object-cover md:h-[82vh]"
-        />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet="/hero/zelor-hero-640.avif 640w, /hero/zelor-hero-1024.avif 1024w, /hero/zelor-hero-1600.avif 1600w, /hero/zelor-hero-1774.avif 1774w"
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcSet="/hero/zelor-hero-640.webp 640w, /hero/zelor-hero-1024.webp 1024w, /hero/zelor-hero-1600.webp 1600w, /hero/zelor-hero-1774.webp 1774w"
+            sizes="100vw"
+          />
+          <img
+            src="/hero/zelor-hero-1600.jpg"
+            srcSet="/hero/zelor-hero-640.jpg 640w, /hero/zelor-hero-1024.jpg 1024w, /hero/zelor-hero-1600.jpg 1600w, /hero/zelor-hero-1774.jpg 1774w"
+            sizes="100vw"
+            width={1774}
+            height={887}
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
+            alt="Une femme drapée d'un voile de soie ivoire, adossée à une roche sombre face à la mer au soleil couchant."
+            className="h-[68vh] min-h-[26rem] w-full object-cover object-[28%_center] md:h-[82vh] md:object-center"
+          />
+        </picture>
         <div
           aria-hidden="true"
           className="grain-z absolute inset-0 bg-linear-to-t from-navy-deep/85 via-navy/30 to-navy-deep/25 md:bg-linear-to-r md:from-navy-deep/80 md:via-navy/25 md:to-navy-deep/10"
         />
         <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
           <div className="slide-up-lux max-w-xl text-navy-foreground">
-            <p className="eyebrow text-navy-foreground/65">Maison ZELOR</p>
+            <p className="eyebrow text-gold">Maison ZELOR</p>
             <h1 className="mt-3 font-display text-4xl md:text-6xl lg:text-7xl">
-              {BRAND.taglineFr}
+              L'élégance dans chaque détail
             </h1>
-            <p className="mt-4 max-w-md text-sm text-navy-foreground/80 md:text-base">
-              {BRAND.heroSubtitle}
+            <span aria-hidden="true" className="mt-5 block h-px w-24 bg-gold/70" />
+            <p className="mt-4 max-w-md text-sm text-navy-foreground/85 md:text-base">
+              Pour faire de chaque détail une promesse.
+            </p>
+            <p className="mt-5 max-w-lg text-sm text-navy-foreground/75">
+              Une sélection contemporaine de pièces essentielles, choisies avec exigence pour leur
+              allure, leurs matières et leur tenue dans le temps. Une maison éditoriale française
+              pensée à Nice, où chaque pièce affirme une élégance durable. Livraison internationale
+              avec suivi.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
               <Link
