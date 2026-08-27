@@ -14,6 +14,7 @@ import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { Reveal } from "@/components/zelor/Reveal";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/produit/$slug")({
   head: ({ params }) => {
@@ -32,9 +33,9 @@ export const Route = createFileRoute("/produit/$slug")({
           content: "Une pièce ZELOR choisie pour son allure et sa tenue dans le temps.",
         },
         { property: "og:type", content: "product" },
-        { property: "og:url", content: `/produit/${params.slug}` },
+        { property: "og:url", content: absoluteUrl(`/produit/${params.slug}`) },
       ],
-      links: [{ rel: "canonical", href: `/produit/${params.slug}` }],
+      links: [{ rel: "canonical", href: absoluteUrl(`/produit/${params.slug}`) }],
     };
   },
   component: ProductPage,

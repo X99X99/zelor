@@ -4,6 +4,7 @@ import editorialImage from "@/assets/editorial.jpg";
 import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
 import { PageShell, Section } from "@/components/zelor/Page";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/univers")({
   head: () => ({
@@ -19,10 +20,10 @@ export const Route = createFileRoute("/univers")({
         property: "og:description",
         content: "Une approche calme et précise du quotidien, entre forme, usage et matière.",
       },
-      { property: "og:url", content: "/univers" },
+      { property: "og:url", content: absoluteUrl("/univers") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/univers" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/univers") }],
   }),
   component: UniversePage,
 });

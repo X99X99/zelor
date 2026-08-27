@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell } from "@/components/zelor/Page";
 import { ImageSlot } from "@/components/zelor/Placeholder";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 const entries = [
   {
@@ -35,10 +36,10 @@ export const Route = createFileRoute("/journal")({
         property: "og:description",
         content: "Notes sur la sélection, les matières et l'art de choisir.",
       },
-      { property: "og:url", content: "/journal" },
+      { property: "og:url", content: absoluteUrl("/journal") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/journal" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/journal") }],
   }),
   component: () => (
     <PageShell

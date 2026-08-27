@@ -6,6 +6,7 @@ import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { Reveal } from "@/components/zelor/Reveal";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/nouveautes")({
   head: () => ({
@@ -21,10 +22,10 @@ export const Route = createFileRoute("/nouveautes")({
         property: "og:description",
         content: "Les dernières pièces entrées dans la sélection ZELOR.",
       },
-      { property: "og:url", content: "/nouveautes" },
+      { property: "og:url", content: absoluteUrl("/nouveautes") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/nouveautes" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/nouveautes") }],
   }),
   component: NewPage,
 });

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { PageShell, Section } from "@/components/zelor/Page";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 const categories = [
   {
@@ -39,10 +40,10 @@ export const Route = createFileRoute("/cookies")({
         property: "og:description",
         content: "Gérez vos préférences de cookies sur le site ZELOR.",
       },
-      { property: "og:url", content: "/cookies" },
+      { property: "og:url", content: absoluteUrl("/cookies") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/cookies" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/cookies") }],
   }),
   component: CookiesPage,
 });
