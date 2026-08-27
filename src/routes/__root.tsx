@@ -17,6 +17,7 @@ import { SiteHeader } from "@/components/zelor/SiteHeader";
 import { SiteFooter } from "@/components/zelor/SiteFooter";
 import { CookieConsent } from "@/components/zelor/CookieConsent";
 import { THEME_INIT_SCRIPT } from "@/lib/zelor/theme";
+import { OG_IMAGE_URL } from "@/lib/zelor/site";
 
 function NotFoundComponent() {
   return (
@@ -119,6 +120,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap",
       },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
     scripts: [
