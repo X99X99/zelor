@@ -11,6 +11,7 @@ import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
+import { HeroMedia } from "@/components/zelor/HeroMedia";
 import { Reveal } from "@/components/zelor/Reveal";
 import { absoluteUrl } from "@/lib/zelor/site";
 
@@ -46,30 +47,8 @@ function Home() {
     <>
       {/* A. Hero */}
       <section className="relative isolate">
-        <picture>
-          <source
-            type="image/avif"
-            srcSet="/hero/zelor-hero-640.avif 640w, /hero/zelor-hero-1024.avif 1024w, /hero/zelor-hero-1600.avif 1600w, /hero/zelor-hero-1774.avif 1774w"
-            sizes="100vw"
-          />
-          <source
-            type="image/webp"
-            srcSet="/hero/zelor-hero-640.webp 640w, /hero/zelor-hero-1024.webp 1024w, /hero/zelor-hero-1600.webp 1600w, /hero/zelor-hero-1774.webp 1774w"
-            sizes="100vw"
-          />
-          <img
-            src="/hero/zelor-hero-1600.jpg"
-            srcSet="/hero/zelor-hero-640.jpg 640w, /hero/zelor-hero-1024.jpg 1024w, /hero/zelor-hero-1600.jpg 1600w, /hero/zelor-hero-1774.jpg 1774w"
-            sizes="100vw"
-            width={1774}
-            height={887}
-            fetchPriority="high"
-            loading="eager"
-            decoding="async"
-            alt="Une femme drapée d'un voile de soie ivoire, adossée à une roche sombre face à la mer au soleil couchant."
-            className="h-[68vh] min-h-[26rem] w-full object-cover object-[28%_center] md:h-[82vh] md:object-center"
-          />
-        </picture>
+        <HeroMedia />
+
         <div
           aria-hidden="true"
           className="grain-z absolute inset-0 bg-linear-to-t from-navy-deep/85 via-navy/30 to-navy-deep/25 md:bg-linear-to-r md:from-navy-deep/80 md:via-navy/25 md:to-navy-deep/10"
