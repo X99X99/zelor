@@ -11,6 +11,7 @@ import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
+import { HeroMedia } from "@/components/zelor/HeroMedia";
 import { Reveal } from "@/components/zelor/Reveal";
 import { absoluteUrl } from "@/lib/zelor/site";
 
