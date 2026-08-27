@@ -104,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: OG_IMAGE_URL },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "ZELOR — maison éditoriale" },
+      { property: "og:image:alt", content: "ZELOR — l'élégance dans chaque détail" },
       { name: "twitter:image", content: OG_IMAGE_URL },
       { name: "theme-color", content: "#151F31" },
     ],
