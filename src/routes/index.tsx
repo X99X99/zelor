@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import heroImage from "@/assets/hero.jpg";
+
 import editorialImage from "@/assets/editorial.jpg";
 import detailImage from "@/assets/detail.jpg";
 import detailVideo from "@/assets/video-detail.mp4.asset.json";
