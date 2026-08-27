@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { PageShell } from "@/components/zelor/Page";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -17,10 +18,10 @@ export const Route = createFileRoute("/contact")({
         property: "og:description",
         content: "Une question sur une commande, un produit ou un retour ?",
       },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: absoluteUrl("/contact") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/contact") }],
   }),
   component: ContactPage,
 });

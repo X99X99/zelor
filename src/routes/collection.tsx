@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { Reveal } from "@/components/zelor/Reveal";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 type CollectionSearch = { q?: string };
 
@@ -29,10 +30,10 @@ export const Route = createFileRoute("/collection")({
         property: "og:description",
         content: "Des pièces choisies pour leur équilibre entre forme, fonction et présence.",
       },
-      { property: "og:url", content: "/collection" },
+      { property: "og:url", content: absoluteUrl("/collection") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/collection" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/collection") }],
   }),
   component: CollectionPage,
 });

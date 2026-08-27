@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import detailImage from "@/assets/detail.jpg";
 import { PageShell, Section } from "@/components/zelor/Page";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/qualite")({
   head: () => ({
@@ -17,10 +18,10 @@ export const Route = createFileRoute("/qualite")({
         property: "og:description",
         content: "Finition, matière, conception et usage réel.",
       },
-      { property: "og:url", content: "/qualite" },
+      { property: "og:url", content: absoluteUrl("/qualite") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/qualite" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/qualite") }],
   }),
   component: () => (
     <PageShell

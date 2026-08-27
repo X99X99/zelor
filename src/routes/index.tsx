@@ -12,6 +12,7 @@ import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { Reveal } from "@/components/zelor/Reveal";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,10 +29,10 @@ export const Route = createFileRoute("/")({
         content:
           "ZELOR est une maison éditoriale contemporaine. Des pièces choisies avec exigence, entre présence, usage et élégance. Livraison en France et dans l'Union européenne.",
       },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: absoluteUrl("/") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/") }],
   }),
   component: Home,
 });

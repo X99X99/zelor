@@ -5,6 +5,7 @@ import { DEMO_PRODUCTS, PRICING } from "@/lib/zelor/content";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
 import { Reveal } from "@/components/zelor/Reveal";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({
@@ -21,10 +22,10 @@ export const Route = createFileRoute("/panier")({
         property: "og:description",
         content: "Votre panier ZELOR, paiement sécurisé.",
       },
-      { property: "og:url", content: "/panier" },
+      { property: "og:url", content: absoluteUrl("/panier") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/panier" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/panier") }],
   }),
   component: CartPage,
 });

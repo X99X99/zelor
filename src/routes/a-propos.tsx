@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { PageShell, Section } from "@/components/zelor/Page";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/a-propos")({
   head: () => ({
@@ -16,10 +17,10 @@ export const Route = createFileRoute("/a-propos")({
         property: "og:description",
         content: "Notre approche, notre exigence et notre manière de travailler.",
       },
-      { property: "og:url", content: "/a-propos" },
+      { property: "og:url", content: absoluteUrl("/a-propos") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/a-propos" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/a-propos") }],
   }),
   component: () => (
     <PageShell

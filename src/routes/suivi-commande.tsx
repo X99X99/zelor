@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { PageShell, Section } from "@/components/zelor/Page";
+import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/suivi-commande")({
   head: () => ({
@@ -16,10 +17,10 @@ export const Route = createFileRoute("/suivi-commande")({
         property: "og:description",
         content: "Suivez votre commande à partir de l'email d'expédition.",
       },
-      { property: "og:url", content: "/suivi-commande" },
+      { property: "og:url", content: absoluteUrl("/suivi-commande") },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/suivi-commande" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/suivi-commande") }],
   }),
   component: () => (
     <PageShell
