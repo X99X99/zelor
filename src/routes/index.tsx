@@ -6,7 +6,7 @@ import editorialImage from "@/assets/editorial.jpg";
 import detailImage from "@/assets/detail.jpg";
 import detailVideo from "@/assets/video-detail.mp4.asset.json";
 import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
-import { BRAND, PROMISES } from "@/lib/zelor/content";
+import { PROMISES } from "@/lib/zelor/content";
 import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
