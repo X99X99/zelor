@@ -91,6 +91,9 @@ export async function storefrontApiRequest(
   query: string,
   variables: Record<string, unknown> = {},
   locale: LocaleCode = DEFAULT_LOCALE,
+  // La forme du corps dépend de la requête : chaque appelant sait ce qu'il a
+  // demandé et le type sur place. Une forme générique ici ne dirait rien de vrai.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   // La langue n'est ajoutée qu'aux opérations qui la déclarent : les mutations
   // du panier n'en ont pas besoin et refuseraient une variable inconnue.

@@ -144,7 +144,9 @@ function ProductDetail({
           <h1 className="mt-3 font-display text-3xl md:text-5xl">{node.title}</h1>
           <p className="mt-4 text-lg">{price}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            {available ? "Disponible — expédié depuis notre atelier." : "Actuellement indisponible."}
+            {available
+              ? "Disponible — expédié depuis notre atelier."
+              : "Actuellement indisponible."}
           </p>
 
           {variants.length > 1 && (
