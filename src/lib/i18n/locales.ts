@@ -6,6 +6,9 @@
  * passe à `ready`, c'est-à-dire lorsque contenu, SEO, service client,
  * paiement, livraison, retours et textes légaux sont prêts pour le marché.
  * Aucune traduction automatique ne peut faire passer une locale à `ready`.
+ *
+ * Chaque locale porte aussi ce que Shopify attend : sans ces deux champs, le
+ * catalogue reviendrait toujours dans la langue d'origine de la boutique.
  */
 
 export type LocaleStatus = "ready" | "draft";
@@ -19,25 +22,105 @@ export type LocaleDefinition = {
   status: LocaleStatus;
   dir: TextDirection;
   currency: string;
+  /** Énumération Shopify : décide de la langue du catalogue renvoyé. */
+  shopifyLanguage: string;
+  /** Pays Shopify : décide de la devise et des prix renvoyés. */
+  shopifyCountry: string;
   /** Marché principal desservi (livraison, retours, mentions légales). */
   region: string;
 };
 
 export const LOCALES = [
-  { code: "fr-FR", label: "Français", status: "ready", dir: "ltr", currency: "EUR", region: "FR" },
-  { code: "en", label: "English", status: "ready", dir: "ltr", currency: "EUR", region: "EU" },
-  { code: "de-DE", label: "Deutsch", status: "draft", dir: "ltr", currency: "EUR", region: "DE" },
-  { code: "it-IT", label: "Italiano", status: "draft", dir: "ltr", currency: "EUR", region: "IT" },
-  { code: "es-ES", label: "Español", status: "draft", dir: "ltr", currency: "EUR", region: "ES" },
-  { code: "ja-JP", label: "日本語", status: "draft", dir: "ltr", currency: "JPY", region: "JP" },
-  { code: "ko-KR", label: "한국어", status: "draft", dir: "ltr", currency: "KRW", region: "KR" },
-  { code: "ar", label: "العربية", status: "draft", dir: "rtl", currency: "AED", region: "AE" },
+  {
+    code: "fr-FR",
+    label: "Français",
+    status: "ready",
+    dir: "ltr",
+    currency: "EUR",
+    shopifyLanguage: "FR",
+    shopifyCountry: "FR",
+    region: "FR",
+  },
+  {
+    code: "en",
+    label: "English",
+    status: "ready",
+    dir: "ltr",
+    currency: "EUR",
+    shopifyLanguage: "EN",
+    // L'Irlande plutôt que le Royaume-Uni : anglophone et en euros, donc les
+    // prix restent cohérents avec la devise déclarée pour cette locale.
+    shopifyCountry: "IE",
+    region: "EU",
+  },
+  {
+    code: "de-DE",
+    label: "Deutsch",
+    status: "draft",
+    dir: "ltr",
+    currency: "EUR",
+    shopifyLanguage: "DE",
+    shopifyCountry: "DE",
+    region: "DE",
+  },
+  {
+    code: "it-IT",
+    label: "Italiano",
+    status: "draft",
+    dir: "ltr",
+    currency: "EUR",
+    shopifyLanguage: "IT",
+    shopifyCountry: "IT",
+    region: "IT",
+  },
+  {
+    code: "es-ES",
+    label: "Español",
+    status: "draft",
+    dir: "ltr",
+    currency: "EUR",
+    shopifyLanguage: "ES",
+    shopifyCountry: "ES",
+    region: "ES",
+  },
+  {
+    code: "ja-JP",
+    label: "日本語",
+    status: "draft",
+    dir: "ltr",
+    currency: "JPY",
+    shopifyLanguage: "JA",
+    shopifyCountry: "JP",
+    region: "JP",
+  },
+  {
+    code: "ko-KR",
+    label: "한국어",
+    status: "draft",
+    dir: "ltr",
+    currency: "KRW",
+    shopifyLanguage: "KO",
+    shopifyCountry: "KR",
+    region: "KR",
+  },
+  {
+    code: "ar",
+    label: "العربية",
+    status: "draft",
+    dir: "rtl",
+    currency: "AED",
+    shopifyLanguage: "AR",
+    shopifyCountry: "AE",
+    region: "AE",
+  },
   {
     code: "zh-Hans",
     label: "简体中文",
     status: "draft",
     dir: "ltr",
     currency: "CNY",
+    shopifyLanguage: "ZH_CN",
+    shopifyCountry: "CN",
     region: "CN",
   },
   {
@@ -46,6 +129,8 @@ export const LOCALES = [
     status: "draft",
     dir: "ltr",
     currency: "TWD",
+    shopifyLanguage: "ZH_TW",
+    shopifyCountry: "TW",
     region: "TW",
   },
 ] as const satisfies readonly LocaleDefinition[];
@@ -87,4 +172,10 @@ export function resolveLocale(
     if (loose) return loose.code as LocaleCode;
   }
   return DEFAULT_LOCALE;
+}
+
+/** Ce que Shopify doit recevoir pour cette locale. */
+export function shopifyContext(code: string): { language: string; country: string } {
+  const definition = getLocale(code) ?? getLocale(DEFAULT_LOCALE)!;
+  return { language: definition.shopifyLanguage, country: definition.shopifyCountry };
 }

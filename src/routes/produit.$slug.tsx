@@ -9,7 +9,7 @@ import {
   productsQueryOptions,
   type ShopifyProduct,
 } from "@/lib/shopify/client";
-import { useCartStore } from "@/stores/cartStore";
+import { useCart } from "@/lib/zelor/cart";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
 import { ProductCard } from "@/components/zelor/ProductCard";
@@ -85,8 +85,7 @@ function ProductDetail({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const { add: addItem, busy: isLoading } = useCart();
 
   const selectedVariant = variants.find((v) => v.id === variantId) ?? variants[0];
   const images = node.images.edges.map((e) => e.node);

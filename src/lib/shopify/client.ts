@@ -1,8 +1,14 @@
-import { toast } from "sonner";
+import { DEFAULT_LOCALE, shopifyContext, type LocaleCode } from "@/lib/i18n/locales";
 
 /** ————— Couche Storefront Shopify —————
  * Source de vérité du catalogue, des stocks et du checkout.
  * Le jeton Storefront est publiable : il n'ouvre qu'un accès lecture publique.
+ *
+ * Chaque requête transporte la langue et le pays en cours, par la directive
+ * `@inContext`. Sans elle, Shopify renverrait toujours les titres et les
+ * descriptions dans la langue d'origine de la boutique — un site anglais avec
+ * des noms de produits en français, ce qui ne se voit qu'une fois le catalogue
+ * rempli.
  */
 
 export const SHOPIFY_API_VERSION = "2025-07";
@@ -66,7 +72,8 @@ export const PRODUCT_FIELDS = `
 `;
 
 export const STOREFRONT_QUERY = `
-  query GetProducts($first: Int!, $query: String) {
+  query GetProducts($first: Int!, $query: String, $language: LanguageCode, $country: CountryCode)
+  @inContext(language: $language, country: $country) {
     products(first: $first, query: $query) {
       edges { node { ${PRODUCT_FIELDS} } }
     }
@@ -74,7 +81,8 @@ export const STOREFRONT_QUERY = `
 `;
 
 export const PRODUCT_BY_HANDLE_QUERY = `
-  query GetProduct($handle: String!) {
+  query GetProduct($handle: String!, $language: LanguageCode, $country: CountryCode)
+  @inContext(language: $language, country: $country) {
     product(handle: $handle) { ${PRODUCT_FIELDS} }
   }
 `;
@@ -82,21 +90,35 @@ export const PRODUCT_BY_HANDLE_QUERY = `
 export async function storefrontApiRequest(
   query: string,
   variables: Record<string, unknown> = {},
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): Promise<any> {
+  // La langue n'est ajoutée qu'aux opérations qui la déclarent : les mutations
+  // du panier n'en ont pas besoin et refuseraient une variable inconnue.
+  const context = shopifyContext(locale);
+  const contextual = query.includes("$language")
+    ? { ...variables, language: context.language, country: context.country }
+    : variables;
+
   const response = await fetch(SHOPIFY_STOREFRONT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
     },
-    body: JSON.stringify({ query, variables }),
+    body: JSON.stringify({ query, variables: contextual }),
   });
 
   if (response.status === 402) {
-    toast.error("Shopify : abonnement requis", {
-      description:
-        "L'accès à l'API Shopify demande une offre Shopify active. Rendez-vous sur admin.shopify.com pour activer une offre.",
-    });
+    // `sonner` s'adresse au DOM : on ne le charge que dans le navigateur, et
+    // seulement le jour où ce cas se présente. Un import de haut niveau
+    // ferait échouer le rendu serveur de toutes les pages.
+    if (typeof window !== "undefined") {
+      const { toast } = await import("sonner");
+      toast.error("Shopify : abonnement requis", {
+        description:
+          "L'accès à l'API Shopify demande une offre Shopify active. Rendez-vous sur admin.shopify.com pour activer une offre.",
+      });
+    }
     return;
   }
 
@@ -114,7 +136,7 @@ export async function storefrontApiRequest(
 }
 
 /** Prix formatés depuis les unités Shopify et le code devise renvoyé. */
-export function formatMoney(money: ShopifyMoney | undefined, locale = "fr-FR") {
+export function formatMoney(money: ShopifyMoney | undefined, locale: string = DEFAULT_LOCALE) {
   if (!money) return "";
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -123,25 +145,42 @@ export function formatMoney(money: ShopifyMoney | undefined, locale = "fr-FR") {
   }).format(Number(money.amount));
 }
 
-export async function fetchProducts(first = 50, query?: string): Promise<ShopifyProduct[]> {
-  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query: query ?? null });
+export async function fetchProducts(
+  first = 50,
+  query?: string,
+  locale: LocaleCode = DEFAULT_LOCALE,
+): Promise<ShopifyProduct[]> {
+  const data = await storefrontApiRequest(
+    STOREFRONT_QUERY,
+    { first, query: query ?? null },
+    locale,
+  );
   return (data?.data?.products?.edges ?? []) as ShopifyProduct[];
 }
 
-export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct | null> {
-  const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
+export async function fetchProductByHandle(
+  handle: string,
+  locale: LocaleCode = DEFAULT_LOCALE,
+): Promise<ShopifyProduct | null> {
+  const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle }, locale);
   const node = data?.data?.product;
   return node ? ({ node } as ShopifyProduct) : null;
 }
 
-export const productsQueryOptions = (first = 50, query?: string) => ({
-  queryKey: ["shopify", "products", first, query ?? null] as const,
-  queryFn: () => fetchProducts(first, query),
+// La langue fait partie de la clé de cache : sans elle, le catalogue chargé en
+// français resterait affiché après un changement de langue.
+export const productsQueryOptions = (
+  first = 50,
+  query?: string,
+  locale: LocaleCode = DEFAULT_LOCALE,
+) => ({
+  queryKey: ["shopify", "products", locale, first, query ?? null] as const,
+  queryFn: () => fetchProducts(first, query, locale),
   staleTime: 60_000,
 });
 
-export const productQueryOptions = (handle: string) => ({
-  queryKey: ["shopify", "product", handle] as const,
-  queryFn: () => fetchProductByHandle(handle),
+export const productQueryOptions = (handle: string, locale: LocaleCode = DEFAULT_LOCALE) => ({
+  queryKey: ["shopify", "product", locale, handle] as const,
+  queryFn: () => fetchProductByHandle(handle, locale),
   staleTime: 60_000,
 });

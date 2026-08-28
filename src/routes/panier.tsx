@@ -1,7 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { useCart } from "@/lib/zelor/cart";
-import { DEMO_PRODUCTS, PRICING } from "@/lib/zelor/content";
+import { formatMoney, productsQueryOptions } from "@/lib/shopify/client";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
 import { ImageSlot } from "@/components/zelor/Placeholder";
 import { Reveal } from "@/components/zelor/Reveal";
@@ -31,8 +32,23 @@ export const Route = createFileRoute("/panier")({
 });
 
 function CartPage() {
-  const { lines, setQuantity, remove, ready } = useCart();
-  const suggestion = DEMO_PRODUCTS.find((p) => !lines.some((l) => l.slug === p.slug));
+  const { lines, setQuantity, remove, ready, busy, subtotal, currencyCode, checkoutUrl } =
+    useCart();
+  const { data: catalog } = useQuery(productsQueryOptions(8));
+
+  const suggestion = (catalog ?? []).find(
+    (product) => !lines.some((line) => line.handle === product.node.handle),
+  );
+  const suggestionImage = suggestion?.node.images.edges[0]?.node;
+
+  const canCheckout = ready && !busy && lines.length > 0 && checkoutUrl !== null;
+
+  // Le paiement se déroule sur le domaine Shopify : une navigation complète,
+  // jamais un routage interne, sinon la session de caisse n'est pas créée.
+  const goToCheckout = () => {
+    if (!checkoutUrl) return;
+    window.location.href = checkoutUrl;
+  };
 
   return (
     <>
@@ -61,27 +77,39 @@ function CartPage() {
         <div className="container-z grid gap-12 pb-24 lg:grid-cols-[1fr_22rem]">
           <Reveal as="ul" className="stagger-z divide-y divide-border border-y border-border">
             {lines.map((line) => (
-              <li key={`${line.slug}-${line.variant}`} className="flex gap-4 py-5">
+              <li key={line.variantId} className="flex gap-4 py-5">
                 <div className="w-20 shrink-0">
-                  <ImageSlot ratio="aspect-4/5" caption={line.name} />
+                  {line.image ? (
+                    <img
+                      src={line.image.url}
+                      alt={line.image.alt}
+                      loading="lazy"
+                      className="aspect-4/5 w-full rounded-[var(--radius-media)] object-cover"
+                    />
+                  ) : (
+                    <ImageSlot ratio="aspect-4/5" caption={line.name} />
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <Link
                     to="/produit/$slug"
-                    params={{ slug: line.slug }}
+                    params={{ slug: line.handle }}
                     className="link-underline text-sm font-medium"
                   >
                     {line.name}
                   </Link>
-                  <p className="mt-1 text-xs text-muted-foreground">{line.variant}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">{PRICING.label}</p>
+                  {line.variant && (
+                    <p className="mt-1 text-xs text-muted-foreground">{line.variant}</p>
+                  )}
+                  <p className="mt-2 text-sm text-muted-foreground">{formatMoney(line.price)}</p>
                   <div className="mt-3 flex items-center gap-4">
                     <div className="stepper-z">
                       <button
                         type="button"
                         aria-label={`Diminuer la quantité de ${line.name}`}
-                        onClick={() => setQuantity(line.slug, line.variant, line.quantity - 1)}
-                        className="size-10"
+                        disabled={busy}
+                        onClick={() => void setQuantity(line.variantId, line.quantity - 1)}
+                        className="size-10 disabled:opacity-50"
                       >
                         −
                       </button>
@@ -89,16 +117,18 @@ function CartPage() {
                       <button
                         type="button"
                         aria-label={`Augmenter la quantité de ${line.name}`}
-                        onClick={() => setQuantity(line.slug, line.variant, line.quantity + 1)}
-                        className="size-10"
+                        disabled={busy}
+                        onClick={() => void setQuantity(line.variantId, line.quantity + 1)}
+                        className="size-10 disabled:opacity-50"
                       >
                         +
                       </button>
                     </div>
                     <button
                       type="button"
-                      onClick={() => remove(line.slug, line.variant)}
-                      className="link-underline press-z text-xs text-muted-foreground hover:text-foreground"
+                      disabled={busy}
+                      onClick={() => void remove(line.variantId)}
+                      className="link-underline press-z text-xs text-muted-foreground hover:text-foreground disabled:opacity-50"
                     >
                       Retirer
                     </button>
@@ -112,7 +142,9 @@ function CartPage() {
             <div className="surface-panel relief-z space-y-2 p-6">
               <div className="flex justify-between text-sm">
                 <span>Sous-total</span>
-                <span className="text-muted-foreground">{PRICING.short}</span>
+                <span className="tabular-nums" data-testid="cart-subtotal">
+                  {formatMoney({ amount: String(subtotal), currencyCode })}
+                </span>
               </div>
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Livraison</span>
@@ -123,12 +155,18 @@ function CartPage() {
                 <span>Incluses pour l'Union européenne</span>
               </div>
             </div>
-            <button type="button" disabled className="btn-lux w-full disabled:opacity-60">
-              Passer commande
+            <button
+              type="button"
+              data-testid="checkout"
+              disabled={!canCheckout}
+              onClick={goToCheckout}
+              className="btn-lux w-full disabled:opacity-60"
+            >
+              {busy ? "Mise à jour…" : "Passer commande"}
             </button>
             <p className="text-xs text-muted-foreground">
-              La commande ouvrira avec la boutique. Retour possible dans le délai légal. Moyens de
-              paiement acceptés :{" "}
+              Le paiement se déroule sur la caisse sécurisée de la boutique. Retour possible dans le
+              délai légal. Moyens de paiement acceptés :{" "}
               <Link to="/paiements" className="link-underline">
                 voir la page dédiée
               </Link>
@@ -139,13 +177,22 @@ function CartPage() {
                 <p className="eyebrow">Pour compléter</p>
                 <Link
                   to="/produit/$slug"
-                  params={{ slug: suggestion.slug }}
+                  params={{ slug: suggestion.node.handle }}
                   className="press-z mt-3 flex items-center gap-3 rounded-2xl p-2 transition-colors duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-accent/60"
                 >
                   <span className="w-16 shrink-0">
-                    <ImageSlot tone={suggestion.tone} ratio="aspect-square" caption=" " />
+                    {suggestionImage ? (
+                      <img
+                        src={suggestionImage.url}
+                        alt={suggestionImage.altText ?? suggestion.node.title}
+                        loading="lazy"
+                        className="aspect-square w-full rounded-[var(--radius-media)] object-cover"
+                      />
+                    ) : (
+                      <ImageSlot ratio="aspect-square" caption=" " />
+                    )}
                   </span>
-                  <span className="text-sm">{suggestion.name}</span>
+                  <span className="text-sm">{suggestion.node.title}</span>
                 </Link>
               </div>
             )}

@@ -1,99 +1,85 @@
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+
+import { useCartSync } from "@/hooks/useCartSync";
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+  cartCount,
+  cartCurrency,
+  cartSubtotal,
+  toCartLines,
+  type CartLine,
+} from "@/lib/zelor/cart-lines";
+import { useCartStore, type CartItem } from "@/stores/cartStore";
 
 /**
- * Panier local de DÉMONSTRATION.
- * En production, le panier et le checkout sont gérés par Shopify
- * (Cart API / Storefront API). Aucun paiement n'est simulé ici.
+ * Porte d'entrée unique du panier.
+ *
+ * Tout ce que l'interface sait du panier passe par ici, et ce contexte ne parle
+ * qu'à une seule source : le panier Shopify (`useCartStore`). Il n'existe plus
+ * de panier local parallèle — c'était la cause du bouton « Passer commande »
+ * qui ne menait nulle part.
+ *
+ * L'ancien panier de démonstration est conservé, inutilisé, dans `cart-demo.tsx`.
  */
 
-export type CartLine = {
-  slug: string;
-  name: string;
-  variant: string;
-  quantity: number;
-};
+export type { CartLine };
 
 type CartContextValue = {
   lines: CartLine[];
   count: number;
-  add: (line: CartLine) => void;
-  setQuantity: (slug: string, variant: string, quantity: number) => void;
-  remove: (slug: string, variant: string) => void;
-  clear: () => void;
+  /** Sous-total en unités de devise, hors livraison et taxes. */
+  subtotal: number;
+  currencyCode: string;
+  /** URL de paiement Shopify, disponible dès qu'une ligne existe. */
+  checkoutUrl: string | null;
+  /** Faux tant que le composant n'est pas monté : évite une divergence d'hydratation. */
   ready: boolean;
+  /** Vrai pendant un appel à Shopify : sert à désactiver les commandes. */
+  busy: boolean;
+  add: (item: Omit<CartItem, "lineId">) => Promise<void>;
+  setQuantity: (variantId: string, quantity: number) => Promise<void>;
+  remove: (variantId: string) => Promise<void>;
+  clear: () => void;
 };
 
-const STORAGE_KEY = "zelor.demo.cart";
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [lines, setLines] = useState<CartLine[]>([]);
+  // Le panier est restauré depuis localStorage, donc vide au rendu serveur.
+  // On n'expose son contenu qu'une fois monté : le premier rendu client est
+  // ainsi identique au HTML reçu, et React n'a rien à corriger.
   const [ready, setReady] = useState(false);
-
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setLines(JSON.parse(raw) as CartLine[]);
-    } catch {
-      /* panier illisible : on repart d'un panier vide */
-    }
     setReady(true);
   }, []);
 
-  useEffect(() => {
-    if (!ready) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-    } catch {
-      /* stockage indisponible */
-    }
-  }, [lines, ready]);
+  // Réaligne le panier local sur Shopify au chargement et au retour d'onglet.
+  useCartSync();
 
-  const add = useCallback((line: CartLine) => {
-    setLines((current) => {
-      const index = current.findIndex((l) => l.slug === line.slug && l.variant === line.variant);
-      if (index === -1) return [...current, line];
-      return current.map((existing, i) =>
-        i === index ? { ...existing, quantity: existing.quantity + line.quantity } : existing,
-      );
-    });
-  }, []);
+  const items = useCartStore((state) => state.items);
+  const checkoutUrl = useCartStore((state) => state.checkoutUrl);
+  const busy = useCartStore((state) => state.isLoading);
+  const addItem = useCartStore((state) => state.addItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const clearCart = useCartStore((state) => state.clearCart);
 
-  const setQuantity = useCallback((slug: string, variant: string, quantity: number) => {
-    setLines((current) =>
-      current
-        .map((l) =>
-          l.slug === slug && l.variant === variant ? { ...l, quantity: Math.max(0, quantity) } : l,
-        )
-        .filter((l) => l.quantity > 0),
-    );
-  }, []);
-
-  const remove = useCallback((slug: string, variant: string) => {
-    setLines((current) => current.filter((l) => !(l.slug === slug && l.variant === variant)));
-  }, []);
-
-  const clear = useCallback(() => setLines([]), []);
+  const lines = useMemo(() => (ready ? toCartLines(items) : []), [ready, items]);
 
   const value = useMemo<CartContextValue>(
     () => ({
       lines,
-      count: lines.reduce((total, l) => total + l.quantity, 0),
-      add,
-      setQuantity,
-      remove,
-      clear,
+      count: cartCount(lines),
+      subtotal: cartSubtotal(lines),
+      currencyCode: cartCurrency(lines),
+      checkoutUrl,
       ready,
+      busy,
+      add: addItem,
+      setQuantity: updateQuantity,
+      remove: removeItem,
+      clear: clearCart,
     }),
-    [lines, add, setQuantity, remove, clear, ready],
+    [lines, checkoutUrl, ready, busy, addItem, updateQuantity, removeItem, clearCart],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
@@ -108,11 +94,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 const FALLBACK_CART: CartContextValue = {
   lines: [],
   count: 0,
-  add: () => {},
-  setQuantity: () => {},
-  remove: () => {},
-  clear: () => {},
+  subtotal: 0,
+  currencyCode: "EUR",
+  checkoutUrl: null,
   ready: false,
+  busy: false,
+  add: async () => {},
+  setQuantity: async () => {},
+  remove: async () => {},
+  clear: () => {},
 };
 
 export function useCart() {

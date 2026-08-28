@@ -2,8 +2,8 @@ import { Reveal } from "./Reveal";
 
 /** Grille vide — aucun produit fictif n'est affiché. */
 export function EmptyCatalog({
-  title = "No products found",
-  body = "Le catalogue Shopify ne contient encore aucune pièce.",
+  title = "Le catalogue ouvre bientôt.",
+  body = "Aucune pièce n'est encore publiée. Les premières arrivent très prochainement.",
 }: {
   title?: string;
   body?: string;

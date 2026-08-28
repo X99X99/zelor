@@ -1,10 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-import { DEMO_PRODUCTS } from "@/lib/zelor/content";
+import { storefrontApiRequest } from "@/lib/shopify/client";
+import { SITE_ORIGIN } from "@/lib/zelor/site";
 
-// TODO: remplacer par l'URL du projet dès qu'un nom ou un domaine est défini.
-const BASE_URL = "";
+/**
+ * Plan du site.
+ *
+ * Les fiches produit sont lues chez Shopify, jamais inventées : un plan qui
+ * déclare des URL inexistantes fait perdre la confiance des moteurs de
+ * recherche bien plus vite qu'un plan incomplet.
+ */
 
 interface SitemapEntry {
   path: string;
@@ -33,25 +39,56 @@ const STATIC_PATHS: SitemapEntry[] = [
   { path: "/cookies", changefreq: "yearly", priority: "0.3" },
 ];
 
+const HANDLES_QUERY = `
+  query SitemapHandles($first: Int!) {
+    products(first: $first) {
+      edges { node { handle updatedAt } }
+    }
+  }
+`;
+
+type HandleEdge = { node: { handle: string; updatedAt: string } };
+
+/** Échappe les cinq caractères que XML n'accepte pas tels quels. */
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+async function fetchProductEntries(): Promise<SitemapEntry[]> {
+  try {
+    const data = await storefrontApiRequest(HANDLES_QUERY, { first: 250 });
+    const edges = (data?.data?.products?.edges ?? []) as HandleEdge[];
+    return edges
+      .filter((edge) => Boolean(edge.node?.handle))
+      .map((edge) => ({
+        path: `/produit/${edge.node.handle}`,
+        changefreq: "weekly" as const,
+        priority: "0.8",
+      }));
+  } catch {
+    // Shopify indisponible : on publie le plan des pages fixes plutôt que
+    // de renvoyer une erreur. Un plan partiel vaut mieux qu'un plan absent.
+    return [];
+  }
+}
+
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const entries: SitemapEntry[] = [
-          ...STATIC_PATHS,
-          ...DEMO_PRODUCTS.map((product) => ({
-            path: `/produit/${product.slug}`,
-            changefreq: "weekly" as const,
-            priority: "0.8",
-          })),
-        ];
+        const entries: SitemapEntry[] = [...STATIC_PATHS, ...(await fetchProductEntries())];
 
-        const urls = entries.map((e) =>
+        const urls = entries.map((entry) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-            e.priority ? `    <priority>${e.priority}</priority>` : null,
+            `    <loc>${escapeXml(`${SITE_ORIGIN}${entry.path}`)}</loc>`,
+            entry.changefreq ? `    <changefreq>${entry.changefreq}</changefreq>` : null,
+            entry.priority ? `    <priority>${entry.priority}</priority>` : null,
             `  </url>`,
           ]
             .filter(Boolean)

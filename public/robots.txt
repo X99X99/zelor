@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /panier
+Disallow: /compte
+
+# À mettre à jour le jour où le domaine définitif remplace l'adresse Lovable,
+# en même temps que SITE_ORIGIN dans src/lib/zelor/site.ts.
+Sitemap: https://zelor.lovable.app/sitemap.xml
