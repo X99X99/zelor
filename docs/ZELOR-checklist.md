@@ -7,16 +7,16 @@ Rien ne doit être publié tant que les points ci-dessous ne sont pas validés p
 Tous les blocs beiges « À valider / Placeholder / Démonstration / Brouillon » et tous les
 marqueurs `[... À RENSEIGNER]` sont provisoires.
 
-| Emplacement | À remplacer |
-| --- | --- |
-| `src/lib/zelor/content.ts` → `DEMO_PRODUCTS` | catalogue réel (Shopify) |
-| `PLACEHOLDER` (prix, devise, délais, frais, adresse, email, statut juridique) | données réelles |
-| Accueil — hero, storytelling, éditorial | textes validés + photos officielles |
-| Accueil — section Qualité | détails de qualité, matière, conception confirmés |
-| Fiche produit — caractéristiques, FAQ, bénéfices | informations fournisseur vérifiées |
-| Journal | articles rédigés |
-| Mentions légales, CGV, Confidentialité, Cookies, Retours | rédaction et validation juridiques |
-| Visuels `src/assets/*` | photographies de marque (WebP/AVIF) |
+| Emplacement                                                                   | À remplacer                                       |
+| ----------------------------------------------------------------------------- | ------------------------------------------------- |
+| `src/lib/zelor/content.ts` → `DEMO_PRODUCTS`                                  | catalogue réel (Shopify)                          |
+| `PLACEHOLDER` (prix, devise, délais, frais, adresse, email, statut juridique) | données réelles                                   |
+| Accueil — hero, storytelling, éditorial                                       | textes validés + photos officielles               |
+| Accueil — section Qualité                                                     | détails de qualité, matière, conception confirmés |
+| Fiche produit — caractéristiques, FAQ, bénéfices                              | informations fournisseur vérifiées                |
+| Journal                                                                       | articles rédigés                                  |
+| Mentions légales, CGV, Confidentialité, Cookies, Retours                      | rédaction et validation juridiques                |
+| Visuels `src/assets/*`                                                        | photographies de marque (WebP/AVIF)               |
 
 ## 2. Informations à collecter
 
