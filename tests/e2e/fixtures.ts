@@ -18,6 +18,28 @@ const FREEZE_CSS = `
   video { visibility: hidden !important; }
 `;
 
+/** Requête catalogue Shopify : c'est elle qui décide de ce que la page affiche. */
+const STOREFRONT_REQUEST = /myshopify\.com\/api\/.*graphql\.json/;
+
+/**
+ * Routes qui interrogent le catalogue au montage.
+ *
+ * Tant que cette requête n'a pas abouti, la page a deux rendus possibles : les
+ * pièces, ou l'état « catalogue à venir ». Sous charge, deux onglets ouverts en
+ * parallèle n'en sont pas au même point, et une comparaison structurelle échoue
+ * pour une raison qui n'a rien d'une régression.
+ *
+ * On attend donc la réponse, jamais un délai : un délai ne ferait que déplacer
+ * la course. Et l'on attend la réponse, non l'apparition de pièces — le
+ * catalogue peut légitimement être vide, et l'est aujourd'hui.
+ */
+const CATALOGUE_ROUTES = ["/collection", "/nouveautes", "/panier", "/produit/"];
+
+function queriesCatalogue(path: string): boolean {
+  const clean = path.split("?")[0] ?? path;
+  return clean === "/" || CATALOGUE_ROUTES.some((route) => clean.startsWith(route));
+}
+
 /**
  * Ouvre une page dans un thème imposé, sans flash ni donnée dynamique :
  * le choix de thème est écrit avant le premier rendu, l'année du footer est
@@ -42,6 +64,11 @@ export async function openPage(page: Page, path: string, theme: ThemeName = "lig
     [THEME_STORAGE_KEY, theme] as const,
   );
   await page.emulateMedia({ colorScheme: theme, reducedMotion: "reduce" });
+  // L'écoute est posée avant la navigation : sur une page rapide, la réponse
+  // arriverait avant qu'on ait eu le temps de l'attendre.
+  const catalogueSettled = queriesCatalogue(path)
+    ? page.waitForResponse(STOREFRONT_REQUEST, { timeout: 20_000 }).catch(() => null)
+    : Promise.resolve(null);
   await page.goto(path, { waitUntil: "load" });
   await page.addStyleTag({ content: FREEZE_CSS });
   // L'hydratation doit être terminée avant toute interaction : sans cela, un
@@ -66,9 +93,13 @@ export async function openPage(page: Page, path: string, theme: ThemeName = "lig
         "Le rendu n'est pas déterministe : réparer le chargement des polices avant de comparer des baselines.",
     );
   }
+  // Le catalogue doit avoir répondu : c'est lui qui décide entre la grille de
+  // pièces et l'état vide, et donc de la position de tout ce qui suit.
+  await catalogueSettled;
   // Données dynamiques neutralisées : l'année courante ne doit pas dater une
   // baseline. La retouche intervient après l'hydratation complète, sinon React
-  // compare son rendu à un DOM déjà modifié et signale un faux écart.
+  // compare son rendu à un DOM déjà modifié et signale un faux écart. Ce même
+  // délai laisse à React le temps de peindre le résultat du catalogue.
   await page.waitForTimeout(250);
   await page.evaluate(() => {
     document.querySelectorAll("footer p").forEach((node) => {
