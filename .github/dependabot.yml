@@ -10,21 +10,19 @@
 
 version: 2
 updates:
-  # Bibliothèques du site.
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "deps"
-    groups:
-      # Une seule pull request pour les montées de version mineures et les
-      # correctifs : cinquante notifications par mois finissent ignorées, et
-      # une alerte qu'on ignore ne protège de rien.
-      routine:
-        update-types: ["minor", "patch"]
+  # Les bibliothèques du site ne sont volontairement pas suivies ici.
+  #
+  # Ce projet verrouille ses versions dans `bun.lock`, et Dependabot ne sait pas
+  # le régénérer : il met à jour `package.json` seul. Le contrôle qualité, qui
+  # installe avec `--frozen-lockfile`, refuse alors le désaccord entre les deux
+  # fichiers. Chaque demande de fusion arrivait rouge et inmergeable — du
+  # travail qui s'accumule sans jamais rien protéger.
+  #
+  # Les alertes Dependabot, elles, continuent de signaler les failles connues :
+  # elles lisent le graphe de dépendances, pas le lockfile. La mise à jour se
+  # fait alors à la main, en une commande, avec le lockfile régénéré.
+  #
+  # À rétablir le jour où Dependabot saura écrire dans `bun.lock`.
 
   # Actions du contrôle qualité. Elles vieillissent sans qu'on y pense, et
   # c'est ainsi qu'on se retrouve averti que Node 20 n'est plus maintenu.
