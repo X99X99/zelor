@@ -33,12 +33,22 @@ jobs:
           path: test-results
           retention-days: 7
 
+  # Revue des dépendances : refuse toute bibliothèque entrante porteuse d'une
+  # faille connue de gravité élevée.
+  #
+  # L'action compare deux états du projet. Sur une pull request, elle trouve
+  # seule quoi comparer. Sur un push direct, il faut lui désigner les deux
+  # points : le commit d'avant, et celui qui arrive.
   dependency-review:
     name: dependency-review
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: high
+          base-ref:
+            ${{ github.event_name == 'pull_request' && github.base_ref || github.event.before }}
+          head-ref: ${{ github.sha }}
