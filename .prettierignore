@@ -9,3 +9,8 @@ routeTree.gen.ts
 
 test-results/
 playwright-report/
+
+# Généré par la plateforme Lovable et par Supabase : réécrit à chaque
+# synchronisation, jamais édité à la main.
+src/integrations
+src/routes/lovable

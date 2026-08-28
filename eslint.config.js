@@ -6,7 +6,13 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi"] },
+  {
+    // Code généré par la plateforme Lovable et par Supabase : réécrit à chaque
+    // synchronisation, sans passer par le formateur du projet. Le corriger à la
+    // main est sans fin — il revient tel quel au commit suivant. La vérification
+    // des types, elle, continue de les couvrir : seul le style est écarté.
+    ignores: ["dist", ".output", ".vinxi", "src/integrations/**", "src/routes/lovable/**"],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
