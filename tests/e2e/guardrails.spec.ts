@@ -161,15 +161,25 @@ test.describe("garde-fou apparence : astre correct dans les quatre états", () =
       await expect(button).toHaveCount(1);
       // Hydratation terminée : avant elle, le libellé est encore générique.
       await expect(button).toHaveAttribute("aria-label", /Apparence : /);
+      // Les deux astres se croisent par un fondu. Sous `prefers-reduced-motion`,
+      // la feuille de style ramène la transition à 1 ms : imperceptible à l'œil,
+      // mais pas nulle. Une lecture synchrone de l'opacité tombait parfois au
+      // milieu du fondu et lisait « 0.43 » au lieu de « 0 » ou « 1 » — d'où un
+      // échec qui changeait de variante à chaque exécution, selon la charge de
+      // la machine.
+      //
+      // `toHaveCSS` réessaie jusqu'à la valeur stabilisée. Rien n'est concédé
+      // sur ce qui est exigé : les deux mêmes valeurs, exactement.
+      const sun = button.locator(".theme-icon-day-z");
+      const moon = button.locator(".theme-icon-night-z");
+      await expect(sun).toHaveCSS("opacity", mode === "dark" ? "0" : "1");
+      await expect(moon).toHaveCSS("opacity", mode === "dark" ? "1" : "0");
+
       const state = await button.evaluate((el) => ({
         dark: document.documentElement.classList.contains("dark"),
-        sun: getComputedStyle(el.querySelector(".theme-icon-day-z")!).opacity,
-        moon: getComputedStyle(el.querySelector(".theme-icon-night-z")!).opacity,
         label: el.getAttribute("aria-label") ?? "",
       }));
       expect(state.dark).toBe(mode === "dark");
-      expect(state.sun).toBe(mode === "dark" ? "0" : "1");
-      expect(state.moon).toBe(mode === "dark" ? "1" : "0");
       expect(state.label).not.toBe("Apparence");
     });
   }
