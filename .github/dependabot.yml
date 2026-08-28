@@ -1,0 +1,36 @@
+# Surveillance des dépendances.
+#
+# Remplace le contrôle `dependency-review`, qui exige GitHub Advanced Security
+# sur un dépôt privé. Dependabot, lui, est gratuit et fait mieux pour ce projet :
+# la revue ne gardait que la porte d'entrée des pull requests, alors qu'ici tous
+# les commits arrivent en push direct. Dependabot surveille l'arbre entier, en
+# continu, et propose lui-même la correction.
+#
+# Les alertes de sécurité s'activent en plus dans Settings → Security.
+
+version: 2
+updates:
+  # Bibliothèques du site.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    groups:
+      # Une seule pull request pour les montées de version mineures et les
+      # correctifs : cinquante notifications par mois finissent ignorées, et
+      # une alerte qu'on ignore ne protège de rien.
+      routine:
+        update-types: ["minor", "patch"]
+
+  # Actions du contrôle qualité. Elles vieillissent sans qu'on y pense, et
+  # c'est ainsi qu'on se retrouve averti que Node 20 n'est plus maintenu.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "ci"
