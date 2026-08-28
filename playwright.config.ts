@@ -10,16 +10,44 @@ import { LOCK_MESSAGE, resolveLockedChromium } from "./tests/e2e/browser";
  * imposés, animations figées, polices attendues et vérifiées avant capture,
  * données dynamiques neutralisées, parallélisme borné.
  */
+/**
+ * Deux familles de tests, deux exigences différentes.
+ *
+ * Les captures visuelles comparent des pixels : elles n'ont de sens que sur le
+ * moteur exact qui a produit les images de référence. Le verrou reste donc
+ * entier pour elles.
+ *
+ * Les parcours — panier, navigation, filets de progression — vérifient un
+ * comportement, pas un rendu de texte. Les bloquer parce qu'un Chromium n'a pas
+ * la bonne version revient à ne plus rien vérifier du tout, y compris le tunnel
+ * d'achat. Ils tournent donc sur le navigateur disponible.
+ *
+ * Sans le moteur verrouillé, la suite visuelle est écartée et le dit. Elle
+ * n'échoue pas en silence, et elle ne fait plus tomber le reste avec elle.
+ */
 const locked = resolveLockedChromium();
-if (!locked) throw new Error(LOCK_MESSAGE);
-const launchOptions = {
-  executablePath: locked.executablePath,
-  // Rendu de texte identique d'une machine à l'autre.
-  args: ["--font-render-hinting=none", "--disable-lcd-text", "--force-color-profile=srgb"],
-};
+if (!locked) {
+  console.warn(LOCK_MESSAGE);
+  console.warn("→ Suite visuelle écartée. Les parcours, eux, restent vérifiés.");
+}
+
+// Rendu de texte identique d'une machine à l'autre.
+const RENDER_ARGS = [
+  "--font-render-hinting=none",
+  "--disable-lcd-text",
+  "--force-color-profile=srgb",
+];
+
+const launchOptions = locked
+  ? { executablePath: locked.executablePath, args: RENDER_ARGS }
+  : { args: RENDER_ARGS };
+
+/** Les comparaisons de pixels n'ont lieu que sur le moteur de référence. */
+const testIgnore = locked ? [] : ["**/visual.spec.ts"];
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  testIgnore,
   snapshotPathTemplate: "{testDir}/baselines/{testFileName}/{arg}-{projectName}{ext}",
   fullyParallel: true,
   // Deux workers : au-delà, la contention CPU altère le rendu du texte et
