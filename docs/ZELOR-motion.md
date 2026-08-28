@@ -17,31 +17,31 @@
 
 ## 2. Primitives centralisées (`src/styles.css`)
 
-| Utilitaire | Rôle |
-| --- | --- |
-| `tactile-z` / `tactile-lift-z` | physique premium (élévation, tassement, focus) |
-| `press-z` | réponse d'appui simple |
-| `utility-z` / `utility-icon-z` | utilitaires du header (fond + icône) |
-| `unfold-z` / `unfold-out-z` | déploiement / repli d'une surface (recherche) |
-| `panel-in` / `panel-out` | panneaux flottants (langue) |
-| `overlay-in` / `overlay-out` | menu mobile, voiles |
-| `collapse-out-z` | repli d'une bande (barre d'annonce) |
-| `discover-bar-z` | bulle « Découvrir » (dilatation / rétractation floutée) |
-| `header-motion-z` | dissolution et retour du header (`data-hidden`) |
-| `focal-list` + `data-focal` | lecture focale d'une liste |
-| `seam-z` | césure lumineuse entre couches marine |
-| `progress-track-z` / `progress-z` | filet de progression joaillier |
-| `reveal-z` | apparition au défilement (`Reveal`, option `replay`) |
+| Utilitaire                        | Rôle                                                    |
+| --------------------------------- | ------------------------------------------------------- |
+| `tactile-z` / `tactile-lift-z`    | physique premium (élévation, tassement, focus)          |
+| `press-z`                         | réponse d'appui simple                                  |
+| `utility-z` / `utility-icon-z`    | utilitaires du header (fond + icône)                    |
+| `unfold-z` / `unfold-out-z`       | déploiement / repli d'une surface (recherche)           |
+| `panel-in` / `panel-out`          | panneaux flottants (langue)                             |
+| `overlay-in` / `overlay-out`      | menu mobile, voiles                                     |
+| `collapse-out-z`                  | repli d'une bande (barre d'annonce)                     |
+| `discover-bar-z`                  | bulle « Découvrir » (dilatation / rétractation floutée) |
+| `header-motion-z`                 | dissolution et retour du header (`data-hidden`)         |
+| `focal-list` + `data-focal`       | lecture focale d'une liste                              |
+| `seam-z`                          | césure lumineuse entre couches marine                   |
+| `progress-track-z` / `progress-z` | filet de progression joaillier                          |
+| `reveal-z`                        | apparition au défilement (`Reveal`, option `replay`)    |
 
 ### Composants factorisés
 
-| Source unique | Ce qu'elle verrouille |
-| --- | --- |
+| Source unique                                          | Ce qu'elle verrouille                                                                           |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
 | `NavySurface` (`src/components/zelor/NavySurface.tsx`) | header **et** recherche : même matière, même entrée/sortie, même durée (`NAVY_SURFACE_EXIT_MS`) |
-| `--surface-navy-bg` / `--surface-navy-veil` | fond et voile marine : aucune surface ne redéfinit sa couleur |
-| `--ease-back` | boomerang (progression, capsules, contours ronds) |
-| `--ease-breathe` | respiration : survols du menu, capsules, halos |
-| `discover-bar-z` | capsule flottante « Découvrir », compacte et centrée |
+| `--surface-navy-bg` / `--surface-navy-veil`            | fond et voile marine : aucune surface ne redéfinit sa couleur                                   |
+| `--ease-back`                                          | boomerang (progression, capsules, contours ronds)                                               |
+| `--ease-breathe`                                       | respiration : survols du menu, capsules, halos                                                  |
+| `discover-bar-z`                                       | capsule flottante « Découvrir », compacte et centrée                                            |
 
 ## 3. Continuité chromatique
 

@@ -13,7 +13,10 @@ export const Route = createFileRoute("/cgv")({
           "Conditions générales de vente ZELOR : commandes, prix, paiement, livraison, rétractation et garanties.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Conditions générales de vente — ZELOR — Maison éditoriale" },
+      {
+        property: "og:title",
+        content: "Conditions générales de vente — ZELOR — Maison éditoriale",
+      },
       {
         property: "og:description",
         content: "Commandes, prix, livraison, rétractation et garanties.",

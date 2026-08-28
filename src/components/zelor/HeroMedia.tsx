@@ -53,8 +53,7 @@ export function HeroMedia() {
       connection?.saveData === true ||
       ["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
     const canPlay =
-      typeof document !== "undefined" &&
-      !!document.createElement("video").canPlayType("video/mp4");
+      typeof document !== "undefined" && !!document.createElement("video").canPlayType("video/mp4");
 
     if (!reduced && !frugal && canPlay) setPlayVideo(true);
   }, []);

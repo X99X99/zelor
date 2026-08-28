@@ -15,7 +15,10 @@ export const Route = createFileRoute("/univers")({
         content:
           "L'univers ZELOR : une approche calme et précise du quotidien, où la forme, l'usage et la matière comptent autant l'un que l'autre.",
       },
-      { property: "og:title", content: "L'univers ZELOR — Maison éditoriale — une signature discrète" },
+      {
+        property: "og:title",
+        content: "L'univers ZELOR — Maison éditoriale — une signature discrète",
+      },
       {
         property: "og:description",
         content: "Une approche calme et précise du quotidien, entre forme, usage et matière.",

@@ -166,8 +166,6 @@
    * au repos ; elle se révèle à l'interaction comme les autres. */
   --cap-current-bg: transparent;
 
-
-
   /* Ivoire lumineux — lumière de Riviera sur pierre claire */
   --background: oklch(0.975 0.005 88);
   --ivory: oklch(0.985 0.004 88);
@@ -379,8 +377,6 @@
   --cap-current-bg: transparent;
 }
 
-
-
 /* Bascule de thème : seules les couleurs et les surfaces traversent, jamais
  * une géométrie — aucune animation du header n'est rejouée. */
 @media (prefers-reduced-motion: no-preference) {
@@ -414,9 +410,7 @@
       button,
       input,
       textarea
-    ):not(
-      :where([data-focal], [data-focal] *, .wordmark-z, .wordmark-z *)
-    ) {
+    ):not(:where([data-focal], [data-focal] *, .wordmark-z, .wordmark-z *)) {
     transition: var(--theme-fade, none);
   }
 }
@@ -612,7 +606,6 @@
   }
 }
 
-
 @utility wordmark-z {
   position: relative;
   display: inline-block;
@@ -681,8 +674,6 @@
     animation: none !important;
   }
 }
-
-
 
 /* Éléments utilitaires : halo de matière au survol et au focus */
 @utility utility-z {
@@ -1247,7 +1238,6 @@
     box-shadow: var(--cap-active-shadow, var(--cap-hover-shadow));
     border-bottom-color: color-mix(in oklab, var(--cap-ink) 14%, transparent);
   }
-
 }
 
 /* Même capsule, posée à l'horizontale (header) ou en colonne serrée (footer).
@@ -1449,7 +1439,6 @@
   will-change: transform, opacity, filter;
   animation: zelor-panel-out var(--dur-panel-out) var(--ease-glide) both;
 }
-
 
 /* Repli vertical d'une bande (barre d'annonce) : hauteur, voile, densité. */
 @keyframes zelor-collapse-out {
@@ -2115,7 +2104,6 @@
     transition-duration: 1ms !important;
   }
 }
-
 
 /* ————— Lien de navigation ZELOR —————
  * Une seule primitive pour le header, le menu et le footer. Les liens de
