@@ -138,6 +138,35 @@ export async function storefrontApiRequest(
   return data;
 }
 
+/**
+ * L'URL de caisse mène-t-elle bien chez Shopify ?
+ *
+ * Elle est fournie par Shopify, mais elle transite par le panier, lui-même
+ * conservé dans le stockage local du navigateur. Ce stockage n'est pas une
+ * zone de confiance : une extension, un poste partagé ou une faille ailleurs
+ * sur le domaine suffisent à y écrire. Une valeur remplacée enverrait le
+ * client sur une fausse page de paiement — depuis un clic légitime, sur le
+ * vrai site. C'est le scénario d'hameçonnage le plus convaincant qui soit.
+ *
+ * On n'ouvre donc que des adresses Shopify, et seulement en HTTPS.
+ * Le jour où une caisse sur domaine personnalisé sera configurée, son hôte
+ * devra être ajouté ici — sinon le bouton restera désactivé.
+ */
+export function isTrustedCheckoutUrl(value: string | null | undefined): boolean {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:") return false;
+    const host = url.hostname.toLowerCase();
+    return (
+      host.endsWith(".myshopify.com") || host === "checkout.shopify.com" || host === "shop.app"
+    );
+  } catch {
+    // Une valeur qui n'est même pas une URL : on refuse sans discuter.
+    return false;
+  }
+}
+
 /** Prix formatés depuis les unités Shopify et le code devise renvoyé. */
 export function formatMoney(money: ShopifyMoney | undefined, locale: string = DEFAULT_LOCALE) {
   if (!money) return "";

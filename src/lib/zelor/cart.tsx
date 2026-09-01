@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { useCartSync } from "@/hooks/useCartSync";
+import { isTrustedCheckoutUrl } from "@/lib/shopify/client";
 import {
   cartCount,
   cartCurrency,
@@ -56,7 +57,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useCartSync();
 
   const items = useCartStore((state) => state.items);
-  const checkoutUrl = useCartStore((state) => state.checkoutUrl);
+  const storedCheckoutUrl = useCartStore((state) => state.checkoutUrl);
   const busy = useCartStore((state) => state.isLoading);
   const addItem = useCartStore((state) => state.addItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
@@ -64,6 +65,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = useCartStore((state) => state.clearCart);
 
   const lines = useMemo(() => (ready ? toCartLines(items) : []), [ready, items]);
+
+  // Le panier est restauré depuis le stockage local, qui n'est pas une zone de
+  // confiance. Une URL de caisse remplacée enverrait le client sur une fausse
+  // page de paiement, depuis un clic légitime. Rien ne sort d'ici sans passer
+  // par la vérification : le bouton se désactive plutôt que d'ouvrir un piège.
+  const checkoutUrl = isTrustedCheckoutUrl(storedCheckoutUrl) ? storedCheckoutUrl : null;
 
   const value = useMemo<CartContextValue>(
     () => ({
