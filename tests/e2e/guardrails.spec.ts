@@ -160,7 +160,15 @@ test.describe("garde-fou apparence : astre correct dans les quatre états", () =
       const button = page.locator('header button[aria-label^="Apparence"]');
       await expect(button).toHaveCount(1);
       // Hydratation terminée : avant elle, le libellé est encore générique.
-      await expect(button).toHaveAttribute("aria-label", /Apparence : /);
+      //
+      // Le délai est allongé à dessein. Ce test n'utilise pas `openPage` — il a
+      // besoin de régler le stockage et la préférence système avant le
+      // chargement — et se prive donc de l'attente d'hydratation du reste de la
+      // suite. Or il figure parmi les premiers à s'exécuter, contre un serveur
+      // de développement qui démarre à froid et compile ses modules à la
+      // demande : cinq secondes n'y suffisaient pas, et l'échec ne disait rien
+      // du code, seulement de la vitesse de la machine.
+      await expect(button).toHaveAttribute("aria-label", /Apparence : /, { timeout: 20_000 });
       // Les deux astres se croisent par un fondu. Sous `prefers-reduced-motion`,
       // la feuille de style ramène la transition à 1 ms : imperceptible à l'œil,
       // mais pas nulle. Une lecture synchrone de l'opacité tombait parfois au
