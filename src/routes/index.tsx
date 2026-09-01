@@ -12,6 +12,7 @@ import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { HeroMedia } from "@/components/zelor/HeroMedia";
 import { Reveal } from "@/components/zelor/Reveal";
+import { SplitReveal } from "@/components/zelor/SplitReveal";
 import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/")({
@@ -55,14 +56,15 @@ function Home() {
         <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
           <div className="slide-up-lux max-w-xl text-navy-foreground">
             <p className="eyebrow text-gold">Maison ZELOR</p>
-            {/* L'italique employé comme une voix, pas comme une insistance : un
-                seul mot penché dans une ligne romaine. C'est le geste de Vero
-                Studio, et Cormorant Garamond le sert mieux que la plupart — sa
-                cursive est la moitié la plus réussie du caractère, et elle
-                n'avait jamais servi ici. */}
-            <h1 className="mt-3 font-display display-hero-z">
-              <em className="italic">L'élégance</em> dans chaque détail
-            </h1>
+            {/* Deux gestes de Vero Studio réunis ici : l'italique employé comme
+                une voix — un seul mot penché dans une ligne romaine — et le
+                titre qui se relève mot à mot au lieu de se fondre. */}
+            <SplitReveal
+              as="h1"
+              text="L'élégance dans chaque détail"
+              italicWords={1}
+              className="mt-3 font-display display-hero-z"
+            />
             <span aria-hidden="true" className="mt-5 block h-px w-24 bg-gold/70" />
             <p className="prose-z mt-5 max-w-md text-navy-foreground/85">
               Pour faire de chaque détail une promesse.
@@ -143,7 +145,10 @@ function Home() {
       <Reveal as="section" replay className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
-            <h2 className="font-display text-3xl md:text-5xl">Le goût des choses bien choisies.</h2>
+            <SplitReveal
+              text="Le goût des choses bien choisies."
+              className="font-display text-3xl leading-[1.05] md:text-5xl"
+            />
             <p className="prose-z mt-6 max-w-lg text-foreground/80">
               ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
               d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
@@ -152,6 +157,7 @@ function Home() {
             </p>
           </div>
           <HoverVideo
+            className="clip-reveal-z"
             src={detailVideo.url}
             poster={detailImage}
             ratio="aspect-4/3"
@@ -164,9 +170,11 @@ function Home() {
       {/* E. Qualité */}
       <Reveal as="section" aria-labelledby="qualite-title" className="container-z py-24 md:py-32">
         <p className="eyebrow">Qualité</p>
-        <h2 id="qualite-title" className="mt-2 max-w-2xl font-display text-3xl md:text-4xl">
-          Ce que nous regardons avant de sélectionner une pièce.
-        </h2>
+        <SplitReveal
+          id="qualite-title"
+          text="Ce que nous regardons avant de sélectionner une pièce."
+          className="mt-2 max-w-2xl font-display text-3xl leading-[1.08] md:text-4xl"
+        />
         <dl className="mt-10 grid gap-8 md:grid-cols-3">
           {[
             [
@@ -201,6 +209,7 @@ function Home() {
         className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28"
       >
         <HoverVideo
+          className="clip-reveal-z"
           src={editorialVideo.url}
           poster={editorialImage}
           ratio="aspect-4/5"
@@ -209,7 +218,10 @@ function Home() {
         />
         <div>
           <p className="eyebrow">Éditorial</p>
-          <h2 className="mt-2 font-display text-3xl md:text-5xl">Une signature discrète.</h2>
+          <SplitReveal
+            text="Une signature discrète."
+            className="mt-2 font-display text-3xl leading-[1.05] md:text-5xl"
+          />
           <p className="mt-6 max-w-md text-base text-foreground/80">
             ZELOR privilégie les détails qui restent : une matière agréable, une silhouette
             équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard.

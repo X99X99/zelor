@@ -132,6 +132,39 @@
   /* Retrait des petits panneaux (Langue, Apparence) : strictement aligné sur
    * le délai de démontage côté composant (260 ms) — aucune coupure sèche. */
   --dur-panel-out: 260ms;
+
+  /* ————— Gamme canonique d'accélérations —————
+   *
+   * Relevée chez Vero Studio, qui en déclare dix-neuf, et chez Brunello
+   * Cucinelli, qui en déclare six sous les mêmes noms. Ce n'est pas leur
+   * nombre qui compte : c'est qu'elles portent des noms partagés, dont
+   * chacun dit ce qu'il fait. Nos anciennes courbes s'appelaient « lux »,
+   * « breathe », « glide » — des noms d'auteur, que personne ne peut
+   * retrouver ailleurs.
+   *
+   * Les anciennes restent définies plus haut : rien ne casse, et le menu
+   * comme la lumière des logos gardent la chorégraphie qui a été validée.
+   */
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* ————— Durées relevées —————
+   * Trois valeurs suffisent, et ce sont celles que les deux maisons emploient
+   * réellement : Vero tient ses transformations à 600-650 ms, ses révélations
+   * longues à 1200-1400 ms, et tout ce qui se survole à 300 ms.
+   */
+  --dur-touch: 300ms;
+  --dur-move: 650ms;
+  --dur-reveal: 1200ms;
+  /* Décalage entre éléments d'une même cascade. Cucinelli et Vero emploient
+   * tous deux 100 ms. Aucun décalage initial : le premier part tout de suite. */
+  --stagger-step: 100ms;
+
   --blur-veil: 22px;
   --blur-panel: 16px;
   --lift-1: -1px;
@@ -1377,15 +1410,86 @@
 @utility reveal-z {
   opacity: 0;
   transform: translateY(22px);
+  /* Sortie exponentielle sur 1200 ms : la valeur employée par Vero pour ses
+   * révélations longues. Le mouvement part franchement et met un temps
+   * inhabituel à se poser — c'est cette fin lente qui se lit comme du calme,
+   * là où une durée courte se lit comme de l'efficacité. */
   transition:
-    opacity 1.1s var(--ease-lux),
-    transform 1.1s var(--ease-lux);
+    opacity var(--dur-reveal) var(--ease-out-expo),
+    transform var(--dur-reveal) var(--ease-out-expo);
   will-change: opacity, transform;
   &[data-visible="true"] {
     opacity: 1;
     transform: none;
     /* Une fois posé, on libère la couche GPU (mobile). */
     will-change: auto;
+  }
+}
+
+/* ————— Titre révélé mot à mot —————
+ *
+ * Le geste signature de Vero Studio, absent de tous les autres sites mesurés.
+ * Chaque mot est enfermé dans une fenêtre qui le rogne, et remonte depuis le
+ * bas comme s'il était composé sur une ligne de plomb qu'on relève.
+ *
+ * Deux exigences tiennent tout : le mot doit être rogné par son conteneur —
+ * sans quoi on voit une ligne glisser au lieu d'apparaître — et le décalage
+ * entre mots doit rester à 100 ms, sous peine de faire attendre le lecteur.
+ */
+@utility split-line-z {
+  display: inline-block;
+  overflow: hidden;
+  /* Marge de rognage : les jambages du Cormorant descendent bas et seraient
+   * coupés par une fenêtre calée sur la ligne de base. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: bottom;
+}
+
+/* Le titre découpé ne doit pas, en plus, se fondre : la fenêtre de rognage est
+ * le geste, le voile serait un second effet par-dessus. La classe est doublée
+ * pour passer devant reveal-z sans dépendre de l'ordre du fichier. */
+.split-host-z.split-host-z {
+  opacity: 1;
+  transform: none;
+}
+
+@utility split-word-z {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform var(--dur-reveal) var(--ease-out-expo);
+  transition-delay: calc(var(--word-index, 0) * var(--stagger-step));
+  will-change: transform;
+  [data-visible="true"] & {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* ————— Média révélé par le cadre —————
+ *
+ * Vero ouvre ses images par un rognage de 1600 ms plutôt que par un fondu :
+ * l'image ne s'éclaircit pas, elle se découvre. C'est plus lent, et beaucoup
+ * plus proche du geste de dévoiler une pièce.
+ */
+@utility clip-reveal-z {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1600ms var(--ease-out-quint);
+  will-change: clip-path;
+  [data-visible="true"] & {
+    clip-path: inset(0 0 0 0);
+    will-change: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split-word-z {
+    transform: none;
+    transition: none;
+  }
+  .clip-reveal-z {
+    clip-path: none;
+    transition: none;
   }
 }
 
