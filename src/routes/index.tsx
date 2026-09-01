@@ -60,11 +60,11 @@ function Home() {
                 Studio, et Cormorant Garamond le sert mieux que la plupart — sa
                 cursive est la moitié la plus réussie du caractère, et elle
                 n'avait jamais servi ici. */}
-            <h1 className="mt-3 font-display text-4xl md:text-6xl lg:text-7xl">
+            <h1 className="mt-3 font-display display-hero-z">
               <em className="italic">L'élégance</em> dans chaque détail
             </h1>
             <span aria-hidden="true" className="mt-5 block h-px w-24 bg-gold/70" />
-            <p className="mt-4 max-w-md text-sm text-navy-foreground/85 md:text-base">
+            <p className="prose-z mt-5 max-w-md text-navy-foreground/85">
               Pour faire de chaque détail une promesse.
             </p>
             <p className="mt-5 max-w-lg text-sm text-navy-foreground/75">
@@ -144,7 +144,7 @@ function Home() {
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
             <h2 className="font-display text-3xl md:text-5xl">Le goût des choses bien choisies.</h2>
-            <p className="mt-6 max-w-md text-base text-foreground/80">
+            <p className="prose-z mt-6 max-w-lg text-foreground/80">
               ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
               d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
               fonction et présence. De la première impression au dernier détail, nous construisons

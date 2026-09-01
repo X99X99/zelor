@@ -547,6 +547,35 @@
   }
 }
 
+/* ————— Le parti de Vero Studio : le serif pour lire, le sans pour agir —————
+ *
+ * Vero compose son corps de texte en serif — 18 px sur 27, colonne d'environ
+ * 450 signes — et ne garde le sans que pour les libellés d'interface. C'est
+ * cette répartition, et non une animation, qui donne à un site marchand la
+ * tenue d'un livre.
+ *
+ * Le Cormorant a une hauteur d'x plus petite que la Louize : composé à 18 px
+ * il paraîtrait 15. On monte donc à 20 px pour retrouver la même présence.
+ * Tout ce qui s'actionne — boutons, navigation, prix, formulaires — reste en
+ * Manrope : on lit un serif, on clique un sans.
+ */
+@utility prose-z {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+
+/* Titre d'ouverture. Vero le compose en clamp(46px, 6.5vw, 120px) avec un
+ * interlignage de 1,00 ; nous étions à 72 px fixes. La taille fluide évite le
+ * saut entre paliers, et l'interlignage serré est ce qui distingue un titre
+ * de maison d'un titre de site. */
+@utility display-hero-z {
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  line-height: 1;
+}
+
 @utility container-z {
   width: 100%;
   margin-inline: auto;
