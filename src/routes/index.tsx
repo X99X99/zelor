@@ -10,7 +10,7 @@ import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
-import { HeroMedia } from "@/components/zelor/HeroMedia";
+import { HeroScroll } from "@/components/zelor/HeroScroll";
 import { Reveal } from "@/components/zelor/Reveal";
 import { SplitReveal } from "@/components/zelor/SplitReveal";
 import { absoluteUrl } from "@/lib/zelor/site";
@@ -45,53 +45,32 @@ function Home() {
 
   return (
     <>
-      {/* A. Hero */}
-      <section className="relative isolate">
-        <HeroMedia />
+      {/* A. Ouverture épinglée */}
+      <HeroScroll />
 
-        <div
-          aria-hidden="true"
-          className="grain-z absolute inset-0 bg-linear-to-t from-navy-deep/85 via-navy/30 to-navy-deep/25 md:bg-linear-to-r md:from-navy-deep/80 md:via-navy/25 md:to-navy-deep/10"
-        />
-        <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
-          <div className="slide-up-lux max-w-xl text-navy-foreground">
-            <p className="eyebrow text-gold">Maison ZELOR</p>
-            {/* Deux gestes de Vero Studio réunis ici : l'italique employé comme
-                une voix — un seul mot penché dans une ligne romaine — et le
-                titre qui se relève mot à mot au lieu de se fondre. */}
-            <SplitReveal
-              as="h1"
-              text="L'élégance dans chaque détail"
-              italicWords={1}
-              className="mt-3 font-display display-hero-z"
-            />
-            <span aria-hidden="true" className="mt-5 block h-px w-24 bg-gold/70" />
-            <p className="prose-z mt-5 max-w-md text-navy-foreground/85">
-              Pour faire de chaque détail une promesse.
-            </p>
-            <p className="mt-5 max-w-lg text-sm text-navy-foreground/75">
-              Une sélection contemporaine de pièces essentielles, choisies avec exigence pour leur
-              allure, leurs matières et leur tenue dans le temps. Une maison éditoriale française
-              pensée à Nice, où chaque pièce affirme une élégance durable. Livraison internationale
-              avec suivi.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-5">
-              <Link
-                to="/collection"
-                className="btn-lux ring-1 whitespace-nowrap ring-navy-foreground/20"
-              >
-                Découvrir la collection
-              </Link>
-              <Link
-                to="/univers"
-                className="link-underline text-sm whitespace-nowrap text-navy-foreground/90"
-              >
-                L'univers ZELOR
-              </Link>
-            </div>
-          </div>
+      {/* A bis. Le manifeste.
+          Vero ne met sous son ouverture ni argument ni bouton : la scène tient
+          seule, et la phrase qui l'explique vient après, dans une colonne
+          étroite. On reprend cet ordre — l'accroche en sans serré, le détail
+          en petit, et les deux chemins d'entrée seulement à la fin. */}
+      <Reveal as="section" className="container-z py-24 text-center md:py-32">
+        <p className="lead-z mx-auto max-w-3xl">
+          Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs
+          matières et leur tenue dans le temps.
+        </p>
+        <p className="mx-auto mt-8 max-w-md text-sm text-muted-foreground">
+          Une maison éditoriale française pensée à Nice, où chaque pièce affirme une élégance
+          durable. Livraison internationale avec suivi.
+        </p>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+          <Link to="/collection" className="btn-lux whitespace-nowrap">
+            Découvrir la collection
+          </Link>
+          <Link to="/univers" className="link-underline text-sm whitespace-nowrap">
+            L'univers ZELOR
+          </Link>
         </div>
-      </section>
+      </Reveal>
 
       {/* B. Promesse */}
       <Reveal as="section" aria-labelledby="promesse-title" className="container-z py-24 md:py-32">
@@ -101,7 +80,7 @@ function Home() {
         <ul className="grid gap-10 md:grid-cols-3 md:gap-12">
           {PROMISES.map((promise) => (
             <li key={promise.title} className="rule-z pt-6">
-              <h3 className="font-display text-2xl">{promise.title}</h3>
+              <h3 className="subhead-z">{promise.title}</h3>
               <p className="mt-3 text-sm text-muted-foreground">{promise.body}</p>
             </li>
           ))}
@@ -117,7 +96,7 @@ function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Sélection</p>
-            <h2 id="collection-title" className="mt-2 font-display text-3xl md:text-4xl">
+            <h2 id="collection-title" className="mt-4 display-2-z">
               La collection
             </h2>
           </div>
@@ -145,10 +124,7 @@ function Home() {
       <Reveal as="section" replay className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
-            <SplitReveal
-              text="Le goût des choses bien choisies."
-              className="font-display text-3xl leading-[1.05] md:text-5xl"
-            />
+            <SplitReveal text="Le goût des choses bien *choisies*." className="display-1-z" />
             <p className="prose-z mt-6 max-w-lg text-foreground/80">
               ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
               d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
@@ -173,7 +149,7 @@ function Home() {
         <SplitReveal
           id="qualite-title"
           text="Ce que nous regardons avant de sélectionner une pièce."
-          className="mt-2 max-w-2xl font-display text-3xl leading-[1.08] md:text-4xl"
+          className="mt-4 max-w-4xl display-2-z"
         />
         <dl className="mt-10 grid gap-8 md:grid-cols-3">
           {[
@@ -218,10 +194,7 @@ function Home() {
         />
         <div>
           <p className="eyebrow">Éditorial</p>
-          <SplitReveal
-            text="Une signature discrète."
-            className="mt-2 font-display text-3xl leading-[1.05] md:text-5xl"
-          />
+          <SplitReveal text="Une signature *discrète*." className="mt-4 display-1-z" />
           <p className="mt-6 max-w-md text-base text-foreground/80">
             ZELOR privilégie les détails qui restent : une matière agréable, une silhouette
             équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard.
@@ -234,7 +207,7 @@ function Home() {
 
       {/* G. Avis */}
       <section aria-labelledby="avis-title" className="container-z pb-4">
-        <h2 id="avis-title" className="font-display text-3xl md:text-4xl">
+        <h2 id="avis-title" className="display-2-z">
           Avis clients
         </h2>
         <div className="surface-light aura-z mt-6 rounded-3xl border border-border/70 p-14 text-center">

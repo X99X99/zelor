@@ -199,10 +199,14 @@
    * au repos ; elle se révèle à l'interaction comme les autres. */
   --cap-current-bg: transparent;
 
-  /* Ivoire lumineux — lumière de Riviera sur pierre claire */
-  --background: oklch(0.975 0.005 88);
-  --ivory: oklch(0.985 0.004 88);
-  --cream: oklch(0.958 0.008 86);
+  /* Le papier. Relevé chez Vero à #F3F0ED : sensiblement plus chaud et plus
+   * gris que notre ivoire, qui tirait vers le blanc de bureau. C'est la
+   * première chose que l'œil perçoit, avant tout titre — et la raison pour
+   * laquelle leurs pages paraissent imprimées là où les nôtres paraissent
+   * affichées. L'encre reste marine : c'est notre couleur, pas la leur. */
+  --background: oklch(0.955 0.004 75);
+  --ivory: oklch(0.968 0.004 75);
+  --cream: oklch(0.938 0.006 74);
   /* Encre marine : jamais un noir pur */
   --foreground: oklch(0.215 0.025 262);
   --ink: oklch(0.215 0.025 262);
@@ -537,16 +541,35 @@
   h2,
   h3 {
     font-family: var(--font-display);
+    /* Capitales. C'est le choix le plus lourd de conséquence relevé chez Vero :
+     * tous leurs titres, du 168 px au 21 px, sont composés en capitales. Un
+     * titre en capitales ne se lit pas, il se regarde — et il autorise
+     * l'interlignage de 1,00 sans lequel rien ne ressemble à leur page,
+     * puisqu'il n'y a plus de jambage à loger sous la ligne. */
+    text-transform: uppercase;
     /* Graisse 300 : relevée chez Cucinelli, Sobha et Vero, en serif comme en sans.
      * La hiérarchie passe par la taille et la famille, jamais par la graisse. */
     font-weight: 300;
-    letter-spacing: -0.012em;
-    /* Les quatre références mesurées tiennent leurs titres entre 0,77 et 1,00.
-     * On descend de 1,1 sans aller jusqu'à 1,0 : les jambages du Cormorant
-     * sont longs, et un titre sur deux lignes se toucherait. */
-    line-height: 1.05;
+    /* Les capitales du Cormorant sont serrées : un rien d'approche les aère
+     * sans les délier. Vero tient ses grands titres à zéro et ne resserre
+     * (−0,01 em) qu'au-delà de 90 px. */
+    letter-spacing: 0.004em;
+    line-height: 1;
     text-wrap: balance;
     font-variant-ligatures: common-ligatures;
+  }
+
+  /* Le mot penché échappe aux capitales : c'est toute la construction de leurs
+   * titres — une ligne de capitales romaines qu'un seul mot en bas-de-casse
+   * italique vient contredire. Sans cette exception, l'italique ne se voit
+   * plus. */
+  h1 em,
+  h2 em,
+  h3 em,
+  .accent-z {
+    text-transform: none;
+    font-style: italic;
+    letter-spacing: 0;
   }
 
   p {
@@ -600,13 +623,68 @@
   letter-spacing: 0.005em;
 }
 
-/* Titre d'ouverture. Vero le compose en clamp(46px, 6.5vw, 120px) avec un
- * interlignage de 1,00 ; nous étions à 72 px fixes. La taille fluide évite le
- * saut entre paliers, et l'interlignage serré est ce qui distingue un titre
- * de maison d'un titre de site. */
+/* ————— L'échelle typographique relevée chez Vero —————
+ *
+ * Mesurée sur leur page d'accueil à 1440 px de large. Deux constantes la
+ * tiennent, et ce sont elles qu'il fallait reprendre, pas les valeurs :
+ *
+ * — l'interlignage vaut 1,00 partout, du titre géant au libellé de 15 px ;
+ * — l'approche croît quand le corps décroît. Un titre de 120 px est composé
+ *   à zéro, un libellé de 15 px à 0,06 em. C'est une échelle optique : à
+ *   grande taille les lettres se serrent d'elles-mêmes, à petite taille il
+ *   faut les écarter pour qu'elles restent lisibles en capitales.
+ *
+ * Les tailles sont fluides pour éviter les sauts entre paliers ; les bornes
+ * hautes reprennent leurs valeurs exactes, converties en rem.
+ */
+
+/* 168 px chez eux. Le titre d'ouverture, et lui seul. */
 @utility display-hero-z {
-  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  font-size: clamp(2.75rem, 11.6vw, 10.5rem);
   line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* 120 px. Les titres de section majeurs. */
+@utility display-1-z {
+  font-size: clamp(2.25rem, 8.3vw, 7.5rem);
+  line-height: 1;
+  letter-spacing: -0.005em;
+}
+
+/* 67,7 px. Le palier intermédiaire, pour les titres de page. */
+@utility display-2-z {
+  font-size: clamp(1.875rem, 4.7vw, 4.25rem);
+  line-height: 1;
+}
+
+/* 21 px en capitales. Les intertitres. */
+@utility subhead-z {
+  font-size: 1.3125rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* 30 px en sans, graisse 500, approche resserrée. C'est la seule chose que
+ * Vero ne compose pas en serif : le paragraphe d'accroche. Le contraste des
+ * deux familles à cet endroit précis fait toute la respiration de la page. */
+@utility lead-z {
+  font-family: var(--font-sans);
+  font-size: clamp(1.25rem, 2.1vw, 1.875rem);
+  line-height: 1.06;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* 16 px, 0,04 em, capitales : les libellés de rubrique. */
+@utility label-z {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 @utility container-z {
@@ -627,12 +705,19 @@
   border-top: 1px solid var(--color-border);
 }
 
+/* Le libellé de rubrique. Nous le composions à 11 px avec 0,18 em d'approche
+ * — la manière d'un site de mode, où le libellé s'efface. Vero le compose à
+ * 15 px avec 0,06 em, en serif : il ne s'efface pas, il annonce. C'est deux
+ * fois plus grand et trois fois moins écarté, et cela change le rang de
+ * l'information. */
 @utility eyebrow {
-  font-size: 0.6875rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-muted-foreground);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ————— Signature de lien ZELOR —————
@@ -2352,5 +2437,122 @@
   .link-underline,
   .link-underline::after {
     transition-duration: 1ms !important;
+  }
+}
+
+/* ————— Ouverture épinglée —————
+ *
+ * Voir HeroScroll.tsx pour le principe. Tout tient dans --p, la progression
+ * du défilement de 0 à 1, écrite par le composant : l'image grandit, les deux
+ * lignes du titre s'écartent, et rien d'autre ne bouge.
+ *
+ * L'image est petite dans le flux et grandit par transformation. C'est
+ * l'inverse de ce qu'on ferait spontanément — poser une grande image et la
+ * réduire — mais c'est le seul ordre qui garde un écart d'une ligne entre les
+ * deux moitiés du titre au repos, et une transformation ne déplace jamais la
+ * mise en page.
+ */
+.hero-scroll-z {
+  --p: 0;
+  position: relative;
+  height: 250vh;
+  background-color: var(--color-background);
+}
+
+.hero-stick-z {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100svh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4vh;
+  /* Le cadre déborde largement à la fin de la course : sans découpe, il
+   * ouvrirait une barre de défilement horizontale. */
+  overflow: clip;
+  padding-inline: 1.25rem;
+}
+
+.hero-eyebrow-z {
+  /* Le libellé s'efface à mesure que la scène s'ouvre : à la fin il ne reste
+   * que le titre et l'image, ce qui est exactement la composition de Vero. */
+  opacity: calc(1 - var(--p) * 1.6);
+  transition: opacity 120ms linear;
+}
+
+.hero-title-z {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 22ch;
+  margin: 0;
+  text-align: center;
+  text-wrap: nowrap;
+}
+
+.hero-line-z {
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+.hero-line-a-z {
+  transform: translateY(calc(var(--p) * -1.6vh));
+}
+
+.hero-line-b-z {
+  transform: translateY(calc(var(--p) * 1.6vh));
+}
+
+.hero-frame-z {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 34vw;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  transform: scale(calc(1 + var(--p) * 1.35));
+  transform-origin: center;
+  margin-block: 0.6vh;
+
+  & img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: 42% center;
+  }
+}
+
+@media (width >= 768px) {
+  .hero-frame-z {
+    width: 15vw;
+    transform: scale(calc(1 + var(--p) * 2.15));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-z {
+    height: auto;
+  }
+
+  .hero-stick-z {
+    position: static;
+    height: auto;
+    padding-block: 14vh;
+  }
+
+  .hero-line-a-z,
+  .hero-line-b-z,
+  .hero-frame-z {
+    transform: none;
+  }
+
+  .hero-eyebrow-z {
+    opacity: 1;
+  }
+
+  .hero-frame-z {
+    width: min(34rem, 80vw);
   }
 }

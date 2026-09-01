@@ -26,16 +26,9 @@ export function PageShell({
           {/* Toutes les pages éditoriales passent par ce gabarit : c'est le
               seul endroit où l'ouverture mot à mot devait être posée pour
               valoir sur l'ensemble du site. */}
-          <SplitReveal
-            as="h1"
-            text={title}
-            className="max-w-3xl font-display text-4xl leading-[1.05] md:text-6xl"
-          />
+          <SplitReveal as="h1" text={title} className="display-2-z max-w-4xl" />
           {intro && (
-            <p
-              className="prose-z slide-up-lux mt-6 max-w-2xl text-muted-foreground"
-              style={{ animationDelay: "90ms" }}
-            >
+            <p className="lead-z slide-up-lux mt-8 max-w-2xl" style={{ animationDelay: "90ms" }}>
               {intro}
             </p>
           )}
@@ -55,7 +48,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
       {/* Chaque section observe le défilement pour son propre compte : sinon
           tous les titres de la page se lèveraient au même instant, ce qui est
           exactement l'effet que ce geste doit éviter. */}
-      <SplitReveal text={title} className="font-display text-2xl leading-[1.15]" />
+      <SplitReveal text={title} className="subhead-z" />
       <div className="space-y-3 text-base text-foreground/85">{children}</div>
     </section>
   );
