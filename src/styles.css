@@ -65,7 +65,7 @@
   --color-draft-foreground: var(--draft-foreground);
   --color-draft-border: var(--draft-border);
 
-  --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow-elegant:
     0 1px 0 color-mix(in oklab, var(--navy) 8%, transparent),
     0 18px 40px -28px color-mix(in oklab, var(--navy) 55%, transparent);
@@ -109,7 +109,7 @@
   --dur-3: 620ms;
   --dur-4: 900ms;
   --dur-5: 1150ms;
-  --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-enter: cubic-bezier(0.16, 0.84, 0.28, 1);
   --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
   /* Miroir strict de --ease-enter : une sortie qui est l'inverse de l'entrée. */
@@ -504,9 +504,14 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 400;
+    /* Graisse 300 : relevée chez Cucinelli, Sobha et Vero, en serif comme en sans.
+     * La hiérarchie passe par la taille et la famille, jamais par la graisse. */
+    font-weight: 300;
     letter-spacing: -0.012em;
-    line-height: 1.1;
+    /* Les quatre références mesurées tiennent leurs titres entre 0,77 et 1,00.
+     * On descend de 1,1 sans aller jusqu'à 1,0 : les jambages du Cormorant
+     * sont longs, et un titre sur deux lignes se toucherait. */
+    line-height: 1.05;
     text-wrap: balance;
     font-variant-ligatures: common-ligatures;
   }
@@ -1664,25 +1669,25 @@
     animation: zelor-slide-up var(--dur-4) var(--ease-enter) both;
   }
   & > *:nth-child(1) {
-    animation-delay: 40ms;
+    animation-delay: 0ms;
   }
   & > *:nth-child(2) {
-    animation-delay: 110ms;
+    animation-delay: 100ms;
   }
   & > *:nth-child(3) {
-    animation-delay: 180ms;
+    animation-delay: 200ms;
   }
   & > *:nth-child(4) {
-    animation-delay: 250ms;
+    animation-delay: 300ms;
   }
   & > *:nth-child(5) {
-    animation-delay: 320ms;
+    animation-delay: 400ms;
   }
   & > *:nth-child(6) {
-    animation-delay: 390ms;
+    animation-delay: 500ms;
   }
   & > *:nth-child(n + 7) {
-    animation-delay: 450ms;
+    animation-delay: 500ms;
   }
 }
 

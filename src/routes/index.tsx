@@ -55,8 +55,13 @@ function Home() {
         <div className="container-z absolute inset-0 flex items-end pb-12 md:items-center md:pb-0">
           <div className="slide-up-lux max-w-xl text-navy-foreground">
             <p className="eyebrow text-gold">Maison ZELOR</p>
+            {/* L'italique employé comme une voix, pas comme une insistance : un
+                seul mot penché dans une ligne romaine. C'est le geste de Vero
+                Studio, et Cormorant Garamond le sert mieux que la plupart — sa
+                cursive est la moitié la plus réussie du caractère, et elle
+                n'avait jamais servi ici. */}
             <h1 className="mt-3 font-display text-4xl md:text-6xl lg:text-7xl">
-              L'élégance dans chaque détail
+              <em className="italic">L'élégance</em> dans chaque détail
             </h1>
             <span aria-hidden="true" className="mt-5 block h-px w-24 bg-gold/70" />
             <p className="mt-4 max-w-md text-sm text-navy-foreground/85 md:text-base">
