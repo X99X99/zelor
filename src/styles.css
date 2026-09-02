@@ -541,20 +541,20 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    /* Capitales. C'est le choix le plus lourd de conséquence relevé chez Vero :
-     * tous leurs titres, du 168 px au 21 px, sont composés en capitales. Un
-     * titre en capitales ne se lit pas, il se regarde — et il autorise
-     * l'interlignage de 1,00 sans lequel rien ne ressemble à leur page,
-     * puisqu'il n'y a plus de jambage à loger sous la ligne. */
-    text-transform: uppercase;
     /* Graisse 300 : relevée chez Cucinelli, Sobha et Vero, en serif comme en sans.
      * La hiérarchie passe par la taille et la famille, jamais par la graisse. */
     font-weight: 300;
-    /* Les capitales du Cormorant sont serrées : un rien d'approche les aère
-     * sans les délier. Vero tient ses grands titres à zéro et ne resserre
-     * (−0,01 em) qu'au-delà de 90 px. */
-    letter-spacing: 0.004em;
-    line-height: 1;
+    /* Les capitales sont sorties d'ici. Elles ne valent que pour les titres de
+     * marque : posées sur les vingt-quatre titres du site, elles rendaient
+     * illisibles les titres produit et les intertitres juridiques. Elles
+     * vivent désormais dans @utility caps-z, posée titre par titre.
+     *
+     * Conséquence directe sur l'interlignage : 1,00 n'était tenable que parce
+     * qu'une capitale n'a pas de jambage. En bas-de-casse, un titre sur deux
+     * lignes se toucherait. Les utilitaires d'affichage qui restent en
+     * capitales redescendent à 1,00 pour leur propre compte. */
+    letter-spacing: -0.004em;
+    line-height: 1.1;
     text-wrap: balance;
     font-variant-ligatures: common-ligatures;
   }
@@ -638,6 +638,24 @@
  * hautes reprennent leurs valeurs exactes, converties en rem.
  */
 
+/* ————— Les capitales, posées titre par titre —————
+ *
+ * Elles étaient dans la couche de base et touchaient les vingt-quatre titres
+ * du site, y compris les titres produit et les intertitres des CGV. Un titre
+ * en capitales ne se lit pas, il se regarde : c'est juste pour un titre de
+ * maison, c'est hostile pour « Livraison et retours ».
+ *
+ * L'interlignage revient à 1,00 ici, et seulement ici : une capitale n'ayant
+ * pas de jambage, deux lignes ne peuvent pas se toucher.
+ */
+/* Les capitales ne portent pas leur interlignage : chaque palier d'affichage
+ * garde le sien. Sans quoi caps-z imposerait 1,00 aux titres en bas-de-casse
+ * qui la voisinent, selon le seul ordre du fichier. */
+@utility caps-z {
+  text-transform: uppercase;
+  letter-spacing: 0.004em;
+}
+
 /* 168 px chez eux. Le titre d'ouverture, et lui seul. */
 @utility display-hero-z {
   font-size: clamp(2.75rem, 11.6vw, 10.5rem);
@@ -648,14 +666,14 @@
 /* 120 px. Les titres de section majeurs. */
 @utility display-1-z {
   font-size: clamp(2.25rem, 8.3vw, 7.5rem);
-  line-height: 1;
+  line-height: 1.06;
   letter-spacing: -0.005em;
 }
 
 /* 67,7 px. Le palier intermédiaire, pour les titres de page. */
 @utility display-2-z {
   font-size: clamp(1.875rem, 4.7vw, 4.25rem);
-  line-height: 1;
+  line-height: 1.06;
 }
 
 /* 21 px en capitales. Les intertitres. */
@@ -1567,12 +1585,78 @@
   }
 }
 
+/* ————— Masque par ligne —————
+ *
+ * Le geste de Vero pour tout texte qui n'est pas un grand titre de marque :
+ * le texte ne se fond pas, il se relève derrière une fenêtre qui le rogne.
+ *
+ * Ce qu'il fait exactement, et il faut le dire précisément : le masque porte
+ * sur le bloc entier, pas sur chaque ligne mesurée. Sur un intertitre d'une
+ * seule ligne — le cas de la quasi-totalité des cinquante-cinq intertitres du
+ * site — c'est rigoureusement un masque de ligne. Au-delà, cela se lit comme
+ * une montée d'ensemble. Découper les lignes réelles exigerait de mesurer les
+ * boîtes de ligne en JavaScript, ce qui casse au redimensionnement, dépend
+ * des polices chargées et n'existe pas au rendu serveur : le jeu n'en vaut
+ * pas la chandelle.
+ *
+ * Gain sur le découpage mot à mot qu'il remplace : le texte redevient un seul
+ * nœud, au lieu d'une suite de spans que le lecteur d'écran doit recoller.
+ */
+@utility line-mask-z {
+  display: block;
+  overflow: hidden;
+  /* Les jambages du Cormorant descendent bas et seraient coupés par une
+   * fenêtre calée sur la ligne de base. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+@utility line-mask-inner-z {
+  display: block;
+  transform: translateY(100%);
+  transition: transform var(--dur-reveal) var(--ease-out-expo);
+  will-change: transform;
+
+  [data-visible="true"] & {
+    transform: none;
+    will-change: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .split-word-z {
+  .split-word-z,
+  .line-mask-inner-z {
     transform: none;
     transition: none;
   }
   .clip-reveal-z {
+    clip-path: none;
+    transition: none;
+  }
+}
+
+/* ————— Filet de sécurité : aucun texte invisible sans JavaScript —————
+ *
+ * Toutes ces apparitions attendent data-visible, écrit par un observateur
+ * JavaScript. Sans script, l'attribut ne vient jamais et le texte resterait
+ * caché : un titre a l'opacité nulle, un intertitre translaté hors de sa
+ * fenêtre, un média rogné à zéro. Le contenu est bien dans le DOM — les
+ * moteurs de recherche le voient — mais un visiteur sans script ne verrait
+ * rien.
+ *
+ * Les règles sont hors couche et à double classe, donc prioritaires sur les
+ * utilitaires quel que soit l'ordre du fichier.
+ */
+@media (scripting: none) {
+  .reveal-z.reveal-z,
+  .line-mask-inner-z.line-mask-inner-z,
+  .split-word-z.split-word-z {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .clip-reveal-z.clip-reveal-z {
     clip-path: none;
     transition: none;
   }

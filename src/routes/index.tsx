@@ -96,7 +96,7 @@ function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Sélection</p>
-            <h2 id="collection-title" className="mt-4 display-2-z">
+            <h2 id="collection-title" className="caps-z mt-4 display-2-z">
               La collection
             </h2>
           </div>
@@ -124,7 +124,7 @@ function Home() {
       <Reveal as="section" replay className="surface-light hairline-z">
         <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
-            <SplitReveal text="Le goût des choses bien *choisies*." className="display-1-z" />
+            <SplitReveal text="Le goût des choses bien *choisies.*" className="display-1-z" />
             <p className="prose-z mt-6 max-w-lg text-foreground/80">
               ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
               d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
@@ -194,7 +194,7 @@ function Home() {
         />
         <div>
           <p className="eyebrow">Éditorial</p>
-          <SplitReveal text="Une signature *discrète*." className="mt-4 display-1-z" />
+          <SplitReveal text="Une signature *discrète.*" className="mt-4 display-1-z" />
           <p className="mt-6 max-w-md text-base text-foreground/80">
             ZELOR privilégie les détails qui restent : une matière agréable, une silhouette
             équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard.
@@ -207,7 +207,7 @@ function Home() {
 
       {/* G. Avis */}
       <section aria-labelledby="avis-title" className="container-z pb-4">
-        <h2 id="avis-title" className="display-2-z">
+        <h2 id="avis-title" className="caps-z display-2-z">
           Avis clients
         </h2>
         <div className="surface-light aura-z mt-6 rounded-3xl border border-border/70 p-14 text-center">

@@ -80,7 +80,7 @@ export function HeroScroll() {
         {/* Le titre est un seul H1 : les deux lignes sont des fragments d'une
             même phrase, et l'image qui les sépare est décorative. Un lecteur
             d'écran doit entendre « L'élégance dans chaque détail » d'un trait. */}
-        <h1 id="hero-title" className="hero-title-z display-hero-z">
+        <h1 id="hero-title" className="caps-z hero-title-z display-hero-z">
           <span className="hero-line-z hero-line-a-z">L'élégance dans</span>
           <HeroFrame />
           <span className="hero-line-z hero-line-b-z">
