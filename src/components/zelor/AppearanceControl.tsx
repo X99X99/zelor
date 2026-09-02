@@ -1,6 +1,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useFocusReturn } from "@/hooks/useFocusReturn";
 import { useTheme, type ThemeChoice } from "@/lib/zelor/theme";
 
 /**
@@ -25,6 +26,10 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
   const [closing, setClosing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Le focus revient au bouton d'apparence à la fermeture, quelle qu'en soit
+  // la cause : Échap, clic extérieur, ou choix d'une option.
+  useFocusReturn(open);
+
   const close = () => {
     if (!open || closing) return;
     setClosing(true);
@@ -47,7 +52,18 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
       document.removeEventListener("mousedown", onPointer);
       document.removeEventListener("keydown", onKey);
     };
-  });
+    // `close` ne dépend que de ces deux états : se réabonner à chaque rendu,
+    // comme avant, ajoutait un retrait et un ajout d'écouteur pour rien.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, closing]);
+
+  // À l'ouverture, le focus va sur l'option active : le clavier entre dans la
+  // liste là où l'utilisateur se trouve déjà, pas au début.
+  useEffect(() => {
+    if (!open || closing) return;
+    const active = ref.current?.querySelector<HTMLElement>('[role="option"][aria-selected="true"]');
+    active?.focus({ preventScroll: true });
+  }, [open, closing]);
 
   // Le libellé dépend d'une donnée client (choix mémorisé) : on ne l'écrit
   // qu'après l'hydratation, sinon l'attribut rendu par le serveur reste figé.
@@ -57,12 +73,27 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
   const buttonLabel = mounted ? `Apparence : ${activeLabel}` : "Apparence";
 
   return (
-    <div className={`relative ${className}`.trim()} ref={ref}>
+    <div
+      className={`relative ${className}`.trim()}
+      ref={ref}
+      // Le panneau se ferme quand le focus quitte *réellement* le conteneur.
+      // Une cible liée nulle signifie que le focus part hors de la fenêtre ou
+      // vers une zone non focalisable : on ne ferme pas, sinon une tabulation
+      // interne ou un clic ailleurs dans la page fermerait deux fois.
+      onBlur={(event) => {
+        const next = event.relatedTarget;
+        if (next instanceof Node && !event.currentTarget.contains(next)) close();
+      }}
+    >
       <button
         type="button"
         onClick={() => (open && !closing ? close() : setOpen(true))}
         aria-expanded={open && !closing}
         aria-haspopup="listbox"
+        // Posé seulement quand le panneau existe : le référencer alors qu'il
+        // n'est pas monté serait une référence morte, donc une erreur
+        // d'accessibilité introduite en croyant en corriger une.
+        aria-controls={open ? "zelor-appearance-panel" : undefined}
         aria-label={buttonLabel}
         title={mounted ? activeLabel : undefined}
         suppressHydrationWarning
@@ -75,6 +106,7 @@ export function AppearanceControl({ className = "" }: { className?: string }) {
 
       {open && (
         <ul
+          id="zelor-appearance-panel"
           role="listbox"
           aria-label="Apparence"
           className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-1.5 w-56 overflow-hidden py-1`}

@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { Menu, Search, ShoppingBag, User, X, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useFocusReturn } from "@/hooks/useFocusReturn";
 import { BrandLink, NavLink } from "@/components/zelor/NavLink";
 import { NavySurface, NAVY_SURFACE_EXIT_MS } from "@/components/zelor/NavySurface";
 import { AppearanceControl } from "@/components/zelor/AppearanceControl";
@@ -45,6 +46,10 @@ function LanguageMenu() {
   const [closing, setClosing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Le focus revient au bouton de langue à la fermeture, quelle qu'en soit la
+  // cause : Échap, clic extérieur, ou choix d'une langue.
+  useFocusReturn(open);
+
   // Fermeture animée : le panneau se retire, puis se démonte.
   const close = () => {
     setClosing(true);
@@ -57,25 +62,59 @@ function LanguageMenu() {
   const toggle = () => (open && !closing ? close() : setOpen(true));
 
   useEffect(() => {
+    function closeIfOpen() {
+      setOpen((v) => {
+        if (v) close();
+        return v;
+      });
+    }
     function onClick(event: MouseEvent) {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen((v) => {
-          if (v) close();
-          return v;
-        });
-      }
+      if (ref.current && !ref.current.contains(event.target as Node)) closeIfOpen();
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") closeIfOpen();
     }
     document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
   }, []);
 
+  // À l'ouverture, le focus entre sur la langue active : le clavier arrive là
+  // où l'utilisateur se trouve déjà, pas en tête de liste.
+  useEffect(() => {
+    if (!open || closing) return;
+    const active = ref.current?.querySelector<HTMLElement>('[role="option"][aria-selected="true"]');
+    active?.focus({ preventScroll: true });
+  }, [open, closing]);
+
   return (
-    <div className="relative" ref={ref}>
+    <div
+      className="relative"
+      ref={ref}
+      // On ne ferme que si le focus quitte réellement le conteneur : une cible
+      // liée nulle signifie hors fenêtre ou zone non focalisable, et fermer
+      // dans ce cas couperait une tabulation interne.
+      onBlur={(event) => {
+        const next = event.relatedTarget;
+        if (next instanceof Node && !event.currentTarget.contains(next)) {
+          setOpen((v) => {
+            if (v) close();
+            return v;
+          });
+        }
+      }}
+    >
       <button
         type="button"
         onClick={toggle}
         aria-expanded={open && !closing}
         aria-haspopup="listbox"
+        // Posé seulement quand le panneau est monté : référencer un
+        // identifiant absent serait une erreur d'accessibilité de plus.
+        aria-controls={open ? "zelor-language-panel" : undefined}
         className={`utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
       >
         FR
@@ -83,6 +122,7 @@ function LanguageMenu() {
       </button>
       {open && (
         <ul
+          id="zelor-language-panel"
           role="listbox"
           aria-label="Langues"
           className={`panel-navy ${closing ? "panel-out" : "panel-in"} absolute right-0 z-50 mt-1.5 w-52 overflow-hidden py-1`}
@@ -244,6 +284,16 @@ function useHideOnScroll(locked: boolean) {
   return { hidden, scrolled };
 }
 
+/**
+ * Ce qui peut recevoir le focus dans une fenêtre modale.
+ *
+ * On écarte tabindex="-1" : ces éléments sont focalisables par script, jamais
+ * par tabulation, et les inclure dans la boucle ferait tourner le piège sur
+ * des cibles que l'utilisateur ne peut pas atteindre autrement.
+ */
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
@@ -252,6 +302,13 @@ export function SiteHeader() {
   const [bump, setBump] = useState(false);
   const { count, ready } = useCart();
   const { hidden, scrolled } = useHideOnScroll(menuOpen || searchOpen);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Le focus revient au bouton qui a ouvert le panneau, dans les deux cas et
+  // quelle que soit la façon dont on ferme : Échap, bouton de fermeture, clic
+  // sur le voile, ou navigation depuis un lien du menu.
+  useFocusReturn(menuOpen);
+  useFocusReturn(searchOpen);
 
   // Fermeture aussi soignée que l'ouverture : le voile se retire, puis démonte.
   const closeMenu = () => {
@@ -315,6 +372,60 @@ export function SiteHeader() {
     };
   }, [menuOpen]);
 
+  // ————— Piège à focus du menu —————
+  //
+  // Le menu est la seule vraie fenêtre modale du site : il porte
+  // aria-modal="true", donc le reste de la page est déclaré inerte et la
+  // tabulation doit y tourner en boucle. Les trois autres panneaux ne piègent
+  // rien : enfermer quelqu'un dans une liste de trois options serait un
+  // anti-motif, on s'y contente d'Échap et du retour du focus.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const node = menuRef.current;
+    if (!node) return;
+
+    // Le focus entre par le bouton de fermeture : c'est la sortie, et c'est
+    // ce qu'un visiteur au clavier cherche d'abord.
+    const closeButton = node.querySelector<HTMLElement>("[data-menu-close]");
+    (closeButton ?? node).focus({ preventScroll: true });
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      // On recalcule à chaque tabulation : le contenu du menu peut changer,
+      // et un élément masqué ou désactivé ne doit jamais recevoir le focus.
+      // getClientRects plutôt que offsetParent, qui vaut null sur tout
+      // descendant d'un conteneur en position fixe — ce qu'est ce menu.
+      const items = [...node.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+        (el) => !el.hasAttribute("disabled") && el.getClientRects().length > 0,
+      );
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      // Aucun élément focalisable : le focus reste sur le conteneur plutôt
+      // que de repartir dans la page derrière.
+      if (!first || !last) {
+        event.preventDefault();
+        node.focus({ preventScroll: true });
+        return;
+      }
+
+      // Avec un seul élément, first et last sont le même : la boucle revient
+      // sur lui, ce qui est le comportement attendu.
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus({ preventScroll: true });
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus({ preventScroll: true });
+      }
+    };
+
+    // Échap n'est jamais intercepté ici : il reste géré plus bas, au niveau du
+    // document, et ferme le menu comme avant.
+    node.addEventListener("keydown", onKey);
+    return () => node.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   // Échap ferme le menu et la recherche.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -342,6 +453,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
+              aria-controls={menuOpen ? "zelor-menu-panel" : undefined}
               aria-label="Ouvrir le menu"
               aria-expanded={menuOpen}
               className="utility-z -ml-2 flex size-11 items-center justify-center opacity-90 hover:opacity-100"
@@ -377,6 +489,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+              aria-controls={searchOpen ? "zelor-search-panel" : undefined}
               aria-expanded={searchOpen && !searchClosing}
               aria-label="Rechercher"
               className={`utility-z utility-icon-z flex size-11 items-center justify-center ${searchOpen && !searchClosing ? "opacity-100" : "opacity-90"} hover:opacity-100`}
@@ -418,7 +531,17 @@ export function SiteHeader() {
         </div>
 
         {searchOpen && (
-          <div className={`slot-z ${searchClosing ? "slot-out-z" : "slot-in-z"}`}>
+          <div
+            id="zelor-search-panel"
+            className={`slot-z ${searchClosing ? "slot-out-z" : "slot-in-z"}`}
+            // On ne ferme que si le focus quitte réellement le panneau : la
+            // tabulation entre le champ, le bouton d'envoi et le bouton de
+            // fermeture doit rester possible sans que tout se referme.
+            onBlur={(event) => {
+              const next = event.relatedTarget;
+              if (next instanceof Node && !event.currentTarget.contains(next)) closeSearch();
+            }}
+          >
             <div>
               <SearchPanel onClose={closeSearch} closing={searchClosing} />
             </div>
@@ -437,6 +560,9 @@ export function SiteHeader() {
       )}
       {menuOpen && (
         <div
+          id="zelor-menu-panel"
+          ref={menuRef}
+          tabIndex={-1}
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
@@ -452,6 +578,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={closeMenu}
+              data-menu-close="true"
               aria-label="Fermer le menu"
               className="utility-z -mr-2 flex size-11 items-center justify-center opacity-80 hover:opacity-100"
             >
