@@ -486,6 +486,20 @@ test.describe("garde-fou scène d'ouverture", () => {
 
   test("la progression de la scène part de zéro et atteint son terme", async ({ page }) => {
     await openWithMotion(page, "/");
+
+    // La progression est posée par un effet, au montage de la scène. Attendre
+    // le marqueur React de l'en-tête ne suffit pas : l'en-tête hydrate tôt,
+    // la séquence est la troisième section d'une page de plus de seize écrans,
+    // et son effet peut n'avoir pas encore tourné. Lire à cet instant renvoie
+    // `NaN` et fait conclure à une panne là où il n'y a qu'une course.
+    //
+    // Constaté en intégration continue sur les deux profils, après que la page
+    // d'accueil se soit allongée. On attend donc que la valeur existe avant de
+    // la juger — l'assertion elle-même, « la progression part de zéro », est
+    // inchangée.
+    await expect
+      .poll(async () => Number.isFinite(await sceneProgress(page)), { timeout: 15_000 })
+      .toBe(true);
     expect(await sceneProgress(page)).toBeLessThan(0.1);
 
     // Le défilement est redemandé à chaque tour de boucle, et ce n'est pas une
