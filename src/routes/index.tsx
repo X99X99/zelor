@@ -1,19 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import editorialImage from "@/assets/editorial.jpg";
-import detailImage from "@/assets/detail.jpg";
-import detailVideo from "@/assets/video-detail.mp4.asset.json";
-import editorialVideo from "@/assets/video-editorial.mp4.asset.json";
-import { PROMISES } from "@/lib/zelor/content";
 import { productsQueryOptions } from "@/lib/shopify/client";
-import { ProductCard } from "@/components/zelor/ProductCard";
-import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
-import { HoverVideo } from "@/components/zelor/HoverVideo";
 import { StageOpening } from "@/components/zelor/StageOpening";
 import { StageSequence } from "@/components/zelor/StageSequence";
-import { Reveal } from "@/components/zelor/Reveal";
-import { SplitReveal } from "@/components/zelor/SplitReveal";
+import { ManifestScene } from "@/components/zelor/ManifestScene";
+import { SilenceBand } from "@/components/zelor/SilenceBand";
+import { Diptych } from "@/components/zelor/Diptych";
+import { DenseGrid } from "@/components/zelor/DenseGrid";
+import { ClosingScene } from "@/components/zelor/ClosingScene";
+import { Reassurance } from "@/components/zelor/Reassurance";
 import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/")({
@@ -41,191 +37,51 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { data } = useQuery(productsQueryOptions(4));
+  const { data } = useQuery(productsQueryOptions(12));
   const products = data ?? [];
+  const catalogueVide = products.length === 0;
 
   return (
     <>
-      {/* A. L'ouverture — un écran, un titre modeste, l'image qui porte.
-          La monumentalité ne vient pas du corps de la lettre : c'est la
-          photographie et le vide autour qui la font. */}
+      {/* La page suit le découpage relevé sur la référence, et ses proportions
+          en écrans : 1,00 / 3,00 / 4,25 / 0,32 / 2,68 / 0,32 / 1,41 / 1,53 /
+          0,26. C'est le rapport entre la plus longue et la plus courte — plus
+          de treize — qui fait le rythme, pas la longueur totale. */}
+
+      {/* 1 — L'ouverture. Un écran. Le titre reste petit : c'est l'image et le
+          vide qui portent, jamais le corps de la lettre. */}
       <StageOpening />
 
-      {/* A ter. La séquence — 4,25 écrans de piste pour un écran de scène.
-          Trois temps se relaient sous un grand titre qui ne bouge pas. C'est
-          la section longue de la page : sans elle, l'alternance des hauteurs
-          s'aplatit et le rythme disparaît. */}
+      {/* 2 — Le manifeste. Trois écrans sans une seule image, où la phrase se
+          relaie proposition par proposition. */}
+      <ManifestScene />
+
+      {/* 3 — La séquence. La section longue de la page : sans elle, toutes les
+          hauteurs se ressemblent et la narration s'aplatit. */}
       <StageSequence />
 
-      {/* A bis. Le manifeste.
-          Vero ne met sous son ouverture ni argument ni bouton : la scène tient
-          seule, et la phrase qui l'explique vient après, dans une colonne
-          étroite. On reprend cet ordre — l'accroche en sans serré, le détail
-          en petit, et les deux chemins d'entrée seulement à la fin. */}
-      <Reveal as="section" className="container-z module-silence-z text-center">
-        <p className="lead-z mx-auto max-w-3xl">
-          Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs
-          matières et leur tenue dans le temps.
-        </p>
-        <p className="mx-auto mt-6 max-w-md text-sm text-muted-foreground">
-          Une maison éditoriale française pensée à Nice, où chaque pièce affirme une élégance
-          durable. Livraison internationale avec suivi.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
-          <Link to="/collection" className="btn-lux whitespace-nowrap">
-            Découvrir la collection
-          </Link>
-          <Link to="/univers" className="link-underline text-sm whitespace-nowrap">
-            L'univers ZELOR
-          </Link>
-        </div>
-      </Reveal>
+      {/* 4 — Première déclaration. Un tiers d'écran, et le seul très grand
+          corps de la page. Il frappe parce qu'il arrive après du vide. */}
+      <SilenceBand id="declaration-un">Ce qui reste quand la nouveauté s'en va.</SilenceBand>
 
-      {/* B. Promesse */}
-      <Reveal as="section" aria-labelledby="promesse-title" className="container-z module-breath-z">
-        <h2 id="promesse-title" className="sr-only">
-          Nos engagements
-        </h2>
-        <ul className="grid gap-10 md:grid-cols-3 md:gap-12">
-          {PROMISES.map((promise) => (
-            <li key={promise.title} className="rule-z pt-6">
-              <h3 className="subhead-z">{promise.title}</h3>
-              <p className="mt-6 text-sm text-muted-foreground">{promise.body}</p>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+      {/* 5 — Le diptyque. Des plans verticaux à des échelles sans rapport,
+          délibérément désalignés : une grille régulière ferait un catalogue. */}
+      <Diptych />
 
-      {/* C. Collection */}
-      <Reveal
-        as="section"
-        aria-labelledby="collection-title"
-        className="container-z module-develop-z"
-      >
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Sélection</p>
-            <h2 id="collection-title" className="caps-z mt-4 display-2-z">
-              La collection
-            </h2>
-          </div>
-          <Link to="/collection" className="link-underline text-sm">
-            Voir tout
-          </Link>
-        </div>
-        <p className="mt-6 max-w-xl text-sm text-muted-foreground">
-          Quelques pièces de la sélection en cours. Les prix seront communiqués à l'ouverture.
-        </p>
-        {products.length > 0 ? (
-          <div className="mt-16 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
-            {products.map((product) => (
-              <ProductCard key={product.node.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-16">
-            <EmptyCatalog />
-          </div>
-        )}
-      </Reveal>
+      {/* 6 — Seconde déclaration. */}
+      <SilenceBand id="declaration-deux">Peu de pièces, longuement regardées.</SilenceBand>
 
-      {/* D. Storytelling */}
-      <Reveal as="section" replay className="surface-light hairline-z">
-        <div className="container-z module-develop-z grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
-            <SplitReveal text="Le goût des choses bien *choisies.*" className="display-1-z" />
-            <p className="prose-z mt-6 max-w-lg text-foreground/75">
-              ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
-              d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
-              fonction et présence. De la première impression au dernier détail, nous construisons
-              une expérience plus calme, plus précise et plus personnelle.
-            </p>
-          </div>
-          <HoverVideo
-            className="clip-reveal-z"
-            src={detailVideo.url}
-            poster={detailImage}
-            ratio="aspect-4/3"
-            alt="Détail de matière : arête d'un objet posée sur un tissu de lin sable."
-            caption="Séquence silencieuse — au survol."
-          />
-        </div>
-      </Reveal>
+      {/* 7 — La planche. Après trois écrans où il ne se passe presque rien, la
+          page se remplit d'un coup. Un seul format, serré. */}
+      <DenseGrid catalogueVide={catalogueVide} />
 
-      {/* E. Qualité */}
-      <Reveal as="section" aria-labelledby="qualite-title" className="container-z module-silence-z">
-        <p className="eyebrow">Qualité</p>
-        <SplitReveal
-          id="qualite-title"
-          text="Ce que nous regardons *avant de sélectionner* une pièce."
-          className="mt-4 max-w-4xl display-2-z"
-        />
-        <dl className="mt-6 grid gap-8 md:grid-cols-3">
-          {[
-            [
-              "Finition",
-              "Une arête franche, une couture régulière, un assemblage qui ne se voit pas.",
-            ],
-            [
-              "Matière",
-              "Une main agréable, une teinte stable, une surface qui se patine sans se marquer.",
-            ],
-            [
-              "Conception",
-              "Un usage évident dès la première prise en main, sans notice ni apprentissage.",
-            ],
-          ].map(([term, value]) => (
-            <div key={term} className="rule-z pt-6">
-              <dt className="eyebrow">{term}</dt>
-              <dd className="mt-4 text-sm text-foreground/75">{value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-16 max-w-2xl text-sm text-muted-foreground">
-          Nous n'annonçons une origine, une certification ou une garantie que lorsqu'elle est
-          documentée. Le reste se lit dans l'objet.
-        </p>
-      </Reveal>
+      {/* 8 — La clôture. La première moitié est vide, et c'est voulu : on
+          arrive au pied de page sans rupture au lieu d'y tomber. */}
+      <ClosingScene />
 
-      {/* F. Section éditoriale */}
-      <Reveal
-        as="section"
-        replay
-        className="container-z module-develop-z grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center"
-      >
-        <HoverVideo
-          className="clip-reveal-z"
-          src={editorialVideo.url}
-          poster={editorialImage}
-          ratio="aspect-4/5"
-          alt="Intérieur de boutique contemporaine : alcôve profonde, socle de pierre et lumière douce."
-          caption="Séquence silencieuse — au survol."
-        />
-        <div>
-          <p className="eyebrow">Éditorial</p>
-          <SplitReveal text="Une signature *discrète.*" className="mt-4 display-1-z" />
-          <p className="mt-6 max-w-md text-base text-foreground/75">
-            ZELOR privilégie les détails qui restent : une matière agréable, une silhouette
-            équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard.
-          </p>
-          <Link to="/univers" className="link-underline mt-8 inline-block text-sm">
-            Lire l'univers ZELOR
-          </Link>
-        </div>
-      </Reveal>
-
-      {/* G. Avis */}
-      <section aria-labelledby="avis-title" className="container-z module-close-z">
-        <h2 id="avis-title" className="caps-z display-2-z">
-          Avis clients
-        </h2>
-        <div className="surface-light aura-z mt-6 rounded-3xl border border-border/70 p-14 text-center">
-          <p className="mx-auto max-w-md text-sm text-muted-foreground">
-            Les premiers retours de nos clients paraîtront ici, tels qu'ils nous seront adressés,
-            sans sélection ni retouche.
-          </p>
-        </div>
-      </section>
+      {/* 9 — La réassurance. La section la plus courte de la page. Elle range
+          trois faits vérifiables et se tait. */}
+      <Reassurance />
     </>
   );
 }

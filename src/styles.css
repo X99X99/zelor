@@ -3515,3 +3515,470 @@ nav[aria-label="Fil d'Ariane"] a {
     animation: none;
   }
 }
+
+/* ————— Les scènes de la page d'accueil —————
+ *
+ * Les hauteurs ne sont pas choisies : elles sont relevées. Sur la référence,
+ * la page enchaîne 1,00 / 3,00 / 4,27 / 0,32 / 2,68 / 0,32 / 1,41 / 1,53 /
+ * 0,26 écran. Le rapport entre la plus longue et la plus courte dépasse seize,
+ * et c'est ce rapport — pas la longueur totale — qui produit le rythme.
+ *
+ * Une balise commune à toutes les scènes pilotées au scroll.
+ */
+
+@utility scene-beacon-z {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* ——— Le manifeste : 3 écrans, aucune image ——— */
+
+@utility manifest-track-z {
+  position: relative;
+  height: 300svh;
+}
+
+@utility manifest-scene-z {
+  position: sticky;
+  top: 0;
+  display: grid;
+  height: 100svh;
+  place-items: center;
+  padding-inline: 1.25rem;
+}
+
+@utility manifest-stack-z {
+  display: grid;
+  width: 100%;
+  max-width: 46rem;
+}
+
+@utility manifest-line-z {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  text-align: center;
+}
+
+/* Le palier d'accroche : sans, graisse 500, approche resserrée. C'est le seul
+ * endroit de la page où le sans porte un grand corps, et ce contraste avec le
+ * serif des titres fait toute la respiration. */
+@utility manifest-word-z {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: clamp(1.375rem, 2.6vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  translate: 0 110%;
+  opacity: 0;
+  transition:
+    translate var(--dur-reveal) var(--ease-out-expo),
+    opacity var(--dur-move) var(--ease-out-quart);
+  [data-active="true"] > & {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+/* ——— La bande de silence : 0,32 écran ——— */
+
+@utility silence-track-z {
+  display: grid;
+  min-height: 32svh;
+  place-items: center;
+  padding-inline: 1.25rem;
+}
+
+/* Le très grand corps n'existe qu'ici. Interligne 1,00, approche négative :
+ * les deux constantes relevées sur tous les paliers d'affichage. */
+@utility silence-line-z {
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8.3vw, 7.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.008em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* ——— Le diptyque : 2,68 écrans, plans verticaux désalignés ——— */
+
+@utility diptych-track-z {
+  position: relative;
+  min-height: 268svh;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+/* L'ancre occupe toute la hauteur de la section : c'est elle qui borne la
+ * course du plan collant. Une ancre de hauteur nulle laissait la figure
+ * peindre au-delà de sa section et recouvrir la suivante — constaté à
+ * l'image, corrigé ici. */
+@utility diptych-anchor-z {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(1.25rem, 4vw, 2rem);
+  width: min(42vw, 34rem);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Le grand plan : 678 × 880 sur la référence, un rapport de 0,77. Il reste
+ * collé pendant que le reste défile, et s'arrête avec sa section. */
+@utility diptych-major-z {
+  position: sticky;
+  top: 12svh;
+  width: 100%;
+  aspect-ratio: 678 / 880;
+  overflow: hidden;
+  margin: 0;
+}
+
+@utility diptych-flow-z {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: end;
+  gap: clamp(4rem, 12vh, 10rem);
+  padding-top: 18svh;
+  padding-bottom: 12svh;
+  margin-left: auto;
+  width: min(46vw, 38rem);
+}
+
+@utility diptych-beat-z {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  width: 100%;
+  opacity: 0.35;
+  transition: opacity var(--dur-reveal) var(--ease-out-quart);
+  &[data-active="true"] {
+    opacity: 1;
+  }
+}
+
+@utility diptych-text-z {
+  font-family: var(--font-sans);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--color-foreground) 75%, transparent);
+}
+
+/* Les plans mineurs : 392 × 542 et 202 × 279 sur la référence. Aucun n'est
+ * aligné sur un autre — c'est ce désalignement qui fait l'éditorial. */
+@utility diptych-minor-z {
+  overflow: hidden;
+  margin: 0;
+  aspect-ratio: 392 / 542;
+  &[data-scale="moyen"] {
+    width: min(27vw, 22rem);
+    justify-self: start;
+    margin-left: clamp(0rem, 6vw, 5rem);
+  }
+  &[data-scale="petit"] {
+    width: min(14vw, 12rem);
+    justify-self: end;
+    margin-right: clamp(0rem, 4vw, 3rem);
+  }
+}
+
+/* ——— La grille dense : 1,41 écran, un seul format ——— */
+
+@utility grid-track-z {
+  min-height: 141svh;
+  padding-block: clamp(4rem, 10vh, 8rem);
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+@utility grid-head-z {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+@utility grid-title-z {
+  flex: 1 1 20rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4.7vw, 4.25rem);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.004em;
+}
+
+/* Vingt vignettes de 153 × 191 sur la référence : serrées, un seul rapport.
+ * Une grille de formats mêlés se lirait comme un désordre. */
+@utility grid-plate-z {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  @media (width >= 640px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (width >= 1024px) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@utility grid-cell-z {
+  aspect-ratio: 153 / 191;
+  overflow: hidden;
+  opacity: 0;
+  translate: 0 1.25rem;
+  transition:
+    opacity var(--dur-touch) var(--ease-out-quart),
+    translate var(--dur-touch) var(--ease-out-quart);
+  transition-delay: calc(var(--i, 0) * 35ms);
+  [data-visible="true"] & {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@utility grid-note-z {
+  max-width: 34rem;
+  margin-top: clamp(2rem, 5vh, 3rem);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-muted-foreground);
+}
+
+/* ——— La clôture : 1,53 écran, dont la première moitié vide ——— */
+
+@utility closing-track-z {
+  display: grid;
+  justify-items: start;
+  gap: 2rem;
+  min-height: 153svh;
+  align-content: center;
+  padding-block: clamp(8rem, 32vh, 21rem) clamp(4rem, 17vh, 11rem);
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+@utility closing-eyebrow-z {
+  color: var(--color-muted-foreground);
+}
+
+@utility closing-line-z {
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6.5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.006em;
+}
+
+@utility closing-foot-z {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* ——— La réassurance : 0,26 écran, colonnes étroites ——— */
+
+@utility reassure-track-z {
+  min-height: 26svh;
+  padding-block: clamp(3rem, 8vh, 6rem);
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+@utility reassure-cols-z {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  @media (width >= 768px) {
+    grid-template-columns: repeat(3, minmax(0, 18rem));
+  }
+}
+
+@utility reassure-col-z {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+@utility reassure-text-z {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--color-foreground) 75%, transparent);
+}
+
+@utility reassure-note-z {
+  max-width: 34rem;
+  margin-top: clamp(2rem, 5vh, 3rem);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--color-muted-foreground);
+}
+
+/* ——— Emplacements et médias partagés ——— */
+
+@utility slot-media-z {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: var(--pos, 50% 50%);
+}
+
+@utility slot-empty-z {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  align-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-foreground) 4%, transparent) 0 2px,
+      transparent 2px 14px
+    ),
+    color-mix(in oklab, var(--color-muted) 70%, var(--color-background));
+  outline: 1px dashed color-mix(in oklab, var(--color-foreground) 18%, transparent);
+  outline-offset: -0.75rem;
+}
+
+@utility slot-empty-role-z {
+  font-family: var(--font-display);
+  font-size: clamp(0.9375rem, 1.4vw, 1.25rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+}
+
+@utility slot-empty-file-z {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted-foreground);
+}
+
+@utility slot-empty-format-z {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted-foreground);
+}
+
+/* ——— Mobile : la narration est conservée, la composition change ——— */
+
+@media (max-width: 767px) {
+  .slot-media-z {
+    object-position: var(--pos-mobile, var(--pos, 50% 50%));
+  }
+
+  /* Le diptyque perd son ancrage collant : sur un écran vertical, deux plans
+   * superposés se masqueraient au lieu de se répondre. Ils s'enchaînent. */
+  .diptych-track-z {
+    min-height: 0;
+  }
+
+  .diptych-anchor-z {
+    position: static;
+    width: 100%;
+    left: auto;
+  }
+
+  .diptych-major-z {
+    position: static;
+    width: 100%;
+  }
+
+  .diptych-flow-z {
+    width: 100%;
+    justify-items: stretch;
+    padding-top: clamp(2rem, 6vh, 4rem);
+  }
+
+  .diptych-beat-z {
+    opacity: 1;
+  }
+
+  .diptych-minor-z[data-scale="moyen"],
+  .diptych-minor-z[data-scale="petit"] {
+    width: 72%;
+    margin-inline: 0;
+  }
+
+  .diptych-minor-z[data-scale="petit"] {
+    justify-self: end;
+  }
+
+  .silence-track-z {
+    min-height: 26svh;
+  }
+
+  .grid-track-z,
+  .closing-track-z,
+  .reassure-track-z {
+    min-height: 0;
+  }
+
+  .closing-track-z {
+    padding-block: clamp(5rem, 18vh, 9rem) clamp(3rem, 10vh, 5rem);
+  }
+}
+
+/* ——— Sans JavaScript ——— */
+
+@media (scripting: none) {
+  .manifest-track-z,
+  .diptych-track-z {
+    height: auto;
+    min-height: 0;
+  }
+
+  .manifest-scene-z {
+    position: static;
+    height: auto;
+    padding-block: 4rem;
+  }
+
+  .manifest-stack-z {
+    gap: 2rem;
+  }
+
+  .manifest-line-z {
+    grid-area: auto;
+  }
+
+  .manifest-word-z {
+    translate: 0 0;
+    opacity: 1;
+  }
+
+  .diptych-anchor-z {
+    position: static;
+    width: 100%;
+    left: auto;
+  }
+
+  .diptych-major-z {
+    position: static;
+  }
+
+  .diptych-beat-z {
+    opacity: 1;
+  }
+
+  .grid-cell-z {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
