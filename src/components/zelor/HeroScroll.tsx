@@ -1,30 +1,34 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 import { HeroFrame } from "./HeroFrame";
 
+/** Les trois temps du regard : de la matière au détail, du détail à la pièce. */
+const STEPS = ["La matière", "Le détail", "La pièce"] as const;
+
 /**
- * Ouverture épinglée.
+ * Ouverture épinglée, en trois temps.
  *
- * Le geste d'accueil de Vero Studio, et le seul qui explique pourquoi leur
- * page ne ressemble à aucune autre : le titre ne surmonte pas une image, il
- * l'entoure. Deux lignes de capitales, l'image entre les deux, et le
- * défilement ne fait pas descendre la page — il fait grandir l'image jusqu'à
- * ce qu'elle passe derrière les mots.
+ * Le titre n'est pas posé sur une image, il l'entoure : deux lignes de
+ * capitales, l'image entre les deux, et le défilement ne fait pas descendre la
+ * page — il fait grandir l'image jusqu'à ce qu'elle passe derrière les mots.
  *
- * Chez eux la scène est rendue en WebGL sur toute la hauteur du cadre. Nous
- * la faisons en CSS : une section haute de deux écrans et demi, un contenu
- * collant qui reste à l'écran pendant qu'elle défile, et une seule variable
- * — la progression de 0 à 1 — qui pilote l'échelle de l'image et l'écart des
- * lignes. Le résultat se lit pareil et ne coûte ni Three.js ni une seconde de
- * chargement.
+ * Une seule variable pilote la scène : la progression de 0 à 1, écrite dans
+ * une propriété personnalisée plutôt que dans l'état React. À soixante images
+ * par seconde, un rendu React par image ferait tomber le défilement ; ici rien
+ * ne se recalcule, le navigateur n'interpole que deux transformations.
  *
- * La progression est écrite dans une propriété personnalisée plutôt que dans
- * l'état React : à soixante images par seconde, un rendu React par image
- * ferait tomber le défilement. Ici rien ne se recalcule, le navigateur
- * n'interpole que deux transformations.
+ * L'état React ne sert qu'au temps courant — trois valeurs sur toute la
+ * course, donc trois rendus au maximum.
+ *
+ * Règle de commerce, et elle prime sur la mise en scène : la phrase de marque
+ * et le bouton sont visibles dès le premier écran, avant tout défilement. Une
+ * maison peut faire attendre pour être admirée ; une boutique ne peut pas
+ * faire attendre pour être comprise.
  */
 export function HeroScroll() {
   const ref = useRef<HTMLElement | null>(null);
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
     const node = ref.current;
@@ -35,6 +39,7 @@ export function HeroScroll() {
     }
 
     let frame = 0;
+    let current = -1;
     const update = () => {
       frame = 0;
       const rect = node.getBoundingClientRect();
@@ -45,6 +50,12 @@ export function HeroScroll() {
       if (run <= 0) return;
       const progress = Math.min(1, Math.max(0, -rect.top / run));
       node.style.setProperty("--p", progress.toFixed(4));
+
+      const next = Math.min(STEPS.length - 1, Math.floor(progress * STEPS.length));
+      if (next !== current) {
+        current = next;
+        setStep(next);
+      }
     };
     const onScroll = () => {
       if (frame) return;
@@ -62,7 +73,7 @@ export function HeroScroll() {
   }, []);
 
   return (
-    <section ref={ref} className="hero-scroll-z" aria-labelledby="hero-title">
+    <section ref={ref} className="hero-scroll-z" aria-labelledby="hero-title" data-step={step}>
       <div className="hero-stick-z">
         <p className="eyebrow hero-eyebrow-z">Maison ZELOR</p>
 
@@ -76,6 +87,25 @@ export function HeroScroll() {
             chaque <em>détail</em>
           </span>
         </h1>
+
+        {/* Nommer ce que l'on regarde. Trois mots qui se relaient au fil de la
+            course : c'est la narration de la maison — de la matière au détail,
+            du détail à la pièce. Décoratif pour un lecteur d'écran, qui
+            entendrait sinon trois fragments sans phrase. */}
+        <p aria-hidden="true" className="hero-steps-z">
+          {STEPS.map((label) => (
+            <span key={label} className="hero-step-z">
+              {label}
+            </span>
+          ))}
+        </p>
+
+        <div className="hero-foot-z">
+          <p className="hero-promise-z">Pour faire de chaque détail une promesse.</p>
+          <Link to="/collection" className="btn-lux whitespace-nowrap">
+            Découvrir la collection
+          </Link>
+        </div>
       </div>
     </section>
   );

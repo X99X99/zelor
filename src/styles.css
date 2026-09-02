@@ -2440,11 +2440,11 @@
   }
 }
 
-/* ————— Ouverture épinglée —————
+/* ————— Ouverture épinglée, en trois temps —————
  *
  * Voir HeroScroll.tsx pour le principe. Tout tient dans --p, la progression
  * du défilement de 0 à 1, écrite par le composant : l'image grandit, les deux
- * lignes du titre s'écartent, et rien d'autre ne bouge.
+ * lignes du titre s'écartent, les trois temps du regard se relaient.
  *
  * L'image est petite dans le flux et grandit par transformation. C'est
  * l'inverse de ce qu'on ferait spontanément — poser une grande image et la
@@ -2455,7 +2455,9 @@
 .hero-scroll-z {
   --p: 0;
   position: relative;
-  height: 250vh;
+  /* Trois temps : il faut de la course pour que chacun s'installe sans que
+   * l'on ait à défiler longtemps pour le suivant. */
+  height: 320vh;
   background-color: var(--color-background);
 }
 
@@ -2467,7 +2469,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4vh;
+  gap: 3vh;
   /* Le cadre déborde largement à la fin de la course : sans découpe, il
    * ouvrirait une barre de défilement horizontale. */
   overflow: clip;
@@ -2476,8 +2478,8 @@
 
 .hero-eyebrow-z {
   /* Le libellé s'efface à mesure que la scène s'ouvre : à la fin il ne reste
-   * que le titre et l'image, ce qui est exactement la composition de Vero. */
-  opacity: calc(1 - var(--p) * 1.6);
+   * que le titre, l'image et ce qui sert à acheter. */
+  opacity: calc(1 - var(--p) * 1.9);
   transition: opacity 120ms linear;
 }
 
@@ -2520,8 +2522,65 @@
     height: 100%;
     width: 100%;
     object-fit: cover;
-    object-position: 42% center;
+    /* La photographie se recadre lentement pendant la montée : on entre dans
+     * la matière au lieu de la regarder de plus loin. C'est la profondeur que
+     * l'on obtient sans 3D, et elle ne coûte rien. */
+    object-position: calc(42% + var(--p) * 10%) center;
+    transform: scale(calc(1 + var(--p) * 0.12));
+    transition: transform 120ms linear;
   }
+}
+
+/* ————— Les trois temps du regard —————
+ * Trois mots empilés dans la même cellule, dont un seul est visible. Le
+ * changement est porté par data-step, écrit par le composant : trois rendus
+ * React sur toute la course, jamais un par image. */
+.hero-steps-z {
+  display: grid;
+  margin: 0;
+  place-items: center;
+  min-height: 1.6em;
+}
+
+.hero-step-z {
+  grid-area: 1 / 1;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+  opacity: 0;
+  transform: translateY(0.5em);
+  transition:
+    opacity var(--dur-move) var(--ease-out-quart),
+    transform var(--dur-move) var(--ease-out-quart);
+}
+
+[data-step="0"] .hero-step-z:nth-child(1),
+[data-step="1"] .hero-step-z:nth-child(2),
+[data-step="2"] .hero-step-z:nth-child(3) {
+  opacity: 1;
+  transform: none;
+}
+
+/* ————— Ce qui sert à acheter —————
+ * Ne s'efface jamais. La mise en scène peut faire attendre pour être admirée,
+ * une boutique ne peut pas faire attendre pour être comprise. */
+.hero-foot-z {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hero-promise-z {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+  line-height: 1.25;
+  color: var(--color-muted-foreground);
+  text-wrap: balance;
 }
 
 @media (width >= 768px) {
@@ -2544,11 +2603,25 @@
 
   .hero-line-a-z,
   .hero-line-b-z,
-  .hero-frame-z {
+  .hero-frame-z,
+  .hero-frame-z img,
+  .hero-step-z {
     transform: none;
+    transition: none;
   }
 
   .hero-eyebrow-z {
+    opacity: 1;
+  }
+
+  /* Sans mouvement, les trois temps ne peuvent pas se relayer : on les montre
+   * tous, séparés, comme une légende. */
+  .hero-steps-z {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .hero-step-z {
     opacity: 1;
   }
 
