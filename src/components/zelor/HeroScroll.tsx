@@ -81,7 +81,12 @@ export function HeroScroll() {
             même phrase, et l'image qui les sépare est décorative. Un lecteur
             d'écran doit entendre « L'élégance dans chaque détail » d'un trait. */}
         <h1 id="hero-title" className="caps-z hero-title-z display-hero-z">
-          <span className="hero-line-z hero-line-a-z">L'élégance dans</span>
+          {/* L'espace en fin de chaîne est sémantique : sans elle, le
+              textContent du titre se lit « L'élégance danschaque détail », les
+              deux moitiés étant séparées par l'image. Une espace en fin de
+              ligne d'un bloc est supprimée à la mise en page : le rendu ne
+              bouge pas d'un pixel. */}
+          <span className="hero-line-z hero-line-a-z">{"L'élégance dans "}</span>
           <HeroFrame />
           <span className="hero-line-z hero-line-b-z">
             chaque <em>détail</em>
