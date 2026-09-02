@@ -26,8 +26,21 @@ déjà noté ici ; va vérifier au navigateur ce qui ne l'est pas.
 | `src/components/zelor/Reveal.tsx` | Apparition au défilement (IntersectionObserver, pose `data-visible`) |
 | `src/components/zelor/SplitReveal.tsx` | Titre révélé mot à mot, accent italique noté `*ainsi*` |
 | `src/components/zelor/HeroScroll.tsx` | Ouverture épinglée, pilotée par la variable CSS `--p` |
-| `src/components/zelor/HeroFrame.tsx` | L'image logée entre les deux lignes du titre |
-| `src/components/zelor/HeroMedia.tsx` | **Inutilisé** depuis `c2e7e0b`. Ancienne bannière vidéo. À supprimer ou à réemployer. |
+| `src/components/zelor/HeroFrame.tsx` | L'image logée entre les deux lignes du titre. Sert la photographie `zelor-hero`, et sait recevoir une séquence en trois temps. |
+
+**Les images de l'ouverture.** `HeroMedia.tsx` et les vidéos `public/hero/hero.webm`
+et `public/hero/hero.mp4` ont été supprimés au commit `b902b81` : plus rien ne les
+rendait depuis `c2e7e0b`. La page d'accueil sert désormais l'unique photographie
+`zelor-hero`, déclinée en quatre largeurs et trois formats (AVIF, WebP, JPEG).
+
+`HeroFrame` est préparé pour une séquence en trois temps — **matière, détail,
+pièce** — dont les fichiers n'existent pas encore. `STAGE_ASSETS` les déclare à
+`null`, et le composant se replie sur la photographie actuelle tant qu'ils
+manquent : une seule `<picture>`, aucune requête supplémentaire.
+
+**Aucune 3D n'est utilisée : ni WebGL, ni Three.js, ni modèle.** Les assets à venir
+devront être **originaux, fournis par ZELOR et légalement exploitables**. Ne rien
+télécharger, ne rien reprendre d'un autre site.
 
 ---
 
