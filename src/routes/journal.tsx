@@ -46,10 +46,11 @@ export const Route = createFileRoute("/journal")({
       title="Journal"
       intro="Des notes courtes sur la sélection, les matières et les lieux qui nourrissent notre regard. Les premiers textes paraîtront avec l'ouverture de la boutique."
       crumbs={[{ label: "Journal" }]}
+      editorial
     >
-      <ul className="grid gap-8 sm:grid-cols-2">
+      <ul className="grid gap-16 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-24">
         {entries.map((entry, index) => (
-          <li key={entry.title}>
+          <li key={entry.title} className={index % 2 === 1 ? "sm:mt-28" : ""}>
             <ImageSlot
               tone={index % 2 === 0 ? "sand" : "stone"}
               ratio="aspect-4/3"

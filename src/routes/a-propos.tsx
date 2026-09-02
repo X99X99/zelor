@@ -27,6 +27,7 @@ export const Route = createFileRoute("/a-propos")({
       title="À propos"
       intro="ZELOR est une maison lifestyle premium internationale. Nous choisissons peu de pièces, et nous les choisissons longuement."
       crumbs={[{ label: "À propos" }]}
+      editorial
     >
       <Section title="Notre intention">
         <p>
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/a-propos")({
           passe de commentaire.
         </p>
       </Section>
-      <Section title="Notre manière de travailler">
+      <Section title="Notre manière de travailler" offset>
         <p>
           Une sélection resserrée, revue saison après saison. Des pièces éprouvées à l'usage avant
           d'être retenues. Des fiches écrites par les personnes qui les ont essayées, et un service
@@ -49,7 +50,7 @@ export const Route = createFileRoute("/a-propos")({
           sera réellement desservie.
         </p>
       </Section>
-      <Section title="Informations société">
+      <Section title="Informations société" offset>
         <p>
           Les informations d'identification de la société sont réunies sur la page des mentions
           légales, mises à jour à l'ouverture de la boutique.

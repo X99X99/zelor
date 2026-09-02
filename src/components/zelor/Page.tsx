@@ -4,19 +4,31 @@ import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { LineReveal } from "./LineReveal";
 import { Reveal } from "./Reveal";
 
-/** Gabarit de page éditoriale : fil d'Ariane, H1 unique, contenu en colonne. */
+/**
+ * Gabarit de page : fil d'Ariane, H1 unique, contenu en colonne.
+ *
+ * Quinze routes passent par ici, et seulement quatre sont éditoriales —
+ * univers, journal, à propos, qualité. Les onze autres sont fonctionnelles ou
+ * juridiques, et « compte » en fait partie. C'est pourquoi la composition
+ * décalée est une option et jamais un défaut : la rendre systématique
+ * restructurerait la page compte, les CGV et les mentions légales, dont la
+ * régularité n'est pas un défaut de composition mais une qualité de lecture.
+ */
 export function PageShell({
   title,
   intro,
   crumbs,
   children,
   aside,
+  editorial = false,
 }: {
   title: string;
   intro?: string;
   crumbs: Crumb[];
   children: ReactNode;
   aside?: ReactNode;
+  /** Composition décalée, réservée aux pages de maison. */
+  editorial?: boolean;
 }) {
   return (
     <>
@@ -38,16 +50,31 @@ export function PageShell({
         </header>
       </div>
       <Reveal className="container-z grid gap-12 pt-14 pb-20 lg:grid-cols-[minmax(0,42rem)_1fr] lg:gap-20">
-        <div className="prose-zelor space-y-14">{children}</div>
-        {aside && <aside className="space-y-6 text-sm">{aside}</aside>}
+        <div className={`prose-zelor ${editorial ? "space-y-24" : "space-y-14"}`}>{children}</div>
+        {/* L'image accompagne la lecture au lieu de la précéder : collante
+            seulement là où il y a deux colonnes. */}
+        {aside && (
+          <aside className={`space-y-6 text-sm${editorial ? " aside-sticky-z" : ""}`}>
+            {aside}
+          </aside>
+        )}
       </Reveal>
     </>
   );
 }
 
-export function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({
+  title,
+  children,
+  offset = false,
+}: {
+  title: string;
+  children: ReactNode;
+  /** Décale la section vers la droite au-delà de 1024 px. Une sur deux. */
+  offset?: boolean;
+}) {
   return (
-    <section className="space-y-4">
+    <section className={`space-y-4${offset ? " section-offset-z" : ""}`}>
       {/* Cinquante-cinq intertitres passent par ici, dont ceux des CGV et des
           mentions légales. Ils étaient en capitales et découpés mot à mot :
           deux gestes de titre de marque appliqués à de la lecture juridique.

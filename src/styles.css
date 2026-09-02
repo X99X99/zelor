@@ -778,6 +778,35 @@
   padding-block: clamp(7rem, 15vw, 12rem);
 }
 
+/* ————— Composition éditoriale décalée —————
+ *
+ * Vero ne commence pas toutes ses sections au même fer. Le décalage est ce
+ * qui distingue une page composée d'une page empilée.
+ *
+ * Deux précautions gouvernent la mise en œuvre. D'abord le décalage s'annule
+ * sous 1024 px : sur un portable, une marge de gauche ne compose rien, elle
+ * ampute la colonne de lecture. Ensuite il passe par `margin-inline-start`
+ * et non par un réordonnancement : l'ordre du DOM reste l'ordre de lecture,
+ * et la tabulation suit le texte.
+ *
+ * La borne haute est volontairement basse — 5,5 rem. Au-delà, la colonne de
+ * lecture se déporte assez pour qu'on la cherche.
+ */
+@utility section-offset-z {
+  @media (width >= 1024px) {
+    margin-inline-start: clamp(0rem, 6vw, 5.5rem);
+  }
+}
+
+/* L'image accompagne la lecture au lieu de la précéder. Collante seulement
+ * là où il y a deux colonnes : en dessous, elle reprend sa place dans le flux. */
+@utility aside-sticky-z {
+  @media (width >= 1024px) {
+    position: sticky;
+    top: clamp(5rem, 12vh, 8rem);
+  }
+}
+
 /* Filet de séparation éditorial */
 @utility rule-z {
   border-top: 1px solid var(--color-border);

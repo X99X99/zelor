@@ -37,6 +37,7 @@ function UniversePage() {
       title="Une signature discrète."
       intro="ZELOR s'intéresse à ce qui reste : une matière agréable en main, une silhouette juste, une fonction évidente, une présentation qui ne laisse rien au hasard."
       crumbs={[{ label: "L'univers ZELOR" }]}
+      editorial
       aside={
         <HoverVideo
           src={editorialVideo.url}
@@ -54,7 +55,7 @@ function UniversePage() {
           fatiguer. C'est cette qualité-là, silencieuse, que la Maison ZELOR cherche à réunir.
         </p>
       </Section>
-      <Section title="Notre manière de choisir">
+      <Section title="Notre manière de choisir" offset>
         <p>
           Nous regardons la forme, l'usage et la finition, dans cet ordre. Une pièce est prise en
           main, portée, posée, déplacée pendant plusieurs semaines avant d'être retenue. Ce qui
@@ -72,7 +73,7 @@ function UniversePage() {
           démonstratif, une présence.
         </p>
       </Section>
-      <Section title="Une maison internationale">
+      <Section title="Une maison internationale" offset>
         <p>
           ZELOR s'adresse à des clients en France, en Europe et au-delà. Le site ouvre en français,
           avec une structure prête pour l'anglais, le russe, l'italien, l'espagnol, l'allemand, le

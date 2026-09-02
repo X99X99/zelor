@@ -28,6 +28,7 @@ export const Route = createFileRoute("/qualite")({
       title="Qualité et sélection"
       intro="La qualité se démontre par des faits précis, jamais par des adjectifs. Voici ce que nous regardons, dans l'ordre."
       crumbs={[{ label: "Qualité et sélection" }]}
+      editorial
       aside={
         <img
           src={detailImage}
@@ -56,7 +57,7 @@ export const Route = createFileRoute("/qualite")({
           <li>Usage réel : plusieurs semaines d'essai avant toute mise en ligne.</li>
         </ul>
       </Section>
-      <Section title="Ce que nous vérifions auprès des fournisseurs">
+      <Section title="Ce que nous vérifions auprès des fournisseurs" offset>
         <p>
           Composition, lieu de fabrication, conditions d'entretien, durée de disponibilité. Une
           information qui ne peut pas être documentée n'est pas publiée : elle reste absente de la
