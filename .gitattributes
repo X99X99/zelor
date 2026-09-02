@@ -1,0 +1,24 @@
+# Fins de ligne.
+#
+# L'installateur Git for Windows pose core.autocrlf=true dans sa configuration
+# systeme (C:/Program Files/Git/etc/gitconfig). Sans ce fichier, tout clone
+# Windows recoit les fichiers en CRLF alors que le depot les stocke en LF, et
+# Prettier — qui attend du LF — rend plus de dix mille erreurs qui n'en sont
+# pas. Le diagnostic coute une heure, et la fausse correction reecrirait tous
+# les fichiers, y compris ceux generes par Lovable.
+#
+# Ce fichier rend le comportement independant de la machine : le depot est en
+# LF, il le reste partout, quelle que soit la configuration locale.
+* text=auto eol=lf
+
+# Binaires : aucune conversion, jamais.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.avif binary
+*.webp binary
+*.ico  binary
+*.mp4  binary
+*.webm binary
+*.woff binary
+*.woff2 binary
