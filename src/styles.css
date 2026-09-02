@@ -855,6 +855,52 @@
   }
 }
 
+/* ————— Galerie produit —————
+ *
+ * Les vignettes etaient de simples images : trois clichés sur cinq
+ * s'affichaient sans qu'on puisse les regarder en grand. Ce sont désormais
+ * des boutons, et la photographie principale change à la sélection.
+ *
+ * Le fondu est court — 260 ms. Sur une fiche produit, une transition qui se
+ * fait attendre se lit comme une lenteur, pas comme du soin : cette page doit
+ * être plus rapide que l'accueil. La règle globale de mouvement réduit la
+ * neutralise déjà.
+ */
+@keyframes zelor-gallery-fade {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility gallery-main-z {
+  animation: zelor-gallery-fade 260ms var(--ease-out-quart) both;
+}
+
+@utility gallery-thumb-z {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius-media);
+  opacity: 0.55;
+  transition:
+    opacity var(--dur-2) var(--ease-lux),
+    box-shadow var(--dur-2) var(--ease-lux);
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  /* La vignette regardée se distingue par un filet, pas seulement par
+   * l'opacité : une différence de transparence seule ne se voit pas assez
+   * pour indiquer un état. */
+  &[aria-pressed="true"] {
+    opacity: 1;
+    box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--navy) 55%, transparent);
+  }
+}
+
 /* Filet de séparation éditorial */
 @utility rule-z {
   border-top: 1px solid var(--color-border);

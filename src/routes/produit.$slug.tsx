@@ -57,13 +57,41 @@ function ProductNotFound() {
 
 function ProductPage() {
   const { slug } = Route.useParams();
-  const { data: product, isLoading } = useQuery(productQueryOptions(slug));
+  const {
+    data: product,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useQuery(productQueryOptions(slug));
   const { data: catalog } = useQuery(productsQueryOptions(8));
 
   if (isLoading) {
     return (
       <div className="container-z py-24">
         <div className="skeleton-lux aspect-[4/5] max-w-xl rounded-[var(--radius-media)]" />
+      </div>
+    );
+  }
+  // Une panne de l'API affichait « cette pièce n'est pas disponible, elle a
+  // peut-être été retirée du catalogue » : on annonçait au client le retrait
+  // d'une pièce qui existe. L'erreur technique a donc son propre message, et
+  // une sortie.
+  if (isError) {
+    return (
+      <div className="container-z py-24 text-center" role="alert">
+        <h1 className="font-display text-4xl">Cette pièce ne peut pas être chargée.</h1>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Le catalogue n'a pas répondu. Veuillez réessayer.
+        </p>
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          disabled={isFetching}
+          className="btn-lux mt-8"
+        >
+          {isFetching ? "Nouvelle tentative…" : "Réessayer"}
+        </button>
       </div>
     );
   }
@@ -84,6 +112,10 @@ function ProductDetail({
   const [variantId, setVariantId] = useState(variants[0]?.id ?? "");
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  // Photographie regardée en grand. Les vignettes étaient de simples images :
+  // trois clichés sur cinq s'affichaient sans qu'on puisse les agrandir.
+  const [activeImage, setActiveImage] = useState(0);
 
   const { add: addItem, busy: isLoading } = useCart();
 
@@ -91,17 +123,34 @@ function ProductDetail({
   const images = node.images.edges.map((e) => e.node);
   const related = catalog.filter((p) => p.node.handle !== node.handle).slice(0, 3);
 
+  // L'appel n'etait pas garde : si addItem rejetait, setAdded n'etait jamais
+  // atteint et rien n'avertissait le client. Un echec silencieux sur un bouton
+  // d'achat est le pire endroit possible pour une exception non capturee.
   const handleAdd = async () => {
     if (!selectedVariant) return;
-    await addItem({
-      product,
-      variantId: selectedVariant.id,
-      variantTitle: selectedVariant.title,
-      price: selectedVariant.price,
-      quantity,
-      selectedOptions: selectedVariant.selectedOptions ?? [],
-    });
-    setAdded(true);
+    setAddError(null);
+    try {
+      await addItem({
+        product,
+        variantId: selectedVariant.id,
+        variantTitle: selectedVariant.title,
+        price: selectedVariant.price,
+        quantity,
+        selectedOptions: selectedVariant.selectedOptions ?? [],
+      });
+      setAdded(true);
+    } catch {
+      setAdded(false);
+      setAddError("L'ajout au panier n'a pas pu être effectué. Veuillez réessayer.");
+    }
+  };
+
+  // Changer de variante invalide le message precedent : une confirmation qui
+  // survit au changement laisserait croire que la nouvelle taille est au panier.
+  const selectVariant = (id: string) => {
+    setVariantId(id);
+    setAdded(false);
+    setAddError(null);
   };
 
   const price = formatMoney(selectedVariant?.price ?? node.priceRange.minVariantPrice);
@@ -114,25 +163,39 @@ function ProductDetail({
       <div className="container-z grid gap-10 pt-8 pb-16 lg:grid-cols-2 lg:gap-16">
         {/* Galerie */}
         <Reveal className="space-y-3">
-          {images[0] ? (
+          {images[activeImage] ? (
             <img
-              src={images[0].url}
-              alt={images[0].altText ?? node.title}
-              className="aspect-[4/5] w-full rounded-[var(--radius-media)] object-cover"
+              key={activeImage}
+              src={images[activeImage].url}
+              alt={images[activeImage].altText ?? node.title}
+              width={1200}
+              height={1500}
+              className="gallery-main-z aspect-[4/5] w-full rounded-[var(--radius-media)] object-cover"
             />
           ) : (
             <ImageSlot ratio="aspect-4/5" caption={node.title} label={node.title} />
           )}
           {images.length > 1 && (
-            <div className="grid grid-cols-3 gap-3">
-              {images.slice(1, 4).map((image) => (
-                <img
+            <div className="grid grid-cols-4 gap-3">
+              {images.slice(0, 4).map((image, index) => (
+                <button
                   key={image.url}
-                  src={image.url}
-                  alt={image.altText ?? node.title}
-                  loading="lazy"
-                  className="aspect-square w-full rounded-[var(--radius-media)] object-cover"
-                />
+                  type="button"
+                  onClick={() => setActiveImage(index)}
+                  aria-pressed={index === activeImage}
+                  aria-label={`Voir la photographie ${index + 1} sur ${Math.min(images.length, 4)}`}
+                  className="gallery-thumb-z"
+                >
+                  <img
+                    src={image.url}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    width={300}
+                    height={300}
+                    className="aspect-square w-full rounded-[var(--radius-media)] object-cover"
+                  />
+                </button>
               ))}
             </div>
           )}
@@ -144,9 +207,7 @@ function ProductDetail({
           <h1 className="mt-3 font-display text-3xl md:text-5xl">{node.title}</h1>
           <p className="mt-4 text-lg">{price}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            {available
-              ? "Disponible — expédié depuis notre atelier."
-              : "Actuellement indisponible."}
+            {available ? "Disponible." : "Actuellement indisponible."}
           </p>
 
           {variants.length > 1 && (
@@ -157,7 +218,7 @@ function ProductDetail({
                   <button
                     key={option.id}
                     type="button"
-                    onClick={() => setVariantId(option.id)}
+                    onClick={() => selectVariant(option.id)}
                     aria-pressed={variantId === option.id}
                     disabled={!option.availableForSale}
                     className={`chip-z min-h-11 px-5 text-sm disabled:opacity-40 ${
@@ -207,10 +268,15 @@ function ProductDetail({
           </button>
           {added && (
             <p role="status" className="mt-4 text-sm">
-              Ajouté à votre panier.{" "}
+              Ajouté au panier.{" "}
               <Link to="/panier" className="link-underline">
                 Voir le panier
               </Link>
+            </p>
+          )}
+          {addError && (
+            <p role="alert" className="mt-4 text-sm text-foreground">
+              {addError}
             </p>
           )}
 
