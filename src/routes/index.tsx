@@ -53,7 +53,7 @@ function Home() {
           seule, et la phrase qui l'explique vient après, dans une colonne
           étroite. On reprend cet ordre — l'accroche en sans serré, le détail
           en petit, et les deux chemins d'entrée seulement à la fin. */}
-      <Reveal as="section" className="container-z py-24 text-center md:py-32">
+      <Reveal as="section" className="container-z rhythm-short-z text-center">
         <p className="lead-z mx-auto max-w-3xl">
           Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs
           matières et leur tenue dans le temps.
@@ -73,7 +73,7 @@ function Home() {
       </Reveal>
 
       {/* B. Promesse */}
-      <Reveal as="section" aria-labelledby="promesse-title" className="container-z py-24 md:py-32">
+      <Reveal as="section" aria-labelledby="promesse-title" className="container-z rhythm-z">
         <h2 id="promesse-title" className="sr-only">
           Nos engagements
         </h2>
@@ -88,11 +88,7 @@ function Home() {
       </Reveal>
 
       {/* C. Collection */}
-      <Reveal
-        as="section"
-        aria-labelledby="collection-title"
-        className="container-z pb-24 md:pb-32"
-      >
+      <Reveal as="section" aria-labelledby="collection-title" className="container-z rhythm-long-z">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Sélection</p>
@@ -122,7 +118,7 @@ function Home() {
 
       {/* D. Storytelling */}
       <Reveal as="section" replay className="surface-light hairline-z">
-        <div className="container-z grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
+        <div className="container-z rhythm-long-z grid gap-10 md:grid-cols-2 md:items-center">
           <div>
             <SplitReveal text="Le goût des choses bien *choisies.*" className="display-1-z" />
             <p className="prose-z mt-6 max-w-lg text-foreground/80">
@@ -144,7 +140,7 @@ function Home() {
       </Reveal>
 
       {/* E. Qualité */}
-      <Reveal as="section" aria-labelledby="qualite-title" className="container-z py-24 md:py-32">
+      <Reveal as="section" aria-labelledby="qualite-title" className="container-z rhythm-short-z">
         <p className="eyebrow">Qualité</p>
         <SplitReveal
           id="qualite-title"
@@ -182,7 +178,7 @@ function Home() {
       <Reveal
         as="section"
         replay
-        className="container-z grid gap-10 pb-20 md:grid-cols-[1.1fr_1fr] md:items-center md:pb-28"
+        className="container-z rhythm-long-z grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center"
       >
         <HoverVideo
           className="clip-reveal-z"

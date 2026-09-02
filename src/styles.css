@@ -718,6 +718,33 @@
   }
 }
 
+/* ————— L'échelle de respiration —————
+ *
+ * Mesuré chez Vero : leurs neuf blocs font 900, 2700, 3840, 290, 2410, 290,
+ * 1268, 1374 et 230 px. Ce n'est pas la hauteur de chaque bloc qui fait leur
+ * rythme, c'est l'alternance — un bloc très long, puis un très court qui sert
+ * de silence, puis un long de nouveau.
+ *
+ * Notre accueil enchaînait cinq sections de hauteur comparable : py-24 sur
+ * trois d'entre elles, py-20 sur deux autres. Un métronome, pas un rythme.
+ *
+ * Trois paliers, donc, et le choix se fait par intention plutôt que par
+ * nombre : une section qui affirme respire long, une section qui ponctue
+ * respire court. Les valeurs sont fluides et bornées en vh, pour que le
+ * rythme tienne aussi bien sur un portable que sur un grand écran.
+ */
+@utility rhythm-short-z {
+  padding-block: clamp(3rem, 6vh, 5rem);
+}
+
+@utility rhythm-z {
+  padding-block: clamp(5rem, 11vh, 8.5rem);
+}
+
+@utility rhythm-long-z {
+  padding-block: clamp(7rem, 17vh, 13rem);
+}
+
 /* Filet de séparation éditorial */
 @utility rule-z {
   border-top: 1px solid var(--color-border);
