@@ -1,5 +1,7 @@
 import { BRAND } from "@/lib/zelor/content";
 import { BrandLink, NavLink, scrollToTop } from "@/components/zelor/NavLink";
+import { LineReveal } from "./LineReveal";
+import { Reveal } from "./Reveal";
 import { Newsletter } from "./Newsletter";
 
 const columns = [
@@ -46,13 +48,34 @@ export function SiteFooter() {
   return (
     <footer className="overlay-navy grain-z shoreline-z mt-28 text-navy-foreground">
       <Newsletter />
+
+      {/* ————— La clôture —————
+          Un pied de page de maison n'est pas une barre de liens : c'est la fin
+          de l'expérience, et elle mérite la même respiration que son ouverture.
+          Chez Vero il occupe presque un écran entier. On y pose la signature en
+          entier — l'accueil n'en montre que la seconde moitié — au palier
+          d'affichage, révélée derrière une fenêtre.
+
+          Les dix-sept liens qui suivent ne bougent pas d'une ligne : c'est la
+          composition qui change, jamais la navigation. */}
+      <Reveal
+        as="section"
+        aria-labelledby="footer-signature"
+        className="container-z border-t border-navy-foreground/12 py-24 md:py-32"
+      >
+        <p className="eyebrow text-navy-foreground/45">Maison ZELOR</p>
+        <LineReveal id="footer-signature" className="mt-6 max-w-5xl display-2-z">
+          L'élégance dans chaque détail, pour faire de chaque détail une <em>promesse</em>.
+        </LineReveal>
+      </Reveal>
+
       <div className="container-z grid gap-10 border-t border-navy-foreground/12 py-16 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-1">
           <BrandLink className="wordmark-z inline-block font-display text-2xl tracking-[0.4em]">
             {BRAND.name}
           </BrandLink>
           <p className="mt-4 max-w-56 text-sm leading-relaxed text-navy-foreground/65">
-            {BRAND.taglineFr}
+            Maison éditoriale française, pensée à Nice et tournée vers l'international.
           </p>
         </div>
         {columns.map((column) => (
