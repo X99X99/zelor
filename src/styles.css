@@ -1242,6 +1242,17 @@
   color: var(--navy-foreground);
 }
 
+/* Respiration lumineuse d'une capsule. Sept secondes par sens, en alternance :
+ * assez lent pour être perçu sans jamais être regardé. */
+@keyframes zelor-capsule-breathe {
+  from {
+    opacity: 0.22;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
 /* CTA statutaire : matière marine translucide, réponse sensible. */
 @utility btn-lux {
   position: relative;
@@ -1273,6 +1284,35 @@
     box-shadow var(--dur-3) var(--ease-lux),
     filter var(--dur-2) var(--ease-lux),
     opacity var(--dur-2) var(--ease-lux);
+  /* La respiration. Une seule capsule du site en porte une — celle-ci, le
+   * bouton d'appel principal. Cinq capsules d'en-tête qui respireraient côte
+   * à côte ne feraient pas du luxe mais de l'agitation ; un seul élément qui
+   * respire se remarque, cinq qui respirent se subissent.
+   *
+   * Sur ::before, parce que ::after porte déjà le balayage lumineux du
+   * survol. Même z-index négatif : le halo passe derrière le texte, qui reste
+   * lisible quelle que soit la phase du cycle.
+   *
+   * Seule l'opacité est animée : le navigateur la compose sans recalculer ni
+   * la mise en page ni la peinture. C'est le coût le plus bas possible pour
+   * une animation perpétuelle, et `overflow: hidden` avec `isolation:
+   * isolate`, déjà posés plus haut, garantissent qu'elle ne déborde jamais
+   * des bords arrondis. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(
+      120% 150% at 50% 0%,
+      color-mix(in oklab, white 20%, transparent),
+      transparent 72%
+    );
+    opacity: 0.22;
+    animation: zelor-capsule-breathe 7s ease-in-out infinite alternate;
+  }
   &::after {
     content: "";
     position: absolute;
@@ -1921,8 +1961,16 @@
   }
 }
 
+/* Entrée de page : 380 ms au lieu de 620. Un fondu de six cent vingt
+ * millisecondes ne se lit pas comme du soin, il se lit comme une latence — et
+ * sur une boutique, la première impression après un clic doit être la
+ * réponse, pas l'élégance. La courbe part franchement et se pose vite.
+ *
+ * Toujours un fondu seul, et surtout pas un clip-path : comme la translation
+ * écartée ci-dessus, il créerait un bloc de confinement pour les éléments en
+ * position fixed, et casserait la barre d'achat mobile. */
 @utility page-in {
-  animation: zelor-page-in var(--dur-3) var(--ease-enter) both;
+  animation: zelor-page-in var(--dur-2) var(--ease-out-quart) both;
 }
 
 /* Grain imperceptible : les aplats marine cessent d'être plats. */
