@@ -807,6 +807,54 @@
   }
 }
 
+/* ————— Grille de catalogue éditoriale —————
+ *
+ * Trois colonnes au lieu de quatre : la pièce gagne la place que Vero donne à
+ * ses images. Le décalage porte sur la colonne du milieu de chaque rangée, ce
+ * qui suffit à casser l'alignement sans rendre la grille illisible — une page
+ * d'achat se parcourt, elle ne se contemple pas.
+ *
+ * Le décalage s'annule sous 1024 px, et deux colonnes sont conservées sur
+ * mobile : on ne sacrifie pas la densité d'achat à la composition.
+ */
+@utility catalog-grid-z {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem 1rem;
+
+  @media (width >= 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4rem 1.5rem;
+  }
+
+  @media (width >= 1024px) {
+    gap: 5.5rem 2rem;
+
+    & > *:nth-child(3n + 2) {
+      margin-block-start: clamp(0rem, 5vw, 4rem);
+    }
+  }
+}
+
+/* La seconde photographie se substitue à la première au survol. Elle n'est
+ * montée que sur pointeur fin — voir ProductCard — donc cette règle ne
+ * s'applique jamais sur un écran tactile. Le focus la révèle aussi : au
+ * clavier, on doit voir ce que la souris montre. */
+@utility card-hover-image-z {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--dur-move) var(--ease-out-quart);
+
+  .group:hover &,
+  .group:focus-within & {
+    opacity: 1;
+  }
+}
+
 /* Filet de séparation éditorial */
 @utility rule-z {
   border-top: 1px solid var(--color-border);

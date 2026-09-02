@@ -7,6 +7,7 @@ import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { Breadcrumbs } from "@/components/zelor/Breadcrumbs";
+import { LineReveal } from "@/components/zelor/LineReveal";
 import { Reveal } from "@/components/zelor/Reveal";
 import { absoluteUrl } from "@/lib/zelor/site";
 
@@ -44,7 +45,7 @@ function CollectionPage() {
   const [line, setLine] = useState("Toutes");
   const [sort, setSort] = useState("nouveaute");
 
-  const { data, isLoading } = useQuery(productsQueryOptions(50));
+  const { data, isLoading, isError, refetch, isFetching } = useQuery(productsQueryOptions(50));
   const all = useMemo(() => data ?? [], [data]);
 
   const lines = useMemo(
@@ -78,9 +79,11 @@ function CollectionPage() {
   return (
     <>
       <Breadcrumbs items={[{ label: "Collection" }]} />
-      <Reveal as="header" className="container-z pt-10 pb-8 md:pt-14">
-        <h1 className="font-display text-4xl md:text-6xl">Collection</h1>
-        <p className="mt-5 max-w-2xl text-base text-muted-foreground">
+      <Reveal as="header" className="container-z module-breath-z">
+        <LineReveal as="h1" className="display-2-z max-w-4xl">
+          Collection
+        </LineReveal>
+        <p className="lead-z mt-8 max-w-2xl">
           La collection ZELOR réunit des pièces choisies pour leur équilibre entre forme, fonction
           et finition. Chaque référence est décrite avec précision : matière, usage, entretien et
           livraison, sans promesse approximative.
@@ -161,6 +164,27 @@ function CollectionPage() {
               <div key={i} className="skeleton-lux aspect-[4/5] rounded-[var(--radius-media)]" />
             ))}
           </div>
+        ) : isError ? (
+          // Une panne de l'API se lisait « le catalogue ne contient encore
+          // aucune pièce » : le client concluait que la maison n'a rien à
+          // vendre. L'erreur a donc son propre état, et il propose une sortie.
+          <Reveal
+            role="alert"
+            className="surface-light aura-z rounded-3xl border border-border/70 px-6 py-24 text-center"
+          >
+            <h2 className="font-display text-2xl">La sélection ne peut pas être affichée.</h2>
+            <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+              Le catalogue n'a pas répondu. Réessayez dans un instant.
+            </p>
+            <button
+              type="button"
+              onClick={() => void refetch()}
+              disabled={isFetching}
+              className="btn-lux mt-8 whitespace-nowrap"
+            >
+              {isFetching ? "Nouvelle tentative…" : "Réessayer"}
+            </button>
+          </Reveal>
         ) : products.length === 0 ? (
           <EmptyCatalog
             body={
@@ -170,13 +194,9 @@ function CollectionPage() {
             }
           />
         ) : (
-          <Reveal
-            key={`${line}-${sort}-${query}`}
-            delay={120}
-            className="stagger-z grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4"
-          >
+          <Reveal key={`${line}-${sort}-${query}`} delay={120} className="stagger-z catalog-grid-z">
             {products.map((product) => (
-              <ProductCard key={product.node.id} product={product} />
+              <ProductCard key={product.node.id} product={product} variant="collection-editorial" />
             ))}
           </Reveal>
         )}
