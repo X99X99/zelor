@@ -449,7 +449,7 @@ export function SiteHeader() {
       >
         <AnnouncementBar />
         <div className="container-z flex items-center justify-between gap-4 py-4">
-          <div className="flex flex-1 items-center gap-1 md:hidden">
+          <div className="flex flex-1 items-center gap-1 lg:hidden">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -464,7 +464,7 @@ export function SiteHeader() {
 
           <nav
             aria-label="Navigation principale"
-            className="-ml-3 hidden flex-1 items-center gap-1 md:flex"
+            className="-ml-3 hidden flex-1 items-center gap-1 lg:flex"
           >
             {MAIN_NAV.map((item) => (
               <NavLink
@@ -480,7 +480,7 @@ export function SiteHeader() {
 
           <BrandLink
             onNavigate={closeMenu}
-            className="wordmark-z font-display text-2xl tracking-[0.4em] md:text-[1.75rem]"
+            className="wordmark-z font-display text-2xl tracking-[0.4em] lg:text-[1.75rem]"
           >
             {BRAND.name}
           </BrandLink>
@@ -500,14 +500,14 @@ export function SiteHeader() {
               />
             </button>
             <AppearanceControl />
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <LanguageMenu />
             </div>
 
             <Link
               to="/compte"
               aria-label="Compte client"
-              className="utility-z utility-icon-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 md:flex"
+              className="utility-z utility-icon-z hidden size-11 items-center justify-center opacity-90 hover:opacity-100 lg:flex"
             >
               <User className="size-4.5" aria-hidden="true" />
             </Link>
@@ -553,7 +553,7 @@ export function SiteHeader() {
 
       {menuOpen && (
         <div
-          className={`fixed inset-0 z-70 bg-[color-mix(in_oklab,var(--navy-deep)_55%,transparent)] backdrop-blur-sm md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          className={`fixed inset-0 z-70 bg-[color-mix(in_oklab,var(--navy-deep)_55%,transparent)] backdrop-blur-sm lg:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
           onClick={closeMenu}
           aria-hidden="true"
         />
@@ -566,7 +566,7 @@ export function SiteHeader() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className={`overlay-navy grain-z sheet-z fixed inset-2 z-70 overflow-y-auto md:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          className={`overlay-navy grain-z sheet-z fixed inset-2 z-70 overflow-y-auto lg:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
           <div className="container-z flex items-center justify-between py-4">
             <BrandLink
