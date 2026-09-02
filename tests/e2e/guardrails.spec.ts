@@ -391,3 +391,103 @@ test.describe("garde-fous — lumière et cohérence interactive", () => {
     expect(parseFloat(geo.pad)).toBeLessThanOrEqual(parseFloat(ref.pad));
   });
 });
+
+/**
+ * Garde-fous de la scène d'ouverture.
+ *
+ * Deux d'entre eux couvrent des défauts réellement constatés : la phrase de
+ * marque avait disparu du site avec l'ancien hero, et deux des trois mots
+ * d'étape restaient invisibles sans JavaScript.
+ *
+ * Piège à connaître : `openPage` impose `reducedMotion: "reduce"`. Dans ce
+ * régime, HeroScroll pose --p à 1 et n'installe aucun écouteur. Éprouver la
+ * scène animée demande donc de rendre le mouvement **puis de recharger** :
+ * l'effet ne s'exécute qu'au montage, changer le média après coup ne le
+ * rejouerait pas.
+ */
+async function openWithMotion(page: import("@playwright/test").Page, path: string) {
+  await openPage(page, path);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.reload({ waitUntil: "load" });
+}
+
+function sceneProgress(page: import("@playwright/test").Page) {
+  return page.evaluate(() => {
+    const el = document.querySelector(".hero-scroll-z");
+    return el ? Number(getComputedStyle(el).getPropertyValue("--p")) : Number.NaN;
+  });
+}
+
+test.describe("garde-fou scène d'ouverture", () => {
+  test("les trois temps du regard sont dans le DOM", async ({ page }) => {
+    await openPage(page, "/");
+    const steps = page.locator(".hero-step-z");
+    await expect(steps).toHaveCount(3);
+    await expect(steps).toHaveText(["La matière", "Le détail", "La pièce"]);
+  });
+
+  test("la phrase de marque et le bouton tiennent dans le premier écran", async ({ page }) => {
+    await openWithMotion(page, "/");
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+
+    await expect(page.locator(".hero-promise-z")).toHaveText(
+      "Pour faire de chaque détail une promesse.",
+    );
+    const cta = page.locator(".hero-foot-z a");
+    await expect(cta).toBeVisible();
+
+    // « Visible » au sens CSS ne suffit pas : le bouton doit être atteignable
+    // sans défiler, sans quoi la mise en scène retarderait l'achat.
+    const box = await cta.boundingBox();
+    if (!box) throw new Error("le bouton du hero n'a pas de boîte de rendu");
+    const viewport = page.viewportSize();
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport ? viewport.height : 0);
+  });
+
+  test("la progression de la scène part de zéro et atteint son terme", async ({ page }) => {
+    await openWithMotion(page, "/");
+    expect(await sceneProgress(page)).toBeLessThan(0.1);
+
+    // Le défilement est redemandé à chaque tour de boucle, et ce n'est pas une
+    // précaution gratuite : le routeur restaure la position après hydratation,
+    // si bien qu'un défilement posé une seule fois est ramené à zéro sous nos
+    // pieds. On redemande donc jusqu'à ce que la position tienne.
+    //
+    // La scène n'est pas en haut du document — l'en-tête et la barre d'annonce
+    // la précèdent : on part de sa position absolue, pas de sa seule hauteur.
+    await expect
+      .poll(async () => {
+        await page.evaluate(() => {
+          const el = document.querySelector(".hero-scroll-z");
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, rect.top + window.scrollY + rect.height - window.innerHeight);
+        });
+        return sceneProgress(page);
+      })
+      .toBeGreaterThan(0.99);
+  });
+
+  test("sans mouvement, la scène se déplie et montre ses trois temps", async ({ page }) => {
+    // `openPage` impose déjà le mouvement réduit : c'est le régime testé ici.
+    await openPage(page, "/");
+
+    await expect(page.locator(".hero-stick-z")).toHaveCSS("position", "static");
+
+    // La scène ne réserve plus trois écrans et demi de défilement.
+    const mesures = await page.evaluate(() => {
+      const el = document.querySelector(".hero-scroll-z");
+      return {
+        scene: el ? el.getBoundingClientRect().height : 0,
+        ecran: window.innerHeight,
+      };
+    });
+    expect(mesures.scene).toBeLessThan(mesures.ecran * 3);
+
+    // Les trois mots sont montrés ensemble, pas un seul à la fois.
+    const opacites = await page
+      .locator(".hero-step-z")
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));
+    expect(opacites).toEqual(["1", "1", "1"]);
+  });
+});

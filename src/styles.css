@@ -2650,17 +2650,60 @@
   transform-origin: center;
   margin-block: 0.6vh;
 
+  /* Cadrage par temps. Le mouvement continu de --p reste — le cadre grandit
+   * sans à-coup — mais chaque temps pose désormais son propre point de
+   * regard : on entre dans la matière, on se place sur le détail, on recule
+   * sur la pièce. Avec une seule photographie, c'est le cadrage qui raconte
+   * les trois temps ; avec trois, il les soulignera.
+   *
+   * Valeurs par défaut = premier temps. Sans JavaScript, data-step vaut « 0 »
+   * au rendu serveur : le cadrage est donc juste, jamais neutre. */
+  --focus-x: 34%;
+  --focus-y: 54%;
+  --focus-zoom: 1.12;
+
   & img {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    /* La photographie se recadre lentement pendant la montée : on entre dans
-     * la matière au lieu de la regarder de plus loin. C'est la profondeur que
-     * l'on obtient sans 3D, et elle ne coûte rien. */
-    object-position: calc(42% + var(--p) * 10%) center;
-    transform: scale(calc(1 + var(--p) * 0.12));
-    transition: transform 120ms linear;
+    object-position: var(--focus-x) var(--focus-y);
+    transform: scale(var(--focus-zoom));
+    /* Lent, parce qu'un changement de cadrage rapide se lit comme un saut de
+     * montage. Une seconde deux pour passer d'un temps au suivant. */
+    transition:
+      object-position var(--dur-reveal) var(--ease-out-quart),
+      transform var(--dur-reveal) var(--ease-out-quart);
   }
+}
+
+[data-step="1"] .hero-frame-z {
+  --focus-x: 50%;
+  --focus-y: 46%;
+  --focus-zoom: 1.06;
+}
+
+[data-step="2"] .hero-frame-z {
+  --focus-x: 62%;
+  --focus-y: 50%;
+  --focus-zoom: 1;
+}
+
+/* ————— Fondu croisé des trois photographies —————
+ * Inerte tant qu'une seule image est fournie : le repli ne porte pas la
+ * classe hero-stage-z et n'est donc jamais concerné. Le jour où les trois
+ * fichiers existeront, ces règles suffiront — aucun code React à écrire. */
+.hero-stage-z {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  transition: opacity var(--dur-move) var(--ease-out-quart);
+}
+
+[data-step="0"] .hero-stage-z[data-stage="matiere"],
+[data-step="1"] .hero-stage-z[data-stage="detail"],
+[data-step="2"] .hero-stage-z[data-stage="piece"] {
+  opacity: 1;
 }
 
 /* ————— Les trois temps du regard —————
@@ -2693,6 +2736,27 @@
 [data-step="2"] .hero-step-z:nth-child(3) {
   opacity: 1;
   transform: none;
+}
+
+/* Sans JavaScript, data-step reste figé à « 0 » : deux des trois mots
+ * resteraient invisibles. Ils sont décoratifs et aria-hidden, donc rien
+ * d'essentiel n'était perdu — mais laisser du texte caché sans script
+ * contredit la règle posée pour les titres. On les montre donc tous les
+ * trois, en ligne, exactement comme en mouvement réduit.
+ *
+ * La règle vit ici, après celles qu'elle doit surclasser : à spécificité
+ * égale, c'est l'ordre du fichier qui tranche. */
+@media (scripting: none) {
+  .hero-steps-z {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .hero-step-z {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ————— Ce qui sert à acheter —————
