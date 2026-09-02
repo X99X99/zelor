@@ -225,8 +225,12 @@
   --sand: oklch(0.912 0.013 82);
 
   --muted: oklch(0.945 0.007 86);
-  /* Gris minéral doux, lisible sur ivoire */
-  --muted-foreground: oklch(0.505 0.019 258);
+  /* Gris minéral doux, lisible sur ivoire.
+   * 0,505 tenait 5,17 : 1 sur le papier, mais retombait à 4,42 au bas d'un
+   * panneau `surface-light`, dont le dégradé s'assombrit vers le bas — sous
+   * le seuil de 4,5. Un cran de luminance suffit à le tenir partout, sans
+   * que le gris cesse d'être discret. */
+  --muted-foreground: oklch(0.485 0.019 258);
   --stone: oklch(0.775 0.011 84);
   --mineral: oklch(0.665 0.014 256);
   /* Reflet argent très subtil */

@@ -119,7 +119,8 @@ test.describe("garde-fous typographiques", () => {
         // Le canvas convertit n'importe quelle notation CSS — oklch comprise —
         // en pixel réel. Lire les composantes de la chaîne donnerait des
         // valeurs fausses.
-        const toRGBA = (col: string) => {
+        type Couleur = { r: number; g: number; b: number; a: number };
+        const toRGBA = (col: string): Couleur => {
           ctx.clearRect(0, 0, 1, 1);
           ctx.fillStyle = "rgba(0,0,0,0)";
           ctx.fillStyle = col;
@@ -127,21 +128,50 @@ test.describe("garde-fous typographiques", () => {
           const d = ctx.getImageData(0, 0, 1, 1).data;
           return { r: d[0] ?? 0, g: d[1] ?? 0, b: d[2] ?? 0, a: (d[3] ?? 0) / 255 };
         };
-        // Remonte au premier fond opaque. Renvoie null si un dégradé, une
-        // image ou un filtre d'arrière-plan intervient avant : la couleur
-        // réellement peinte n'est alors pas déductible des styles calculés,
-        // et le test se tait plutôt que d'inventer un chiffre.
-        const fondDe = (el: Element) => {
+        const sur = (f: Couleur, b: Couleur): Couleur => ({
+          r: f.r * f.a + b.r * (1 - f.a),
+          g: f.g * f.a + b.g * (1 - f.a),
+          b: f.b * f.a + b.b * (1 - f.a),
+          a: 1,
+        });
+        // Couches peintes par un élément : sa couleur de fond, puis chaque
+        // arrêt de son dégradé. Un arrêt translucide n'est pas un fond opaque :
+        // le lire comme tel donnait des rapports de 1 : 1 impossibles.
+        const couchesDe = (el: Element): Couleur[][] => {
+          const cs = getComputedStyle(el);
+          const couches: Couleur[][] = [];
+          const fond = toRGBA(cs.backgroundColor);
+          if (fond.a > 0.001) couches.push([fond]);
+          const image = cs.backgroundImage;
+          if (image && image !== "none") {
+            const motif = /(oklab|oklch|rgba?|hsla?)\([^()]*\)|#[0-9a-f]{3,8}/gi;
+            const arrets = (image.match(motif) ?? []).map(toRGBA).filter((c) => c.a > 0.001);
+            if (arrets.length) couches.push(arrets);
+          }
+          return couches;
+        };
+        // Compose de la racine vers l'élément. Un dégradé donne une fourchette :
+        // on conserve le fond le plus sombre et le plus clair, et l'on retient
+        // ensuite le pire des deux rapports.
+        const fondsDe = (el: Element): Couleur[] => {
+          const chaine: Element[] = [];
           let n: Element | null = el;
           while (n) {
-            const cs = getComputedStyle(n);
-            if (cs.backgroundImage !== "none") return null;
-            if (cs.backdropFilter && cs.backdropFilter !== "none") return null;
-            const c = toRGBA(cs.backgroundColor);
-            if (c.a > 0.95) return c;
+            chaine.unshift(n);
             n = n.parentElement;
           }
-          return null;
+          let fonds: Couleur[] = [{ r: 255, g: 255, b: 255, a: 1 }];
+          for (const noeud of chaine) {
+            for (const couche of couchesDe(noeud)) {
+              const suivants: Couleur[] = [];
+              for (const base of fonds) for (const arret of couche) suivants.push(sur(arret, base));
+              suivants.sort((x, y) => lum(x) - lum(y));
+              const premier = suivants[0];
+              const dernier = suivants[suivants.length - 1];
+              if (premier && dernier) fonds = [premier, dernier];
+            }
+          }
+          return fonds;
         };
         const lum = (c: { r: number; g: number; b: number }) => {
           const f = (v: number) => {
@@ -150,34 +180,35 @@ test.describe("garde-fous typographiques", () => {
           };
           return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
         };
-        const racine = document.querySelector("main");
-        if (!racine) return [];
+        // `main` et `footer` seulement. L'en-tête est exclu : il porte un
+        // `backdrop-filter` au-dessus du contenu défilé, donc son fond réel
+        // dépend de ce qui passe dessous et n'est pas déductible des styles.
+        const racines = [document.querySelector("main"), document.querySelector("footer")];
         const trouves: Array<{ rapport: number; taille: number; texte: string }> = [];
         const cibles = "p,a,h1,h2,h3,h4,li,button,figcaption,small,dt,dd,label";
-        for (const el of Array.from(racine.querySelectorAll(cibles))) {
-          if (!el.getClientRects().length || el.classList.contains("sr-only")) continue;
-          const texte = (el.textContent ?? "").replace(/\s+/g, " ").trim();
-          if (!texte) continue;
-          const fond = fondDe(el);
-          if (!fond) continue;
-          const cs = getComputedStyle(el);
-          const fg = toRGBA(cs.color);
-          const mix = {
-            r: fg.r * fg.a + fond.r * (1 - fg.a),
-            g: fg.g * fg.a + fond.g * (1 - fg.a),
-            b: fg.b * fg.a + fond.b * (1 - fg.a),
-          };
-          const l1 = lum(mix);
-          const l2 = lum(fond);
-          const rapport = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-          const taille = Math.round(parseFloat(cs.fontSize));
-          const seuil = taille >= 24 ? 3 : 4.5;
-          if (rapport < seuil) {
-            trouves.push({
-              rapport: Math.round(rapport * 100) / 100,
-              taille,
-              texte: texte.slice(0, 44),
-            });
+        for (const racine of racines) {
+          if (!racine) continue;
+          for (const el of Array.from(racine.querySelectorAll(cibles))) {
+            if (!el.getClientRects().length || el.classList.contains("sr-only")) continue;
+            const texte = (el.textContent ?? "").replace(/\s+/g, " ").trim();
+            if (!texte) continue;
+            const cs = getComputedStyle(el);
+            const fg = toRGBA(cs.color);
+            const taille = Math.round(parseFloat(cs.fontSize));
+            const seuil = taille >= 24 ? 3 : 4.5;
+            let pire = Number.POSITIVE_INFINITY;
+            for (const fond of fondsDe(el)) {
+              const l1 = lum(sur(fg, fond));
+              const l2 = lum(fond);
+              pire = Math.min(pire, (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05));
+            }
+            if (pire < seuil) {
+              trouves.push({
+                rapport: Math.round(pire * 100) / 100,
+                taille,
+                texte: texte.slice(0, 44),
+              });
+            }
           }
         }
         return trouves;

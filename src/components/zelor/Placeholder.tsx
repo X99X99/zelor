@@ -8,10 +8,10 @@ const toneClass: Record<string, string> = {
 };
 
 const toneText: Record<string, string> = {
-  sand: "text-foreground/55",
-  stone: "text-foreground/55",
-  forest: "text-navy-foreground/55",
-  ink: "text-navy-foreground/55",
+  sand: "text-foreground/60",
+  stone: "text-foreground/60",
+  forest: "text-navy-foreground/60",
+  ink: "text-navy-foreground/60",
 };
 
 const toneLight: Record<string, string> = {
@@ -61,7 +61,7 @@ export function ImageSlot({
         className="pointer-events-none absolute inset-0 rounded-[var(--radius-media)] ring-1 ring-inset ring-navy/8"
       />
       <span
-        className={`eyebrow relative ${toneText[tone] ?? "text-foreground/55"} px-4 text-center`}
+        className={`eyebrow relative ${toneText[tone] ?? "text-foreground/60"} px-4 text-center`}
       >
         {caption}
       </span>

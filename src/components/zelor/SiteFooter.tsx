@@ -63,7 +63,7 @@ export function SiteFooter() {
         aria-labelledby="footer-signature"
         className="container-z border-t border-navy-foreground/12 py-24 md:py-32"
       >
-        <p className="eyebrow text-navy-foreground/55">Maison ZELOR</p>
+        <p className="eyebrow text-navy-foreground/60">Maison ZELOR</p>
         <LineReveal id="footer-signature" className="mt-6 max-w-5xl display-2-z">
           L'élégance dans chaque détail, pour faire de chaque détail une <em>promesse</em>.
         </LineReveal>
@@ -80,7 +80,7 @@ export function SiteFooter() {
         </div>
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>
-            <h2 className="eyebrow text-navy-foreground/55">{column.title}</h2>
+            <h2 className="eyebrow text-navy-foreground/60">{column.title}</h2>
             {/* Le retrait négatif annule le `padding-inline` de la capsule :
                 sans lui, le libellé du lien se posait 12 px à droite du titre
                 de sa propre colonne. Même compensation que la navigation du
@@ -102,7 +102,7 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
-      <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 py-7 text-xs text-navy-foreground/55 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 py-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>

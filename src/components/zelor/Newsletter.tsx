@@ -47,7 +47,7 @@ export function Newsletter() {
               aria-describedby={error ? "newsletter-error" : undefined}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Votre adresse email"
-              className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/55"
+              className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/60"
             />
           </div>
           <button type="submit" className="btn-veil shrink-0 px-8">
@@ -68,7 +68,7 @@ export function Newsletter() {
             Merci — vous recevrez la lettre de la Maison ZELOR.
           </p>
         )}
-        <p className="mt-3 text-xs text-navy-foreground/55">
+        <p className="mt-3 text-xs text-navy-foreground/60">
           Vous pouvez vous désinscrire à tout moment. Vos données sont utilisées uniquement pour
           vous envoyer nos communications.
         </p>

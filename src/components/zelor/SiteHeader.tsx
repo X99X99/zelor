@@ -134,7 +134,7 @@ function LanguageMenu() {
                 role="option"
                 aria-selected={lang.active}
                 disabled={!lang.active}
-                className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-[background-color,padding] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-navy-foreground/10 hover:px-5 disabled:cursor-not-allowed disabled:text-navy-foreground/55 disabled:hover:px-4"
+                className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-[background-color,padding] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-navy-foreground/10 hover:px-5 disabled:cursor-not-allowed disabled:text-navy-foreground/60 disabled:hover:px-4"
               >
                 <span>{lang.label}</span>
                 {lang.active ? (
@@ -188,7 +188,7 @@ function SearchPanel({ onClose, closing }: { onClose: () => void; closing: boole
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Rechercher une pièce, une ligne…"
-            className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/55"
+            className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/60"
           />
         </div>
         <button type="submit" className="btn-veil hidden shrink-0 sm:inline-flex">
@@ -589,7 +589,7 @@ export function SiteHeader() {
             aria-label="Navigation mobile"
             className="focal-list container-z flex flex-col pt-6 pb-16"
           >
-            <p className="eyebrow mb-4 text-navy-foreground/55">Collection</p>
+            <p className="eyebrow mb-4 text-navy-foreground/60">Collection</p>
             {MAIN_NAV.map((item) => (
               <NavLink
                 key={item.to}
@@ -612,7 +612,7 @@ export function SiteHeader() {
                 14 px, soit une autre police et moins de la moitié de la taille,
                 ce qui cassait la hiérarchie du panneau. « Langue » reste en
                 Manrope : c'est un contrôle, pas une entrée de navigation. */}
-            <p className="eyebrow mt-16 mb-4 text-navy-foreground/55">Services</p>
+            <p className="eyebrow mt-16 mb-4 text-navy-foreground/60">Services</p>
             <NavLink
               to="/compte"
               variant="sheet"

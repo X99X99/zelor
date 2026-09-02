@@ -5,7 +5,9 @@ export type Crumb = { label: string; to?: string };
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <nav aria-label="Fil d'Ariane" className="container-z pt-6">
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+      {/* Palier secondaire plutôt que `muted-foreground` : à 12 px sur le
+          papier, ce jeton tombait à 4,42 : 1, sous le seuil de 4,5. */}
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground/75">
         <li>
           <Link to="/" className="link-underline">
             Accueil

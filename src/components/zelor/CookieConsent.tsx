@@ -66,7 +66,7 @@ export function CookieConsent() {
       className={`${closing ? "slide-down-out" : "slide-up-lux"} fixed inset-x-4 z-60 md:inset-x-auto md:right-8 md:max-w-md`}
     >
       <div className="panel-navy p-6 md:p-7">
-        <p className="eyebrow text-navy-foreground/55">Confidentialité</p>
+        <p className="eyebrow text-navy-foreground/60">Confidentialité</p>
         <h2 className="mt-2 font-display text-2xl text-navy-foreground">Une expérience mesurée.</h2>
         <p className="mt-3 text-sm text-navy-foreground/75">
           Nous n'activons aucune mesure d'audience ni cookie marketing sans votre accord. Les
