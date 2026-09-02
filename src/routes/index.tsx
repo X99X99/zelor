@@ -53,7 +53,7 @@ function Home() {
           seule, et la phrase qui l'explique vient après, dans une colonne
           étroite. On reprend cet ordre — l'accroche en sans serré, le détail
           en petit, et les deux chemins d'entrée seulement à la fin. */}
-      <Reveal as="section" className="container-z rhythm-short-z text-center">
+      <Reveal as="section" className="container-z module-silence-z text-center">
         <p className="lead-z mx-auto max-w-3xl">
           Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs
           matières et leur tenue dans le temps.
@@ -73,7 +73,7 @@ function Home() {
       </Reveal>
 
       {/* B. Promesse */}
-      <Reveal as="section" aria-labelledby="promesse-title" className="container-z rhythm-z">
+      <Reveal as="section" aria-labelledby="promesse-title" className="container-z module-breath-z">
         <h2 id="promesse-title" className="sr-only">
           Nos engagements
         </h2>
@@ -88,7 +88,11 @@ function Home() {
       </Reveal>
 
       {/* C. Collection */}
-      <Reveal as="section" aria-labelledby="collection-title" className="container-z rhythm-long-z">
+      <Reveal
+        as="section"
+        aria-labelledby="collection-title"
+        className="container-z module-develop-z"
+      >
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Sélection</p>
@@ -118,7 +122,7 @@ function Home() {
 
       {/* D. Storytelling */}
       <Reveal as="section" replay className="surface-light hairline-z">
-        <div className="container-z rhythm-long-z grid gap-10 md:grid-cols-2 md:items-center">
+        <div className="container-z module-develop-z grid gap-10 md:grid-cols-2 md:items-center">
           <div>
             <SplitReveal text="Le goût des choses bien *choisies.*" className="display-1-z" />
             <p className="prose-z mt-6 max-w-lg text-foreground/80">
@@ -140,7 +144,7 @@ function Home() {
       </Reveal>
 
       {/* E. Qualité */}
-      <Reveal as="section" aria-labelledby="qualite-title" className="container-z rhythm-short-z">
+      <Reveal as="section" aria-labelledby="qualite-title" className="container-z module-silence-z">
         <p className="eyebrow">Qualité</p>
         <SplitReveal
           id="qualite-title"
@@ -178,7 +182,7 @@ function Home() {
       <Reveal
         as="section"
         replay
-        className="container-z rhythm-long-z grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center"
+        className="container-z module-develop-z grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center"
       >
         <HoverVideo
           className="clip-reveal-z"
@@ -202,7 +206,7 @@ function Home() {
       </Reveal>
 
       {/* G. Avis */}
-      <section aria-labelledby="avis-title" className="container-z pb-4">
+      <section aria-labelledby="avis-title" className="container-z module-close-z">
         <h2 id="avis-title" className="caps-z display-2-z">
           Avis clients
         </h2>

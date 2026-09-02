@@ -718,31 +718,63 @@
   }
 }
 
-/* ————— L'échelle de respiration —————
+/* ————— L'échelle de modules —————
  *
- * Mesuré chez Vero : leurs neuf blocs font 900, 2700, 3840, 290, 2410, 290,
- * 1268, 1374 et 230 px. Ce n'est pas la hauteur de chaque bloc qui fait leur
- * rythme, c'est l'alternance — un bloc très long, puis un très court qui sert
- * de silence, puis un long de nouveau.
+ * Relevé sur cinq pages de Vero, à 1440 × 900. Leurs hauteurs de bloc ne sont
+ * pas libres : ce sont des modules qui reviennent. Le bloc de 290 px apparaît
+ * cinq fois sur trois pages — c'est leur silence. Celui de 668 px revient sur
+ * « about » et sur « process ». Celui de 230 px ferme systématiquement avant
+ * le pied de page.
  *
- * Notre accueil enchaînait cinq sections de hauteur comparable : py-24 sur
- * trois d'entre elles, py-20 sur deux autres. Un métronome, pas un rythme.
+ * Ce n'est donc pas la hauteur de chaque bloc qui fait leur rythme, c'est
+ * l'alternance de modules nommés : un développement, puis un silence, puis un
+ * développement de nouveau.
  *
- * Trois paliers, donc, et le choix se fait par intention plutôt que par
- * nombre : une section qui affirme respire long, une section qui ponctue
- * respire court. Les valeurs sont fluides et bornées en vh, pour que le
- * rythme tienne aussi bien sur un portable que sur un grand écran.
+ * Le mécanisme est `min-height`, jamais `height`. Un plancher garantit le
+ * module sans jamais rogner : si le contenu dépasse, la section grandit. Une
+ * hauteur fixe couperait le texte au premier paragraphe de trop.
+ *
+ * Les bornes sont exprimées en vw parce que c'est la dimension sur laquelle
+ * les valeurs ont été relevées : 290 px valent 20 vw à 1440 de large. Le
+ * rythme se resserre donc proportionnellement sur un portable, au lieu de
+ * réserver des vides absurdes.
  */
-@utility rhythm-short-z {
-  padding-block: clamp(3rem, 6vh, 5rem);
+:root {
+  --module-close: clamp(7rem, 16vw, 14.375rem);
+  --module-silence: clamp(8rem, 20vw, 18.125rem);
+  --module-breath: clamp(20rem, 46vw, 41.75rem);
+  --module-develop: clamp(28rem, 73vw, 65.625rem);
+  --module-immersion: clamp(40rem, 132vw, 118.75rem);
 }
 
-@utility rhythm-z {
-  padding-block: clamp(5rem, 11vh, 8.5rem);
+/* Fermeture — le dernier souffle avant le pied de page. */
+@utility module-close-z {
+  min-height: var(--module-close);
+  padding-block: clamp(2.5rem, 5vw, 4rem);
 }
 
-@utility rhythm-long-z {
-  padding-block: clamp(7rem, 17vh, 13rem);
+/* Silence — une section qui ponctue, jamais qui développe. */
+@utility module-silence-z {
+  min-height: var(--module-silence);
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+/* Respiration — une section qui pose une idée et s'arrête. */
+@utility module-breath-z {
+  min-height: var(--module-breath);
+  padding-block: clamp(4.5rem, 9vw, 7.5rem);
+}
+
+/* Développement — une section qui affirme, avec image ou grille. */
+@utility module-develop-z {
+  min-height: var(--module-develop);
+  padding-block: clamp(6rem, 12vw, 10rem);
+}
+
+/* Immersion — réservé aux scènes. Une seule par page, jamais deux. */
+@utility module-immersion-z {
+  min-height: var(--module-immersion);
+  padding-block: clamp(7rem, 15vw, 12rem);
 }
 
 /* Filet de séparation éditorial */
