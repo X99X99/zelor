@@ -184,9 +184,10 @@ Le défilement ne fait pas descendre la page : il fait **grandir l'image** jusqu
 qu'elle passe derrière les mots.
 
 Chez eux la scène est rendue en WebGL. Le dépôt la reproduit en CSS
-(`HeroScroll.tsx` + `.hero-scroll-z` dans `styles.css`) : section de 250 vh, contenu
-collant, et une seule variable `--p` de 0 à 1 écrite par un écouteur de défilement
-throttlé en `requestAnimationFrame`. **Garde cette approche** — elle donne le même
+(`HeroScroll.tsx` + `.hero-scroll-z` dans `styles.css`) : section de **320 vh** dont
+**220 vh de course utile**, un contenu collant de **100 svh**, et une seule variable
+`--p` de 0 à 1 écrite par un écouteur de défilement throttlé en
+`requestAnimationFrame`. **Garde cette approche** — elle donne le même
 résultat sans Three.js ni seconde de chargement.
 
 ---
