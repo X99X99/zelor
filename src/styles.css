@@ -901,6 +901,58 @@
   }
 }
 
+/* ————— Zones tactiles des commandes utilitaires —————
+ *
+ * Quatre commandes autonomes mesuraient moins que le minimum : le fil
+ * d'Ariane, « Haut de page », « Personnaliser mes préférences » — 20 px de
+ * haut, sous le seuil AA de 24 — et la fermeture du bandeau, 26 × 26, sous
+ * les 44 recommandés.
+ *
+ * Le correctif passe par un pseudo-élément et non par du remplissage, pour
+ * une raison de composition : agrandir réellement le bouton de fermeture
+ * ferait passer le bandeau d'environ 37 à 64 px, soit près du double. Un
+ * pseudo-élément absolu n'occupe aucune place dans le flux — la boîte de la
+ * commande ne bouge pas, le texte garde sa taille, et seule la surface
+ * cliquable s'étend.
+ *
+ * Le seul risque est un rognage par un ancêtre en overflow hidden. Il se
+ * mesure par elementFromPoint, il ne se suppose pas.
+ */
+@utility tap-target-z {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Le fil d'Ariane reçoit le même traitement par sélecteur plutôt que par
+ * classe : son composant n'est pas dans le périmètre autorisé, et une règle
+ * ciblée suffit. */
+nav[aria-label="Fil d'Ariane"] a {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 /* Filet de séparation éditorial */
 @utility rule-z {
   border-top: 1px solid var(--color-border);

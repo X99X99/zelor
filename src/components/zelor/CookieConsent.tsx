@@ -87,7 +87,7 @@ export function CookieConsent() {
         <Link
           to="/cookies"
           onClick={dismiss}
-          className="link-underline mt-4 text-xs tracking-wide text-navy-foreground/70 hover:text-navy-foreground"
+          className="link-underline tap-target-z mt-4 text-xs tracking-wide text-navy-foreground/70 hover:text-navy-foreground"
         >
           Personnaliser mes préférences
         </Link>

@@ -107,7 +107,7 @@ export function SiteFooter() {
           <button
             type="button"
             onClick={scrollToTop}
-            className="link-underline press-z text-navy-foreground/70 hover:text-navy-foreground"
+            className="link-underline press-z tap-target-z text-navy-foreground/70 hover:text-navy-foreground"
           >
             Haut de page
           </button>
