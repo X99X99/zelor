@@ -14,16 +14,42 @@ import { Reveal } from "./Reveal";
  *    découpe par mot, jamais par lettre : une lettre qui bouge seule est un
  *    effet, un mot qui se lève est une phrase qui se compose.
  *
- * 2. Une ligne de capitales romaines qu'un seul mot en bas-de-casse italique
- *    vient contredire. C'est la construction de tous leurs titres, et elle ne
- *    tient que par l'exception : deux mots penchés et il n'y a plus d'accent.
+ * 2. Une ligne romaine qu'un passage en italique vient contredire. C'est la
+ *    construction de tous leurs titres, et elle ne tient que par l'exception :
+ *    tout pencher, c'est ne plus rien accentuer.
  *
- * L'accent se note dans le texte lui-même, entre astérisques :
- *   « L'élégance dans chaque *détail* »
- * Le mot marqué sort des capitales et passe en italique ; tout le reste suit
- * la règle de la feuille de style. On note l'accent dans la chaîne plutôt que
- * par un index, parce que le mot penché n'est presque jamais le premier.
+ * L'accent se note dans le texte lui-même, entre astérisques, et il peut
+ * couvrir plusieurs mots :
+ *   « Le goût des choses bien *choisies.* »
+ *   « Ce que nous regardons *avant de sélectionner* une pièce. »
+ *
+ * Le fragment est repéré avant le découpage, pas après : la détection portait
+ * auparavant sur chaque mot pris isolément, si bien qu'un fragment de
+ * plusieurs mots laissait ses astérisques à l'écran. On lit donc la chaîne
+ * une fois, on en extrait les passages penchés, puis on découpe.
  */
+
+/** Un mot prêt à être posé : son texte, et s'il appartient à un passage penché. */
+type Word = { text: string; accent: boolean };
+
+/**
+ * Découpe la chaîne en mots, en marquant ceux qui tombent dans un passage
+ * entre astérisques. Une astérisque non refermée est traitée comme du texte :
+ * mieux vaut un titre correct qu'un titre à moitié penché.
+ */
+function parseWords(text: string): Word[] {
+  const words: Word[] = [];
+  for (const segment of text.split(/(\*[^*]+\*)/g)) {
+    if (!segment) continue;
+    const accent = segment.startsWith("*") && segment.endsWith("*") && segment.length > 2;
+    const plain = accent ? segment.slice(1, -1) : segment;
+    for (const word of plain.split(" ")) {
+      if (word) words.push({ text: word, accent });
+    }
+  }
+  return words;
+}
+
 export function SplitReveal({
   text,
   as: Tag = "h2",
@@ -35,27 +61,23 @@ export function SplitReveal({
   className?: string;
   [key: string]: unknown;
 }) {
-  const words = text.split(" ").filter(Boolean);
+  const words = parseWords(text);
 
   return (
     <Reveal as={Tag} className={`split-host-z ${className}`} {...rest}>
-      {words.map((word, index) => {
-        const accent = word.startsWith("*") && word.endsWith("*") && word.length > 2;
-        const plain = accent ? word.slice(1, -1) : word;
-        return (
-          // Le mot et son espace vivent dans la même fenêtre : sans cela,
-          // l'espace reste fixe et la ligne se disloque pendant la montée.
-          <span key={`${word}-${index}`} className="split-line-z">
-            <span
-              className={`split-word-z${accent ? " accent-z" : ""}`}
-              style={{ "--word-index": index } as CSSProperties}
-            >
-              {plain}
-              {index < words.length - 1 ? " " : ""}
-            </span>
+      {words.map((word, index) => (
+        // Le mot et son espace vivent dans la même fenêtre : sans cela,
+        // l'espace reste fixe et la ligne se disloque pendant la montée.
+        <span key={`${word.text}-${index}`} className="split-line-z">
+          <span
+            className={`split-word-z${word.accent ? " accent-z" : ""}`}
+            style={{ "--word-index": index } as CSSProperties}
+          >
+            {word.text}
+            {index < words.length - 1 ? " " : ""}
           </span>
-        );
-      })}
+        </span>
+      ))}
     </Reveal>
   );
 }

@@ -148,7 +148,7 @@ function Home() {
         <p className="eyebrow">Qualité</p>
         <SplitReveal
           id="qualite-title"
-          text="Ce que nous regardons avant de sélectionner une pièce."
+          text="Ce que nous regardons *avant de sélectionner* une pièce."
           className="mt-4 max-w-4xl display-2-z"
         />
         <dl className="mt-10 grid gap-8 md:grid-cols-3">

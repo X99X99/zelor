@@ -620,7 +620,7 @@
   font-size: 1.25rem;
   line-height: 1.5;
   font-weight: 400;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.012em;
 }
 
 /* ————— L'échelle typographique relevée chez Vero —————
@@ -666,14 +666,15 @@
 /* 120 px. Les titres de section majeurs. */
 @utility display-1-z {
   font-size: clamp(2.25rem, 8.3vw, 7.5rem);
-  line-height: 1.06;
-  letter-spacing: -0.005em;
+  line-height: 1.02;
+  letter-spacing: -0.008em;
 }
 
 /* 67,7 px. Le palier intermédiaire, pour les titres de page. */
 @utility display-2-z {
   font-size: clamp(1.875rem, 4.7vw, 4.25rem);
-  line-height: 1.06;
+  line-height: 1.04;
+  letter-spacing: -0.004em;
 }
 
 /* 21 px en capitales. Les intertitres. */
