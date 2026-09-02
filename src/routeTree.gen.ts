@@ -24,6 +24,7 @@ import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as NouveautesRouteImport } from './routes/nouveautes'
 import { Route as PaiementsRouteImport } from './routes/paiements'
 import { Route as PanierRouteImport } from './routes/panier'
+import { Route as PrototypeHeroRouteImport } from './routes/prototype-hero'
 import { Route as QualiteRouteImport } from './routes/qualite'
 import { Route as RetoursRouteImport } from './routes/retours'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -107,6 +108,11 @@ const PanierRoute = PanierRouteImport.update({
   path: '/panier',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrototypeHeroRoute = PrototypeHeroRouteImport.update({
+  id: '/prototype-hero',
+  path: '/prototype-hero',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QualiteRoute = QualiteRouteImport.update({
   id: '/qualite',
   path: '/qualite',
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/nouveautes': typeof NouveautesRoute
   '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
+  '/prototype-hero': typeof PrototypeHeroRoute
   '/qualite': typeof QualiteRoute
   '/retours': typeof RetoursRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -184,6 +191,7 @@ export interface FileRoutesByTo {
   '/nouveautes': typeof NouveautesRoute
   '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
+  '/prototype-hero': typeof PrototypeHeroRoute
   '/qualite': typeof QualiteRoute
   '/retours': typeof RetoursRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -209,6 +217,7 @@ export interface FileRoutesById {
   '/nouveautes': typeof NouveautesRoute
   '/paiements': typeof PaiementsRoute
   '/panier': typeof PanierRoute
+  '/prototype-hero': typeof PrototypeHeroRoute
   '/qualite': typeof QualiteRoute
   '/retours': typeof RetoursRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
     | '/nouveautes'
     | '/paiements'
     | '/panier'
+    | '/prototype-hero'
     | '/qualite'
     | '/retours'
     | '/sitemap.xml'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/nouveautes'
     | '/paiements'
     | '/panier'
+    | '/prototype-hero'
     | '/qualite'
     | '/retours'
     | '/sitemap.xml'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/nouveautes'
     | '/paiements'
     | '/panier'
+    | '/prototype-hero'
     | '/qualite'
     | '/retours'
     | '/sitemap.xml'
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   NouveautesRoute: typeof NouveautesRoute
   PaiementsRoute: typeof PaiementsRoute
   PanierRoute: typeof PanierRoute
+  PrototypeHeroRoute: typeof PrototypeHeroRoute
   QualiteRoute: typeof QualiteRoute
   RetoursRoute: typeof RetoursRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -424,6 +437,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PanierRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prototype-hero': {
+      id: '/prototype-hero'
+      path: '/prototype-hero'
+      fullPath: '/prototype-hero'
+      preLoaderRoute: typeof PrototypeHeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qualite': {
       id: '/qualite'
       path: '/qualite'
@@ -492,6 +512,7 @@ const rootRouteChildren: RootRouteChildren = {
   NouveautesRoute: NouveautesRoute,
   PaiementsRoute: PaiementsRoute,
   PanierRoute: PanierRoute,
+  PrototypeHeroRoute: PrototypeHeroRoute,
   QualiteRoute: QualiteRoute,
   RetoursRoute: RetoursRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

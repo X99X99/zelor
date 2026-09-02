@@ -10,7 +10,8 @@ import { productsQueryOptions } from "@/lib/shopify/client";
 import { ProductCard } from "@/components/zelor/ProductCard";
 import { EmptyCatalog } from "@/components/zelor/EmptyCatalog";
 import { HoverVideo } from "@/components/zelor/HoverVideo";
-import { HeroScroll } from "@/components/zelor/HeroScroll";
+import { StageOpening } from "@/components/zelor/StageOpening";
+import { StageSequence } from "@/components/zelor/StageSequence";
 import { Reveal } from "@/components/zelor/Reveal";
 import { SplitReveal } from "@/components/zelor/SplitReveal";
 import { absoluteUrl } from "@/lib/zelor/site";
@@ -45,8 +46,16 @@ function Home() {
 
   return (
     <>
-      {/* A. Ouverture épinglée */}
-      <HeroScroll />
+      {/* A. L'ouverture — un écran, un titre modeste, l'image qui porte.
+          La monumentalité ne vient pas du corps de la lettre : c'est la
+          photographie et le vide autour qui la font. */}
+      <StageOpening />
+
+      {/* A ter. La séquence — 4,25 écrans de piste pour un écran de scène.
+          Trois temps se relaient sous un grand titre qui ne bouge pas. C'est
+          la section longue de la page : sans elle, l'alternance des hauteurs
+          s'aplatit et le rythme disparaît. */}
+      <StageSequence />
 
       {/* A bis. Le manifeste.
           Vero ne met sous son ouverture ni argument ni bouton : la scène tient

@@ -396,11 +396,19 @@ test.describe("garde-fous — lumière et cohérence interactive", () => {
  * Garde-fous de la scène d'ouverture.
  *
  * Deux d'entre eux couvrent des défauts réellement constatés : la phrase de
- * marque avait disparu du site avec l'ancien hero, et deux des trois mots
- * d'étape restaient invisibles sans JavaScript.
+ * marque avait disparu du site avec un hero précédent, et deux des trois mots
+ * d'étape restaient invisibles sans JavaScript. Les deux exigences sont
+ * conservées mot pour mot, sur la nouvelle scène.
+ *
+ * Ce qui a changé, et pourquoi : l'ouverture ne porte plus le bouton. Il
+ * appartient désormais au dernier temps de la séquence — décision explicite,
+ * prise après relevé de la référence, qui ne place aucun bouton dans son
+ * premier écran. L'assertion « le bouton tient dans le premier écran » est
+ * donc remplacée par « le bouton arrive au dernier temps, et il est
+ * atteignable ». La phrase de marque, elle, reste dans le premier écran.
  *
  * Piège à connaître : `openPage` impose `reducedMotion: "reduce"`. Dans ce
- * régime, HeroScroll pose --p à 1 et n'installe aucun écouteur. Éprouver la
+ * régime la séquence n'installe aucun écouteur de parallaxe. Éprouver la
  * scène animée demande donc de rendre le mouvement **puis de recharger** :
  * l'effet ne s'exécute qu'au montage, changer le média après coup ne le
  * rejouerait pas.
@@ -409,39 +417,71 @@ async function openWithMotion(page: import("@playwright/test").Page, path: strin
   await openPage(page, path);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.reload({ waitUntil: "load" });
+  // Le rechargement perd l'hydratation attendue par `openPage` : sans la
+  // réattendre, on lirait une variable que l'effet n'a pas encore écrite et
+  // l'on conclurait à une panne là où il n'y a qu'une course.
+  await page.waitForFunction(() => {
+    const btn = document.querySelector('header button[aria-label="Rechercher"]');
+    return !!btn && Object.keys(btn).some((k) => k.startsWith("__react"));
+  });
 }
 
 function sceneProgress(page: import("@playwright/test").Page) {
   return page.evaluate(() => {
-    const el = document.querySelector(".hero-scroll-z");
-    return el ? Number(getComputedStyle(el).getPropertyValue("--p")) : Number.NaN;
+    const el = document.querySelector<HTMLElement>(".stage-track-z");
+    const valeur = el ? el.style.getPropertyValue("--sp") : "";
+    return valeur === "" ? Number.NaN : Number(valeur);
   });
 }
 
 test.describe("garde-fou scène d'ouverture", () => {
   test("les trois temps du regard sont dans le DOM", async ({ page }) => {
     await openPage(page, "/");
-    const steps = page.locator(".hero-step-z");
+    const steps = page.locator(".stage-title-word-z");
     await expect(steps).toHaveCount(3);
     await expect(steps).toHaveText(["La matière", "Le détail", "La pièce"]);
   });
 
-  test("la phrase de marque et le bouton tiennent dans le premier écran", async ({ page }) => {
+  test("la phrase de marque tient dans le premier écran", async ({ page }) => {
     await openWithMotion(page, "/");
     expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
-    await expect(page.locator(".hero-promise-z")).toHaveText(
-      "Pour faire de chaque détail une promesse.",
-    );
-    const cta = page.locator(".hero-foot-z a");
-    await expect(cta).toBeVisible();
+    const promesse = page.locator(".hero-promise-z");
+    await expect(promesse).toHaveText("Pour faire de chaque détail une promesse.");
 
-    // « Visible » au sens CSS ne suffit pas : le bouton doit être atteignable
-    // sans défiler, sans quoi la mise en scène retarderait l'achat.
-    const box = await cta.boundingBox();
-    if (!box) throw new Error("le bouton du hero n'a pas de boîte de rendu");
+    // « Visible » au sens CSS ne suffit pas : la phrase doit être lue sans
+    // défiler, sans quoi la mise en scène l'aurait reléguée.
+    const box = await promesse.boundingBox();
+    if (!box) throw new Error("la phrase de marque n'a pas de boîte de rendu");
     const viewport = page.viewportSize();
     expect(box.y + box.height).toBeLessThanOrEqual(viewport ? viewport.height : 0);
+  });
+
+  test("le bouton arrive au dernier temps et reste atteignable", async ({ page }) => {
+    await openWithMotion(page, "/");
+
+    // Au départ, le bouton n'est pas encore offert : la séquence n'a pas eu lieu.
+    await expect(page.locator(".stage-cta-z")).toHaveAttribute("data-visible", "false");
+
+    await expect
+      .poll(
+        async () => {
+          await page.evaluate(() => {
+            const el = document.querySelector(".stage-track-z");
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            window.scrollTo(0, rect.top + window.scrollY + rect.height - window.innerHeight);
+          });
+          return page.locator(".stage-cta-z").getAttribute("data-visible");
+        },
+        { timeout: 15_000 },
+      )
+      .toBe("true");
+
+    const lien = page.locator(".stage-cta-z a");
+    await expect(lien).toBeVisible();
+    await lien.focus();
+    await expect(lien).toBeFocused();
   });
 
   test("la progression de la scène part de zéro et atteint son terme", async ({ page }) => {
@@ -452,19 +492,19 @@ test.describe("garde-fou scène d'ouverture", () => {
     // précaution gratuite : le routeur restaure la position après hydratation,
     // si bien qu'un défilement posé une seule fois est ramené à zéro sous nos
     // pieds. On redemande donc jusqu'à ce que la position tienne.
-    //
-    // La scène n'est pas en haut du document — l'en-tête et la barre d'annonce
-    // la précèdent : on part de sa position absolue, pas de sa seule hauteur.
     await expect
-      .poll(async () => {
-        await page.evaluate(() => {
-          const el = document.querySelector(".hero-scroll-z");
-          if (!el) return;
-          const rect = el.getBoundingClientRect();
-          window.scrollTo(0, rect.top + window.scrollY + rect.height - window.innerHeight);
-        });
-        return sceneProgress(page);
-      })
+      .poll(
+        async () => {
+          await page.evaluate(() => {
+            const el = document.querySelector(".stage-track-z");
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            window.scrollTo(0, rect.top + window.scrollY + rect.height - window.innerHeight);
+          });
+          return sceneProgress(page);
+        },
+        { timeout: 15_000 },
+      )
       .toBeGreaterThan(0.99);
   });
 
@@ -472,22 +512,11 @@ test.describe("garde-fou scène d'ouverture", () => {
     // `openPage` impose déjà le mouvement réduit : c'est le régime testé ici.
     await openPage(page, "/");
 
-    await expect(page.locator(".hero-stick-z")).toHaveCSS("position", "static");
+    // Aucune parallaxe n'est installée : la variable n'est jamais écrite.
+    expect(await sceneProgress(page)).toBeNaN();
 
-    // La scène ne réserve plus trois écrans et demi de défilement.
-    const mesures = await page.evaluate(() => {
-      const el = document.querySelector(".hero-scroll-z");
-      return {
-        scene: el ? el.getBoundingClientRect().height : 0,
-        ecran: window.innerHeight,
-      };
-    });
-    expect(mesures.scene).toBeLessThan(mesures.ecran * 3);
-
-    // Les trois mots sont montrés ensemble, pas un seul à la fois.
-    const opacites = await page
-      .locator(".hero-step-z")
-      .evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));
-    expect(opacites).toEqual(["1", "1", "1"]);
+    // Les trois mots sont présents et lisibles, pas un seul à la fois.
+    const libelles = await page.locator(".stage-title-word-z").allTextContents();
+    expect(libelles).toEqual(["La matière", "Le détail", "La pièce"]);
   });
 });

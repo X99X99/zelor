@@ -161,6 +161,10 @@
   --dur-touch: 300ms;
   --dur-move: 650ms;
   --dur-reveal: 1200ms;
+  /* Le masque est le geste le plus lent du répertoire : là où une révélation
+   * fait apparaître, un masque découvre, et le regard suit l'arête. Mesuré à
+   * 1600 ms sur la référence, seule durée du relevé qui manquait ici. */
+  --dur-mask: 1600ms;
   /* Décalage entre éléments d'une même cascade. Cucinelli et Vero emploient
    * tous deux 100 ms. Aucun décalage initial : le premier part tout de suite. */
   --stagger-step: 100ms;
@@ -3064,5 +3068,450 @@ nav[aria-label="Fil d'Ariane"] a {
 
   .hero-frame-z {
     width: min(34rem, 80vw);
+  }
+}
+
+/* ————— Prototype : ouverture et séquence des trois temps —————
+ *
+ * Toute la profondeur de ce bloc vient de deux mécaniques, et d'aucune 3D :
+ * une piste plus haute que sa scène, et des calques qui ne se déplacent pas à
+ * la même vitesse. Rien n'est animé qui touche à la mise en page — uniquement
+ * `transform`, `opacity` et `clip-path`.
+ *
+ * `--sp` est la seule valeur continue : la progression de la piste, écrite par
+ * le composant une fois par trame. Elle vaut 0 en haut, 1 en bas.
+ */
+
+/* ——— L'ouverture : exactement un écran ——— */
+
+@utility open-track-z {
+  position: relative;
+  height: 100svh;
+}
+
+@utility open-scene-z {
+  position: sticky;
+  top: 0;
+  display: grid;
+  height: 100svh;
+  overflow: hidden;
+  align-items: center;
+  justify-items: center;
+}
+
+@utility open-layer-z {
+  position: absolute;
+  inset: 0;
+  /* Voile horizontal : il assombrit la moitié gauche, là où le mur est nu et
+   * où le texte se pose, et se retire vers la droite pour laisser la pièce
+   * intacte. Un voile uniforme ternirait l'image sans garantir le contraste. */
+  &[data-layer="voile"] {
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--navy-deep) 82%, transparent) 0%,
+        color-mix(in oklab, var(--navy-deep) 58%, transparent) 38%,
+        transparent 72%
+      ),
+      linear-gradient(to bottom, transparent 60%, color-mix(in oklab, var(--navy-deep) 55%, transparent) 100%);
+  }
+}
+
+@utility open-media-z {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  /* Le sujet est décalé à droite, le mur nu reste à gauche pour le texte. */
+  object-position: 70% 50%;
+}
+
+@utility open-content-z {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  text-align: left;
+  color: var(--color-navy-foreground);
+  @media (width >= 768px) {
+    padding-inline: 2rem;
+    /* Le texte n'occupe que la moitié gauche : la pièce garde son air. */
+    & > * {
+      max-width: min(34rem, 46%);
+    }
+  }
+}
+
+@utility open-eyebrow-z {
+  color: color-mix(in oklab, var(--color-navy-foreground) 75%, transparent);
+}
+
+/* Le titre d'ouverture reste petit : c'est l'image et le vide qui portent la
+ * monumentalité, pas le corps de la lettre. */
+@utility open-title-z {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+@utility open-promise-z {
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.35;
+  color: color-mix(in oklab, var(--color-navy-foreground) 82%, transparent);
+}
+
+@utility open-cue-z {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-navy-foreground) 60%, transparent);
+}
+
+@utility open-cue-line-z {
+  display: block;
+  height: 2.5rem;
+  width: 1px;
+  background: currentColor;
+  transform-origin: top center;
+  animation: cue-z 5200ms var(--ease-in-out-quart) infinite;
+}
+
+@keyframes cue-z {
+  0%,
+  100% {
+    opacity: 0.2;
+    scale: 1 0.35;
+  }
+  50% {
+    opacity: 0.85;
+    scale: 1 1;
+  }
+}
+
+/* ——— La séquence : trois écrans de piste, un écran de scène ——— */
+
+/* 4,25 écrans de piste pour un écran de scène.
+ *
+ * La longueur n'est pas décorative : c'est elle qui crée l'amplitude du
+ * rythme de la page. La section la plus longue de la référence vaut 4,27
+ * écrans, la plus courte 0,26 — un rapport de 16. Sans une section longue,
+ * l'alternance s'aplatit et la page se lit comme une suite de blocs égaux.
+ *
+ * Les trois temps ne durent pas également : 1,25 / 1,50 / 1,50 écran. Le
+ * premier temps s'installe vite, les deux suivants respirent, et le dernier
+ * laisse au bouton le temps d'arriver sans bousculer la lecture. */
+@utility stage-track-z {
+  position: relative;
+  height: 425svh;
+}
+
+@utility stage-beacon-z {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  /* Une part de piste par temps. L'observateur réduit sa fenêtre à une ligne
+   * au milieu de l'écran : la part que cette ligne traverse devient le temps
+   * actif. Des balises de hauteur nulle seraient plus élégantes, mais
+   * l'intersection d'une hauteur nulle avec une fenêtre de hauteur nulle est
+   * un cas dégénéré que le moteur ne rapporte pas — mesuré, pas supposé.
+   *
+   * Parts inégales : 1,25 / 1,50 / 1,50 écran sur 4,25. */
+  &[data-beacon="0"] {
+    top: 0;
+    height: 29.4118%;
+  }
+  &[data-beacon="1"] {
+    top: 29.4118%;
+    height: 35.2941%;
+  }
+  &[data-beacon="2"] {
+    top: 64.7059%;
+    height: 35.2941%;
+  }
+}
+
+@utility stage-scene-z {
+  position: sticky;
+  top: 0;
+  display: grid;
+  height: 100svh;
+  overflow: hidden;
+  background-color: var(--navy-deep);
+}
+
+/* Chaque panneau occupe toute la scène et se découvre par le bas.
+ * `clip-path` plutôt qu'un fondu : un fondu superpose, un masque découvre. */
+@utility stage-panel-z {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path var(--dur-mask) var(--ease-out-quint);
+  &[data-active="true"] {
+    clip-path: inset(0 0 0 0);
+  }
+  &[data-passed="true"] {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Trois calques, trois vitesses. C'est cet écart, et lui seul, qui fait lire
+ * de la profondeur. Aucune 3D n'est en jeu. */
+/* La réserve verticale est dimensionnée par la course : 12 % de débattement
+ * de chaque côté pour un déplacement maximal de 10 %, sans jamais découvrir
+ * le bord. Sur une piste de 4,25 écrans, une course de 8 % ne se voyait pas —
+ * mesuré : environ 2 % par temps, autant dire rien. */
+@utility stage-layer-z {
+  position: absolute;
+  inset: -12% 0;
+  will-change: transform;
+  &[data-layer="fond"] {
+    translate: 0 calc(var(--sp, 0) * -10%);
+    scale: 1 1.06;
+  }
+  &[data-layer="sujet"] {
+    translate: 0 calc(var(--sp, 0) * -4%);
+  }
+  &[data-layer="voile"] {
+    translate: 0 calc(var(--sp, 0) * 5%);
+    background:
+      radial-gradient(
+        120% 80% at 50% 20%,
+        transparent 0%,
+        color-mix(in oklab, var(--navy-deep) 70%, transparent) 100%
+      ),
+      linear-gradient(to bottom, transparent 55%, var(--navy-deep) 100%);
+  }
+}
+
+/* Le cadrage est porté par l'image elle-même, pas par la scène : chaque plan
+ * décide de ce qui reste dans le champ, en paysage comme en portrait. */
+@utility stage-media-z {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: var(--pos, 50% 50%);
+}
+
+/* L'emplacement se déclare comme tel. On n'y met jamais une autre photographie
+ * ZELOR : la scène mentirait sur ce qu'elle raconte. */
+@utility stage-slot-z {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  align-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-navy-foreground) 4%, transparent) 0 2px,
+      transparent 2px 14px
+    ),
+    linear-gradient(
+      140deg,
+      color-mix(in oklab, var(--navy-deep) 88%, var(--color-navy-foreground)) 0%,
+      var(--navy-deep) 55%,
+      color-mix(in oklab, var(--navy-deep) 94%, black) 100%
+    );
+  outline: 1px dashed color-mix(in oklab, var(--color-navy-foreground) 22%, transparent);
+  outline-offset: -1.5rem;
+}
+
+@utility stage-slot-label-z {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-navy-foreground) 80%, transparent);
+}
+
+@utility stage-slot-note-z {
+  max-width: 32rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: color-mix(in oklab, var(--color-navy-foreground) 60%, transparent);
+}
+
+/* Le grand titre ne bouge pas ; ses libellés se relaient derrière une fenêtre
+ * de rognage. C'est ici, et seulement ici, que le très grand corps apparaît. */
+@utility stage-title-z {
+  position: absolute;
+  inset-inline: 0;
+  bottom: clamp(6rem, 18vh, 11rem);
+  display: grid;
+  justify-items: center;
+  pointer-events: none;
+}
+
+@utility stage-title-line-z {
+  grid-area: 1 / 1;
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+@utility stage-title-word-z {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.875rem, 8.3vw, 7.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.008em;
+  color: var(--color-navy-foreground);
+  translate: 0 110%;
+  transition: translate var(--dur-move) var(--ease-out-quart);
+  [data-active="true"] > & {
+    translate: 0 0;
+  }
+}
+
+@utility stage-cta-z {
+  position: absolute;
+  inset-inline: 0;
+  bottom: clamp(2rem, 7vh, 4rem);
+  display: grid;
+  justify-items: center;
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 0.75rem;
+  transition:
+    opacity var(--dur-move) var(--ease-out-quart),
+    translate var(--dur-move) var(--ease-out-quart),
+    visibility 0s linear var(--dur-move);
+  &[data-visible="true"] {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    transition-delay: 0s;
+  }
+}
+
+/* ——— Mobile : la narration est conservée, l'échelle seule change ——— */
+
+@media (max-width: 767px) {
+  .stage-layer-z[data-layer="fond"] {
+    translate: 0 calc(var(--sp, 0) * -5%);
+  }
+
+  /* Un seul calque garde du mouvement : trois vitesses sur un petit écran se
+   * lisent comme du bruit, pas comme de la profondeur. */
+  .stage-layer-z[data-layer="sujet"],
+  .stage-layer-z[data-layer="voile"] {
+    translate: 0 0;
+  }
+
+  .stage-media-z {
+    object-position: var(--pos-mobile, var(--pos, 50% 50%));
+  }
+
+  /* ——— L'ouverture en portrait est composée autrement, pas réduite ———
+   * Sur un écran vertical il n'existe aucune colonne libre à gauche : le
+   * sujet occupe toute la largeur. Le voile latéral n'a donc plus de sens et
+   * laissait le titre traverser la céramique claire. Il devient ascendant, le
+   * texte descend sur la base sombre, et le sujet remonte pour lui céder la
+   * place. Même récit, autre composition. */
+  .open-scene-z {
+    align-items: end;
+  }
+
+  .open-content-z {
+    padding-bottom: clamp(3rem, 12vh, 5.5rem);
+  }
+
+  .open-layer-z[data-layer="voile"] {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--navy-deep) 34%, transparent) 0%,
+      transparent 30%,
+      color-mix(in oklab, var(--navy-deep) 62%, transparent) 68%,
+      color-mix(in oklab, var(--navy-deep) 90%, transparent) 100%
+    );
+  }
+
+  .open-media-z {
+    /* Le sujet remonte : le bas du cadre appartient au texte. */
+    object-position: 62% 32%;
+  }
+
+  .stage-title-z {
+    bottom: clamp(7rem, 22vh, 10rem);
+  }
+}
+
+/* ——— Sans JavaScript : la piste se déplie ——— */
+
+@media (scripting: none) {
+  .open-track-z,
+  .stage-track-z {
+    height: auto;
+  }
+
+  .open-scene-z {
+    position: static;
+    height: 100svh;
+  }
+
+  .stage-scene-z {
+    position: static;
+    display: block;
+    height: auto;
+  }
+
+  .stage-panel-z {
+    position: relative;
+    height: 100svh;
+    clip-path: none;
+  }
+
+  .stage-layer-z {
+    inset: 0;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  .stage-title-z {
+    position: static;
+    padding-block: 2rem;
+  }
+
+  .stage-title-line-z {
+    grid-area: auto;
+  }
+
+  .stage-title-word-z {
+    translate: 0 0;
+  }
+
+  .stage-cta-z {
+    position: static;
+    padding-block: 2rem;
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+  }
+
+  .open-cue-line-z {
+    animation: none;
   }
 }

@@ -190,6 +190,11 @@ test.describe("garde-fous typographiques", () => {
           if (!racine) continue;
           for (const el of Array.from(racine.querySelectorAll(cibles))) {
             if (!el.getClientRects().length || el.classList.contains("sr-only")) continue;
+            // Texte posé sur une photographie voilée : la couleur réellement
+            // peinte n'est pas déductible des styles calculés, et un fond
+            // remonté depuis le DOM donnerait un chiffre faux dans un sens
+            // comme dans l'autre. Ces surfaces se jugent à l'œil.
+            if (el.closest("[data-media-ground]")) continue;
             const texte = (el.textContent ?? "").replace(/\s+/g, " ").trim();
             if (!texte) continue;
             const cs = getComputedStyle(el);
