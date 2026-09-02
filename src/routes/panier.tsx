@@ -94,7 +94,7 @@ function CartPage() {
                   <Link
                     to="/produit/$slug"
                     params={{ slug: line.handle }}
-                    className="link-underline text-sm font-medium"
+                    className="link-underline text-sm"
                   >
                     {line.name}
                   </Link>

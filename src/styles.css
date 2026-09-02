@@ -610,17 +610,19 @@
  * cette répartition, et non une animation, qui donne à un site marchand la
  * tenue d'un livre.
  *
- * Le Cormorant a une hauteur d'x plus petite que la Louize : composé à 18 px
- * il paraîtrait 15. On monte donc à 20 px pour retrouver la même présence.
- * Tout ce qui s'actionne — boutons, navigation, prix, formulaires — reste en
- * Manrope : on lit un serif, on clique un sans.
+ * Le paragraphe long est en Manrope, comme sur toutes les pages de maison.
+ * Le Cormorant reste une police de titre et d'expression : sa hauteur d'x
+ * plus faible le rend fatigant sur un manifeste de cinq lignes, et la page
+ * d'accueil était jusqu'ici la seule à le composer ainsi — le même rôle y
+ * changeait donc de famille d'une page à l'autre. Tout ce qui s'actionne —
+ * boutons, navigation, prix, formulaires — était déjà en Manrope.
  */
 @utility prose-z {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
   font-weight: 400;
-  letter-spacing: 0.012em;
+  letter-spacing: 0;
 }
 
 /* ————— L'échelle typographique relevée chez Vero —————

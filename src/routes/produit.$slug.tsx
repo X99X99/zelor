@@ -280,7 +280,7 @@ function ProductDetail({
             </p>
           )}
 
-          <p className="mt-6 text-sm text-foreground/80">
+          <p className="mt-6 text-sm text-foreground/75">
             Retour possible dans le délai légal — paiement sécurisé Shopify — service client en
             français et en anglais.
           </p>
@@ -292,9 +292,7 @@ function ProductDetail({
         <Reveal className="space-y-8">
           <section>
             <h2 className="font-display text-2xl">Description</h2>
-            <p className="mt-3 text-base whitespace-pre-line text-foreground/85">
-              {node.description}
-            </p>
+            <p className="mt-3 text-base whitespace-pre-line text-foreground">{node.description}</p>
           </section>
           {node.options.length > 0 && (
             <section>
@@ -313,7 +311,7 @@ function ProductDetail({
         <Reveal delay={90} className="space-y-8">
           <section>
             <h2 className="font-display text-2xl">Livraison et retours</h2>
-            <p className="mt-3 text-sm text-foreground/85">
+            <p className="mt-3 text-sm text-foreground/75">
               Le délai et les frais exacts s'affichent avant le paiement. Retour possible dans le
               délai légal, remboursement après réception et contrôle.
             </p>
@@ -328,7 +326,7 @@ function ProductDetail({
           </section>
           <section>
             <h2 className="font-display text-2xl">Garantie légale</h2>
-            <p className="mt-3 text-sm text-foreground/85">
+            <p className="mt-3 text-sm text-foreground/75">
               Chaque pièce bénéficie de la garantie légale de conformité et de la garantie contre
               les vices cachés. Les modalités figurent dans les conditions générales de vente.
             </p>
@@ -353,7 +351,7 @@ function ProductDetail({
       <div className="sticky bottom-0 z-30 mx-2 mb-2 rounded-[var(--radius-sheet)] border border-border/70 bg-background/80 shadow-[0_-18px_50px_-40px_color-mix(in_oklab,var(--navy)_80%,transparent)] backdrop-blur-xl lg:hidden">
         <div className="container-z flex items-center justify-between gap-4 py-3">
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium">{node.title}</p>
+            <p className="truncate text-sm">{node.title}</p>
             <p className="truncate text-xs text-muted-foreground">{price}</p>
           </div>
           <button

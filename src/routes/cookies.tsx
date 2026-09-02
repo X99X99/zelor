@@ -67,7 +67,7 @@ function CookiesPage() {
           {categories.map((category) => (
             <li key={category.id} className="flex items-start justify-between gap-6 py-5">
               <div>
-                <p className="font-medium">{category.label}</p>
+                <p>{category.label}</p>
                 <p className="text-sm text-muted-foreground">{category.body}</p>
               </div>
               <label className="chip-z press-z shrink-0 cursor-pointer gap-2 px-4 py-2 text-sm">

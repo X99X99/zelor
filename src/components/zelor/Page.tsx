@@ -84,7 +84,7 @@ export function Section({
           tous les titres de la page se lèveraient au même instant, ce qui est
           exactement l'effet que ce geste doit éviter. */}
       <LineReveal className="font-display text-2xl">{title}</LineReveal>
-      <div className="space-y-3 text-base text-foreground/85">{children}</div>
+      <div className="space-y-3 text-base text-foreground">{children}</div>
     </section>
   );
 }

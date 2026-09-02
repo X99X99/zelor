@@ -1,4 +1,4 @@
-import { type CSSProperties, type ElementType } from "react";
+import { Fragment, type CSSProperties, type ElementType } from "react";
 
 import { Reveal } from "./Reveal";
 
@@ -66,17 +66,24 @@ export function SplitReveal({
   return (
     <Reveal as={Tag} className={`split-host-z ${className}`} {...rest}>
       {words.map((word, index) => (
-        // Le mot et son espace vivent dans la même fenêtre : sans cela,
-        // l'espace reste fixe et la ligne se disloque pendant la montée.
-        <span key={`${word.text}-${index}`} className="split-line-z">
-          <span
-            className={`split-word-z${word.accent ? " accent-z" : ""}`}
-            style={{ "--word-index": index } as CSSProperties}
-          >
-            {word.text}
-            {index < words.length - 1 ? " " : ""}
+        // L'espace vit ENTRE les fenêtres, jamais dedans. Placé à l'intérieur,
+        // il tombait en fin de contenu d'un inline-block, où le traitement des
+        // blancs le supprime : les trois titres de l'accueil se lisaient
+        // « Legoûtdeschosesbienchoisies. ». Entre deux boîtes inline-block, en
+        // revanche, il est conservé et autorise le retour à la ligne. Il reste
+        // hors du rognage, ce qui est sans effet visible — un espace n'a pas de
+        // glyphe à faire monter.
+        <Fragment key={`${word.text}-${index}`}>
+          {index > 0 ? " " : null}
+          <span className="split-line-z">
+            <span
+              className={`split-word-z${word.accent ? " accent-z" : ""}`}
+              style={{ "--word-index": index } as CSSProperties}
+            >
+              {word.text}
+            </span>
           </span>
-        </span>
+        </Fragment>
       ))}
     </Reveal>
   );

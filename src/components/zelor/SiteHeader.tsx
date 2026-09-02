@@ -25,7 +25,7 @@ function AnnouncementBar() {
       className={`veil-top seam-z relative text-navy-foreground ${closing ? "collapse-out-z" : ""}`}
     >
       <div className="container-z flex items-center justify-center gap-4 py-2.5">
-        <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/85 uppercase">
+        <p className="text-center text-[0.6875rem] tracking-[0.18em] text-navy-foreground/75 uppercase">
           {BRAND.announcement}
         </p>
         <button
@@ -134,13 +134,13 @@ function LanguageMenu() {
                 role="option"
                 aria-selected={lang.active}
                 disabled={!lang.active}
-                className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-[background-color,padding] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-navy-foreground/10 hover:px-5 disabled:cursor-not-allowed disabled:text-navy-foreground/45 disabled:hover:px-4"
+                className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-[background-color,padding] duration-[var(--dur-2)] ease-[var(--ease-lux)] hover:bg-navy-foreground/10 hover:px-5 disabled:cursor-not-allowed disabled:text-navy-foreground/55 disabled:hover:px-4"
               >
                 <span>{lang.label}</span>
                 {lang.active ? (
                   <Check className="size-3.5" aria-hidden="true" />
                 ) : (
-                  <span className="text-[0.65rem] tracking-wide uppercase opacity-70">
+                  <span className="text-[0.65rem] tracking-wide uppercase opacity-55">
                     Prochainement
                   </span>
                 )}
@@ -188,7 +188,7 @@ function SearchPanel({ onClose, closing }: { onClose: () => void; closing: boole
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Rechercher une pièce, une ligne…"
-            className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/45"
+            className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/55"
           />
         </div>
         <button type="submit" className="btn-veil hidden shrink-0 sm:inline-flex">
@@ -470,8 +470,8 @@ export function SiteHeader() {
               <NavLink
                 key={item.to}
                 to={item.to}
-                className="text-[0.8125rem] tracking-[0.08em] opacity-85 hover:opacity-100"
-                activeClassName="opacity-100 font-semibold"
+                className="text-[0.8125rem] tracking-[0.08em] opacity-75 hover:opacity-100"
+                activeClassName="opacity-100"
               >
                 {item.label}
               </NavLink>
@@ -589,7 +589,7 @@ export function SiteHeader() {
             aria-label="Navigation mobile"
             className="focal-list container-z flex flex-col pt-6 pb-16"
           >
-            <p className="eyebrow mb-2 text-navy-foreground/50">Collection</p>
+            <p className="eyebrow mb-4 text-navy-foreground/55">Collection</p>
             {MAIN_NAV.map((item) => (
               <NavLink
                 key={item.to}
@@ -606,13 +606,19 @@ export function SiteHeader() {
               </NavLink>
             ))}
 
-            <p className="eyebrow mt-10 mb-2 text-navy-foreground/50">Services</p>
+            {/* Deuxième palier de navigation, pas une autre espèce de lien :
+                même famille que les entrées principales, un seul cran plus bas
+                (30 px → 20 px). Auparavant ces deux liens tombaient en Manrope
+                14 px, soit une autre police et moins de la moitié de la taille,
+                ce qui cassait la hiérarchie du panneau. « Langue » reste en
+                Manrope : c'est un contrôle, pas une entrée de navigation. */}
+            <p className="eyebrow mt-16 mb-4 text-navy-foreground/55">Services</p>
             <NavLink
               to="/compte"
               variant="sheet"
               onNavigate={closeMenu}
               data-focal=""
-              className="text-sm tracking-[0.08em]"
+              className="font-display text-xl"
             >
               <span>Compte client</span>
             </NavLink>
@@ -621,7 +627,7 @@ export function SiteHeader() {
               variant="sheet"
               onNavigate={closeMenu}
               data-focal=""
-              className="text-sm tracking-[0.08em]"
+              className="font-display text-xl"
             >
               <span>Aide et contact</span>
             </NavLink>

@@ -63,7 +63,7 @@ export function SiteFooter() {
         aria-labelledby="footer-signature"
         className="container-z border-t border-navy-foreground/12 py-24 md:py-32"
       >
-        <p className="eyebrow text-navy-foreground/45">Maison ZELOR</p>
+        <p className="eyebrow text-navy-foreground/55">Maison ZELOR</p>
         <LineReveal id="footer-signature" className="mt-6 max-w-5xl display-2-z">
           L'élégance dans chaque détail, pour faire de chaque détail une <em>promesse</em>.
         </LineReveal>
@@ -74,20 +74,24 @@ export function SiteFooter() {
           <BrandLink className="wordmark-z inline-block font-display text-2xl tracking-[0.4em]">
             {BRAND.name}
           </BrandLink>
-          <p className="mt-4 max-w-56 text-sm leading-relaxed text-navy-foreground/65">
+          <p className="mt-4 max-w-56 text-sm leading-relaxed text-navy-foreground/75">
             Maison éditoriale française, pensée à Nice et tournée vers l'international.
           </p>
         </div>
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>
-            <h2 className="eyebrow font-sans text-navy-foreground/50">{column.title}</h2>
-            <ul className="mt-5 space-y-3">
+            <h2 className="eyebrow text-navy-foreground/55">{column.title}</h2>
+            {/* Le retrait négatif annule le `padding-inline` de la capsule :
+                sans lui, le libellé du lien se posait 12 px à droite du titre
+                de sa propre colonne. Même compensation que la navigation du
+                header, qui porte déjà `-ml-3` pour la même raison. */}
+            <ul className="-ml-3 mt-4 space-y-3">
               {column.links.map((link) => (
                 <li key={link.to}>
                   <NavLink
                     to={link.to}
                     variant="footer"
-                    className="text-sm text-navy-foreground/80 hover:text-navy-foreground"
+                    className="text-sm text-navy-foreground"
                     activeClassName="text-navy-foreground"
                   >
                     {link.label}
@@ -107,7 +111,7 @@ export function SiteFooter() {
           <button
             type="button"
             onClick={scrollToTop}
-            className="link-underline press-z tap-target-z text-navy-foreground/70 hover:text-navy-foreground"
+            className="link-underline press-z tap-target-z text-navy-foreground"
           >
             Haut de page
           </button>

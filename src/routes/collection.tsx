@@ -128,7 +128,7 @@ function CollectionPage() {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Rechercher une pièce"
-                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               />
             </div>
             <div className="input-z relative flex min-h-11 items-center px-4 text-foreground sm:w-56">

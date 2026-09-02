@@ -73,7 +73,7 @@ function ContactPage() {
           },
         ].map((field) => (
           <div key={field.id}>
-            <label htmlFor={field.id} className="block text-sm font-medium">
+            <label htmlFor={field.id} className="block text-sm">
               {field.label}
             </label>
             <input
@@ -93,7 +93,7 @@ function ContactPage() {
           </div>
         ))}
         <div>
-          <label htmlFor="message" className="block text-sm font-medium">
+          <label htmlFor="message" className="block text-sm">
             Message
           </label>
           <textarea

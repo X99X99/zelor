@@ -87,7 +87,7 @@ export function ProductCard({
         {editorial ? (
           <div className="mt-5 space-y-1.5">
             <h3 className="font-display text-lg leading-tight">{node.title}</h3>
-            <p className="font-sans text-base font-medium">{price}</p>
+            <p className="font-sans text-base">{price}</p>
             <p className="text-xs tracking-wide text-muted-foreground">
               {soldOut ? "Épuisé" : node.productType}
             </p>
@@ -95,7 +95,7 @@ export function ProductCard({
         ) : (
           <>
             <div className="mt-4 flex items-baseline justify-between gap-3">
-              <h3 className="font-sans text-sm font-medium">{node.title}</h3>
+              <h3 className="font-sans text-sm">{node.title}</h3>
               {soldOut && <span className="eyebrow">Épuisé</span>}
             </div>
             {node.productType && (

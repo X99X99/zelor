@@ -58,11 +58,11 @@ function Home() {
           Une sélection contemporaine de pièces essentielles, choisies pour leur allure, leurs
           matières et leur tenue dans le temps.
         </p>
-        <p className="mx-auto mt-8 max-w-md text-sm text-muted-foreground">
+        <p className="mx-auto mt-6 max-w-md text-sm text-muted-foreground">
           Une maison éditoriale française pensée à Nice, où chaque pièce affirme une élégance
           durable. Livraison internationale avec suivi.
         </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
           <Link to="/collection" className="btn-lux whitespace-nowrap">
             Découvrir la collection
           </Link>
@@ -81,7 +81,7 @@ function Home() {
           {PROMISES.map((promise) => (
             <li key={promise.title} className="rule-z pt-6">
               <h3 className="subhead-z">{promise.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{promise.body}</p>
+              <p className="mt-6 text-sm text-muted-foreground">{promise.body}</p>
             </li>
           ))}
         </ul>
@@ -104,17 +104,17 @@ function Home() {
             Voir tout
           </Link>
         </div>
-        <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+        <p className="mt-6 max-w-xl text-sm text-muted-foreground">
           Quelques pièces de la sélection en cours. Les prix seront communiqués à l'ouverture.
         </p>
         {products.length > 0 ? (
-          <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
+          <div className="mt-16 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
             {products.map((product) => (
               <ProductCard key={product.node.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="mt-10">
+          <div className="mt-16">
             <EmptyCatalog />
           </div>
         )}
@@ -125,7 +125,7 @@ function Home() {
         <div className="container-z module-develop-z grid gap-10 md:grid-cols-2 md:items-center">
           <div>
             <SplitReveal text="Le goût des choses bien *choisies.*" className="display-1-z" />
-            <p className="prose-z mt-6 max-w-lg text-foreground/80">
+            <p className="prose-z mt-6 max-w-lg text-foreground/75">
               ZELOR est née d'une idée simple : les objets qui nous entourent méritent plus
               d'attention. Chaque pièce est pensée ou sélectionnée pour son équilibre entre forme,
               fonction et présence. De la première impression au dernier détail, nous construisons
@@ -151,7 +151,7 @@ function Home() {
           text="Ce que nous regardons *avant de sélectionner* une pièce."
           className="mt-4 max-w-4xl display-2-z"
         />
-        <dl className="mt-10 grid gap-8 md:grid-cols-3">
+        <dl className="mt-6 grid gap-8 md:grid-cols-3">
           {[
             [
               "Finition",
@@ -168,11 +168,11 @@ function Home() {
           ].map(([term, value]) => (
             <div key={term} className="rule-z pt-6">
               <dt className="eyebrow">{term}</dt>
-              <dd className="mt-3 text-sm text-foreground/80">{value}</dd>
+              <dd className="mt-4 text-sm text-foreground/75">{value}</dd>
             </div>
           ))}
         </dl>
-        <p className="mt-8 max-w-2xl text-sm text-muted-foreground">
+        <p className="mt-16 max-w-2xl text-sm text-muted-foreground">
           Nous n'annonçons une origine, une certification ou une garantie que lorsqu'elle est
           documentée. Le reste se lit dans l'objet.
         </p>
@@ -195,11 +195,11 @@ function Home() {
         <div>
           <p className="eyebrow">Éditorial</p>
           <SplitReveal text="Une signature *discrète.*" className="mt-4 display-1-z" />
-          <p className="mt-6 max-w-md text-base text-foreground/80">
+          <p className="mt-6 max-w-md text-base text-foreground/75">
             ZELOR privilégie les détails qui restent : une matière agréable, une silhouette
             équilibrée, une fonction intuitive et une présentation qui ne laisse rien au hasard.
           </p>
-          <Link to="/univers" className="link-underline mt-6 inline-block text-sm">
+          <Link to="/univers" className="link-underline mt-8 inline-block text-sm">
             Lire l'univers ZELOR
           </Link>
         </div>

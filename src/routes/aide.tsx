@@ -78,7 +78,7 @@ export const Route = createFileRoute("/aide")({
       <div className="divide-y divide-border border-y border-border">
         {faq.map((item) => (
           <details key={item.q} className="py-4">
-            <summary className="cursor-pointer list-none font-medium">{item.q}</summary>
+            <summary className="cursor-pointer list-none">{item.q}</summary>
             <p className="mt-2 text-sm text-muted-foreground">{item.a}</p>
           </details>
         ))}
