@@ -1371,7 +1371,12 @@ nav[aria-label="Fil d'Ariane"] a {
     position: absolute;
     inset-inline: 0;
     bottom: 100%;
-    height: 11rem;
+    /* Étendu de 11rem à ce clamp : sur l'accueil, ce fondu remonte dans la
+     * scène du logo final (BrandSignature, 70svh) — 11rem n'en couvrait
+     * qu'une fraction mesurée trop courte pour lier les deux ; ce fondu
+     * reste par ailleurs le seul lien visuel entre elles, aucune répétition
+     * du mot-symbole n'est ajoutée ici. */
+    height: clamp(11rem, 24vh, 19rem);
     pointer-events: none;
     /* La dernière teinte est exactement celle du haut du bas de page :
      * l'eau monte, elle ne s'arrête jamais sur une ligne. */
@@ -1908,13 +1913,29 @@ nav[aria-label="Fil d'Ariane"] a {
   }
 }
 
+/* Le retour horizontal de clip-reveal-z : « une image se découvre, elle ne
+ * s'éclaircit pas » — appliqué au seul mot-symbole de la signature de
+ * clôture, de gauche à droite plutôt que de haut en bas. Même durée, même
+ * courbe, même déclenchement par Reveal : un axe différent, pas un nouveau
+ * geste. */
+@utility clip-reveal-x-z {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1600ms var(--ease-out-quint);
+  will-change: clip-path;
+  [data-visible="true"] & {
+    clip-path: inset(0 0 0 0);
+    will-change: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .split-word-z,
   .line-mask-inner-z {
     transform: none;
     transition: none;
   }
-  .clip-reveal-z {
+  .clip-reveal-z,
+  .clip-reveal-x-z {
     clip-path: none;
     transition: none;
   }
@@ -1941,7 +1962,8 @@ nav[aria-label="Fil d'Ariane"] a {
     transition: none;
   }
 
-  .clip-reveal-z.clip-reveal-z {
+  .clip-reveal-z.clip-reveal-z,
+  .clip-reveal-x-z.clip-reveal-x-z {
     clip-path: none;
     transition: none;
   }
@@ -2305,7 +2327,15 @@ nav[aria-label="Fil d'Ariane"] a {
   &::before {
     content: "";
     position: absolute;
-    inset: -12% -6%;
+    /* Le débordement horizontal était proportionnel à la largeur de la carte
+     * (jusqu'à 56px sur les cartes « catalogue vide »/« panne » les plus
+     * larges) : mesuré responsable d'un débordement de page réel, jusqu'à
+     * 24px, sur /collection à plusieurs largeurs. Plafonné à 1.25rem — le
+     * plus petit padding de container-z, à toute largeur — pour ne plus
+     * jamais dépasser le viewport ; la respiration verticale, elle, ne pose
+     * pas ce problème et reste proportionnelle.
+     */
+    inset: -12% max(-6%, -1.25rem);
     z-index: -1;
     pointer-events: none;
     background: radial-gradient(
@@ -3555,33 +3585,46 @@ nav[aria-label="Fil d'Ariane"] a {
   max-width: 46rem;
 }
 
+/* Le palier d'accroche : sans, graisse 500, approche resserrée. C'est le seul
+ * endroit de la page où le sans porte un grand corps, et ce contraste avec le
+ * serif des titres fait toute la respiration.
+ *
+ * Porte à la fois le rôle de carte empilée (grid-area: 1 / 1, une seule
+ * proposition visible à la fois) et celui d'hôte de WordReveal : les deux
+ * vivaient déjà sur le même élément avant ce changement, seul l'enfant direct
+ * a changé de forme — un mot par mot plutôt qu'un bloc unique. */
 @utility manifest-line-z {
   grid-area: 1 / 1;
   overflow: hidden;
   padding-bottom: 0.14em;
   margin-bottom: -0.14em;
   text-align: center;
-}
-
-/* Le palier d'accroche : sans, graisse 500, approche resserrée. C'est le seul
- * endroit de la page où le sans porte un grand corps, et ce contraste avec le
- * serif des titres fait toute la respiration. */
-@utility manifest-word-z {
-  display: block;
   font-family: var(--font-sans);
   font-size: clamp(1.375rem, 2.6vw, 1.875rem);
   font-weight: 500;
   line-height: 1.06;
   letter-spacing: -0.02em;
   text-wrap: balance;
-  translate: 0 110%;
-  opacity: 0;
-  transition:
-    translate var(--dur-reveal) var(--ease-out-expo),
-    opacity var(--dur-move) var(--ease-out-quart);
-  [data-active="true"] > & {
-    translate: 0 0;
-    opacity: 1;
+}
+
+/* Le mot par mot du manifeste : chaque mot monte à son tour plutôt que la
+ * ligne entière d'un seul bloc translaté. word-body-z porte déjà l'état caché
+ * comme valeur de repos (translate: 0 125%) ; cette règle ne fait que révéler
+ * les mots de la proposition active — exactement ce que faisait l'ancien
+ * sélecteur sur le bloc entier, adapté en descendant : les mots sont
+ * maintenant nichés dans leur propre fenêtre de rognage, pas enfants directs. */
+.manifest-line-z[data-active="true"] .word-body-z {
+  translate: 0 0;
+}
+
+/* Sous mouvement réduit, le passage d'une proposition à l'autre reste — data-
+ * active continue de basculer avec le défilement, ce n'est pas un mouvement au
+ * sens de la préférence — mais la montée mot à mot, elle, disparaît : les mots
+ * de la proposition active sont déjà à leur place, sans transition ni délai
+ * étagé, donc rien à attendre pour lire. */
+@media (prefers-reduced-motion: reduce) {
+  .manifest-line-z .word-body-z {
+    transition: none;
   }
 }
 
@@ -3652,16 +3695,18 @@ nav[aria-label="Fil d'Ariane"] a {
   width: min(46vw, 38rem);
 }
 
+/* La progression est écrite en ligne, à chaque trame, sur cet élément même :
+ * --ep vaut 1 au centre du viewport, 0 au bord. Aucune transition — la
+ * fonction est déjà continue trame par trame, et une transition ferait
+ * traîner l'effet derrière le geste de défilement, comme ailleurs sur le
+ * site. L'absence de --ep (mouvement réduit, sans JavaScript) retombe sur 1 :
+ * plein, immédiatement lisible. */
 @utility diptych-beat-z {
   display: grid;
   gap: 1rem;
   justify-items: start;
   width: 100%;
-  opacity: 0.35;
-  transition: opacity var(--dur-reveal) var(--ease-out-quart);
-  &[data-active="true"] {
-    opacity: 1;
-  }
+  opacity: calc(0.35 + var(--ep, 1) * 0.65);
 }
 
 @utility diptych-text-z {
@@ -3672,11 +3717,21 @@ nav[aria-label="Fil d'Ariane"] a {
 }
 
 /* Les plans mineurs : 392 × 542 et 202 × 279 sur la référence. Aucun n'est
- * aligné sur un autre — c'est ce désalignement qui fait l'éditorial. */
+ * aligné sur un autre — c'est ce désalignement qui fait l'éditorial.
+ *
+ * Chacun respire avec sa propre progression (--ep, décrite sur diptych-beat-z
+ * ci-dessus) : une aperture qui se ferme légèrement en s'éloignant du centre
+ * du viewport, plutôt qu'un zoom — le geste déjà établi dans l'ouverture. Une
+ * couleur ne s'anime pas comme un poids : l'opacité ne descend jamais sous
+ * 0,55, la figure reste toujours reconnaissable, jamais un trou. */
 @utility diptych-minor-z {
   overflow: hidden;
   margin: 0;
   aspect-ratio: 392 / 542;
+  opacity: calc(0.55 + var(--ep, 1) * 0.45);
+  scale: calc(0.94 + var(--ep, 1) * 0.06);
+  clip-path: inset(calc((1 - var(--ep, 1)) * 6%));
+  will-change: opacity, transform, clip-path;
   &[data-scale="moyen"] {
     width: min(27vw, 22rem);
     justify-self: start;
@@ -3686,6 +3741,381 @@ nav[aria-label="Fil d'Ariane"] a {
     width: min(14vw, 12rem);
     justify-self: end;
     margin-right: clamp(0rem, 4vw, 3rem);
+  }
+}
+
+/* ——— Le ruban de fragments : lecture horizontale d'un scroll vertical ———
+ *
+ * Desktop : la scène s'épingle, la piste se traduit sur X depuis --sp — la
+ * même progression que useScrollSteps fournit déjà à l'ouverture et au
+ * manifeste. Aucun nouvel effet, aucune mesure JS par trame : la traduction
+ * tient tout entière dans ce calc.
+ *
+ * La largeur totale de la piste, et donc la distance à parcourir, ne sont
+ * jamais mesurées : elles se déduisent des mêmes variables que la largeur des
+ * panneaux, en unités de viewport. Changer --panel-w ne peut donc jamais
+ * désynchroniser la traduction de la géométrie réelle. */
+@utility hscene-track-z {
+  position: relative;
+  height: 380svh;
+
+  --panel-w: clamp(18rem, 32vw, 26rem);
+  --panel-gap: clamp(1rem, 4vw, 2.5rem);
+  --panel-count: 5;
+  --edge-pad: clamp(1.25rem, 6vw, 5rem);
+
+  --strip-w: calc(
+    var(--panel-count) * var(--panel-w) + (var(--panel-count) - 1) * var(--panel-gap) + 2 *
+      var(--edge-pad)
+  );
+  --travel: calc(var(--strip-w) - 100vw);
+}
+
+@utility hscene-scene-z {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-content: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+  height: 100svh;
+  overflow: hidden;
+}
+
+@utility hscene-eyebrow-z {
+  padding-inline: var(--edge-pad, 1.25rem);
+}
+
+@utility hscene-strip-z {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--panel-gap);
+  width: max-content;
+  padding-inline: var(--edge-pad);
+  /* Traduction pure, continue, jamais transitionnée : elle doit suivre le
+   * geste de défilement à la trame près, pas traîner derrière lui. */
+  translate: calc(var(--sp, 0) * -1 * var(--travel)) 0;
+  will-change: transform;
+}
+
+@utility hscene-panel-z {
+  flex: 0 0 var(--panel-w);
+  width: var(--panel-w);
+  margin: 0;
+}
+
+/* 1:1, jamais 4:5 : editorial.jpg est déjà exactement 1408 × 1760, soit 4:5 —
+ * un panneau au même ratio n'aurait rien à rogner, et object-position resterait
+ * sans effet quel que soit le réglage. Constaté à l'image : la photo entière
+ * s'affichait, pas un fragment. Le carré force un recadrage réel sur les deux
+ * sources. */
+@utility hscene-media-z {
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+}
+
+@utility hscene-caption-z {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  margin-top: 0.875rem;
+}
+
+@utility hscene-index-z {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+@utility hscene-label-z {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--color-foreground);
+}
+
+@utility hscene-note-z {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-muted-foreground);
+}
+
+/* Le filet de progression : le seul repère de la scène. Sans lui, une piste
+ * qui ne bouge qu'avec un défilement lent peut se lire comme bloquée. */
+@utility hscene-bar-z {
+  justify-self: center;
+  width: min(88vw, 30rem);
+  height: 1px;
+  background: color-mix(in oklab, var(--color-foreground) 12%, transparent);
+}
+
+@utility hscene-bar-fill-z {
+  display: block;
+  height: 100%;
+  background: var(--color-foreground);
+  transform-origin: left center;
+  scale: var(--sp, 0) 1;
+}
+
+/* ——— Mobile : le pilotage du scroll vertical est abandonné ———
+ *
+ * Le scroll-jacking horizontal est un motif fragile au tactile : la physique
+ * du geste s'y heurte à la traduction programmée. Le ruban devient un
+ * défilement natif, au doigt, avec accrochage — aucune ligne de JavaScript,
+ * et la page ne s'allonge plus d'un multiple d'écrans pour lui faire de la
+ * place. */
+@media (max-width: 767px) {
+  .hscene-track-z {
+    height: auto;
+  }
+
+  .hscene-scene-z {
+    position: static;
+    height: auto;
+    padding-block: clamp(3rem, 10vh, 5rem);
+    overflow: visible;
+  }
+
+  .hscene-strip-z {
+    /* La largeur de base (max-content) mesure exactement son contenu : sans
+     * cette contrainte, aucune limite ne force jamais overflow-x à agir, et
+     * c'est la page entière qui déborde plutôt que le seul ruban. Constaté à
+     * la mesure : 1224 px de débordement global à 320 px de large. */
+    width: 100%;
+    translate: none;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--edge-pad);
+    -webkit-overflow-scrolling: touch;
+    /* La barre de défilement est masquée : l'accrochage et l'aperçu du
+     * panneau suivant suffisent à signaler qu'il y a plus à voir. */
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .hscene-panel-z {
+    scroll-snap-align: start;
+  }
+
+  /* Sans progression de piste pilotée, le filet n'a plus de valeur à
+   * afficher : il disparaît plutôt que de rester figé à zéro. */
+  .hscene-bar-z {
+    display: none;
+  }
+}
+
+/* ——— Mouvement réduit et sans JavaScript ———
+ *
+ * useScrollSteps n'installe déjà pas l'écriture de --sp dans ces deux
+ * régimes : la traduction retombe sur --sp, 0 par défaut, et la piste reste
+ * bloquée sur son premier panneau si rien d'autre ne change. Elle se déplie
+ * donc en grille, comme le diptyque et le manifeste. */
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .hscene-track-z {
+    height: auto;
+  }
+
+  .hscene-scene-z {
+    position: static;
+    height: auto;
+    padding-block: clamp(3rem, 10vh, 5rem);
+    overflow: visible;
+  }
+
+  .hscene-strip-z {
+    flex-wrap: wrap;
+    width: 100%;
+    translate: none;
+    justify-content: center;
+  }
+
+  .hscene-panel-z {
+    flex: 0 1 min(var(--panel-w), 42vw);
+  }
+
+  .hscene-bar-z {
+    display: none;
+  }
+}
+
+/* ——— Ce que nous vérifions : 3,20 écrans, quatre temps ———
+ *
+ * Même grammaire que le diptyque — une ancre qui reste, un flux qui avance —
+ * mais le flux est ici textuel : aucune photographie du dépôt ne montre un
+ * geste ou une étape, donc aucune vignette n'en tient lieu.
+ *
+ * Le déclenchement discret, via useScrollSteps, reprend le précédent déjà
+ * établi par la séquence de matière : quatre temps nommés se lisent comme un
+ * ordre, pas comme une jauge continue. */
+@utility process-track-z {
+  position: relative;
+  height: 320svh;
+}
+
+@utility process-scene-z {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 30rem) 1fr;
+  align-items: center;
+  gap: clamp(3rem, 8vw, 6rem);
+  height: 100svh;
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+@utility process-anchor-z {
+  width: 100%;
+}
+
+@utility process-figure-z {
+  margin: 0;
+  width: 100%;
+}
+
+@utility process-media-z {
+  aspect-ratio: 4 / 5;
+  border-radius: 2px;
+}
+
+@utility process-eyebrow-z {
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+@utility process-steps-z {
+  display: grid;
+  gap: clamp(1.75rem, 4vh, 2.75rem);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@utility process-step-z {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: baseline;
+  opacity: 0.35;
+  transition: opacity var(--dur-reveal) var(--ease-out-quart);
+  &[data-active="true"] {
+    opacity: 1;
+  }
+}
+
+@utility process-step-index-z {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+@utility process-step-title-z {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+  color: var(--color-foreground);
+}
+
+@utility process-step-text-z {
+  margin-top: 0.375rem;
+  max-width: 34ch;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: color-mix(in oklab, var(--color-foreground) 72%, transparent);
+}
+
+/* Le filet de progression : lecture d'ensemble de la séquence, indépendante
+ * du temps actif — le même repère que le ruban de fragments. */
+@utility process-bar-z {
+  width: min(100%, 20rem);
+  height: 1px;
+  margin-top: clamp(2rem, 5vh, 3rem);
+  background: color-mix(in oklab, var(--color-foreground) 12%, transparent);
+}
+
+@utility process-bar-fill-z {
+  display: block;
+  height: 100%;
+  background: var(--color-foreground);
+  transform-origin: left center;
+  scale: var(--sp, 0) 1;
+}
+
+@utility process-link-z {
+  display: inline-block;
+  margin-top: clamp(1.5rem, 4vh, 2.25rem);
+}
+
+@media (max-width: 767px) {
+  .process-track-z {
+    height: auto;
+  }
+
+  .process-scene-z {
+    position: static;
+    display: block;
+    height: auto;
+    padding-block: clamp(3rem, 10vh, 5rem);
+  }
+
+  .process-anchor-z {
+    max-width: 20rem;
+    margin-inline: auto;
+    margin-bottom: clamp(2.5rem, 8vh, 4rem);
+  }
+
+  /* Sans épinglage, les quatre temps ne se relaient plus derrière une seule
+   * fenêtre : ils sont tous à leur place, dans l'ordre du texte. */
+  .process-step-z {
+    opacity: 1;
+  }
+
+  .process-bar-z {
+    display: none;
+  }
+}
+
+/* useScrollSteps n'installe pas --sp sous mouvement réduit, mais son
+ * observateur de balises continue de faire avancer `step` : trois des quatre
+ * temps resteraient à 0,35 en permanence plutôt que cachés, ce qui reste trop
+ * proche d'un contenu qu'il faudrait attendre pour lire pleinement. L'ancrage
+ * collant, lui, n'a rien d'une animation déclenchée — il reste, comme pour le
+ * diptyque sous ce même régime. */
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .process-step-z {
+    opacity: 1;
+    transition: none;
+  }
+
+  .process-bar-z {
+    display: none;
+  }
+}
+
+/* Sans JavaScript, l'observateur qui fait avancer `step` ne tourne jamais :
+ * `step` reste bloqué à sa valeur de départ. L'ancrage collant n'a alors plus
+ * de sens — rien ne le fait jamais céder la place — et la piste se déplie
+ * comme pour le diptyque sous ce même régime. */
+@media (scripting: none) {
+  .process-track-z {
+    height: auto;
+  }
+
+  .process-scene-z {
+    position: static;
+    display: block;
+    height: auto;
+    padding-block: clamp(3rem, 10vh, 5rem);
+  }
+
+  .process-anchor-z {
+    max-width: 20rem;
+    margin-inline: auto;
+    margin-bottom: clamp(2.5rem, 8vh, 4rem);
   }
 }
 
@@ -3824,6 +4254,41 @@ nav[aria-label="Fil d'Ariane"] a {
   color: var(--color-muted-foreground);
 }
 
+/* ——— La signature : le mot-symbole seul, avant le pied de page ———
+ *
+ * Ni piste de défilement ni état multiple : un seul instant, largement
+ * paddé. Le corps dépasse délibérément display-hero-z (10,5rem au maximum) —
+ * la seule fois où le mot-symbole doit être le plus grand corps de toute la
+ * page. Approche, casse et indentation reprennent exactement la convention
+ * déjà en place pour le mot-symbole (en-tête, ouverture) : ce n'est pas une
+ * nouvelle signature graphique, c'est la même, en grand. */
+@utility signature-track-z {
+  display: grid;
+  place-items: center;
+  min-height: 70svh;
+  padding-block: clamp(4rem, 14vh, 9rem);
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+  text-align: center;
+}
+
+@utility signature-word-z {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(3rem, 14vw, 13rem);
+  line-height: 1;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+}
+
+@media (max-width: 767px) {
+  .signature-track-z {
+    min-height: 42svh;
+    padding-block: clamp(3rem, 10vh, 5rem);
+  }
+}
+
 /* ——— Emplacements et médias partagés ——— */
 
 @utility slot-media-z {
@@ -3910,6 +4375,14 @@ nav[aria-label="Fil d'Ariane"] a {
     opacity: 1;
   }
 
+  /* L'aperture (clip-path) disparaît : sur un cadrage déjà serré par le
+   * recadrage mobile, une fenêtre qui se referme encore paraît agressive.
+   * L'échelle et l'opacité, plus discrètes, restent — la respiration continue
+   * de l'intention sans en payer le prix visuel. */
+  .diptych-minor-z {
+    clip-path: none;
+  }
+
   .diptych-minor-z[data-scale="moyen"],
   .diptych-minor-z[data-scale="petit"] {
     width: 72%;
@@ -3958,9 +4431,8 @@ nav[aria-label="Fil d'Ariane"] a {
     grid-area: auto;
   }
 
-  .manifest-word-z {
+  .manifest-line-z .word-body-z {
     translate: 0 0;
-    opacity: 1;
   }
 
   .diptych-anchor-z {
@@ -4516,7 +4988,18 @@ html:has(.ovt-track-z) header.header-motion-z {
    * puis les rend à l'en-tête pour sa rétractation normale. */
   --ovt-live: clamp(0, calc((1 - var(--ovt-p, 1)) * 200), 1);
   translate: 0 calc(-100% * max(1 - var(--ovt-h), var(--ovt-r)));
-  opacity: var(--ovt-h);
+  /* Visible seulement si l'ouverture le montre ET que la rétraction normale ne
+   * le cache pas. Déclarée ici seule : --ovt-r vaut 0 par défaut, et la règle
+   * `[data-hidden="true"]` ci-dessous le fait grimper à 1 sans jamais avoir à
+   * redéclarer `opacity` elle-même — la cascade lit la variable à jour.
+   *
+   * Avant cette ligne, `opacity: var(--ovt-h)` ignorait --ovt-r : une fois
+   * l'ouverture finie, --ovt-h reste bloqué à 1, et l'en-tête rétracté par le
+   * défilement ordinaire se retrouvait hors écran (translate -100%) mais à
+   * opacité 1 — un état qui ne se voit pas, l'élément étant de toute façon hors
+   * champ, mais qui désaccorde silencieusement les deux propriétés. Constaté
+   * en lisant `getComputedStyle` après un défilement vers le bas. */
+  opacity: calc(var(--ovt-h) * (1 - var(--ovt-r)));
   filter: none;
   /* La règle de rétractation retire les événements de pointeur à un en-tête
    * marqué caché. Or l'ouverture le maintient à sa place bien qu'il soit
