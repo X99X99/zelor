@@ -1,4 +1,5 @@
 import { beaconStyle, useScrollSteps } from "@/hooks/useScrollSteps";
+import { WordReveal } from "./WordReveal";
 
 /**
  * ————— Le manifeste —————
@@ -14,6 +15,19 @@ import { beaconStyle, useScrollSteps } from "@/hooks/useScrollSteps";
  * en sans, graisse 500, approche resserrée. Le contraste des deux familles à
  * cet endroit précis fait toute la respiration de la page — un serif y serait
  * décoratif, un corps de titre y serait bruyant.
+ *
+ * Chaque proposition se révèle mot par mot — `WordReveal`, déjà éprouvé dans
+ * l'ouverture — plutôt qu'en un seul bloc translaté. La translation de bloc
+ * d'origine (`translate: 0 110%` sur la ligne entière) faisait arriver la
+ * phrase d'un coup, comme un carton plutôt que comme une pensée qui se forme ;
+ * le mot par mot est la seule composition du site qui installe une durée dans
+ * la lecture elle-même, pas seulement dans son arrivée.
+ *
+ * Le déclenchement reste celui déjà en place : `data-active`, porté par
+ * `step`, la même valeur discrète qui relaie les trois propositions. Réversible
+ * par construction — la valeur de repos de `word-body-z` est l'état caché ;
+ * quand `data-active` retombe à `false` puis revient à `true` en remontant, la
+ * transition rejoue d'elle-même, sans état à réinitialiser.
  */
 
 const PROPOSITIONS = [
@@ -43,9 +57,12 @@ export function ManifestScene() {
       <div className="manifest-scene-z" data-step={step}>
         <div className="manifest-stack-z">
           {PROPOSITIONS.map((texte, index) => (
-            <p key={texte} className="manifest-line-z" data-active={step === index}>
-              <span className="manifest-word-z">{texte}</span>
-            </p>
+            <WordReveal
+              key={texte}
+              text={texte}
+              className="manifest-line-z"
+              data-active={step === index}
+            />
           ))}
         </div>
       </div>
