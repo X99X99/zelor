@@ -4160,6 +4160,7 @@ nav[aria-label="Fil d'Ariane"] a {
 }
 
 @utility grid-cell-z {
+  position: relative;
   aspect-ratio: 153 / 191;
   overflow: hidden;
   opacity: 0;
@@ -4171,6 +4172,76 @@ nav[aria-label="Fil d'Ariane"] a {
   [data-visible="true"] & {
     opacity: 1;
     translate: 0 0;
+  }
+}
+
+/* Couche de parallaxe, séparée de grid-cell-z : celle-ci porte la révélation
+ * d'entrée — une transition, une fois — celle-ci une position pilotée en
+ * continu par --sp. Les deux sur la même propriété se seraient disputé
+ * chaque trame de défilement, exactement l'erreur que ce dépôt évite
+ * partout ailleurs (voir Diptych, --ep). Débordement de 14 % de chaque
+ * côté : la fenêtre de la cellule reste pleine quelle que soit la vitesse. */
+@utility grid-cell-parallax-z {
+  position: absolute;
+  inset: -14% 0;
+  translate: 0 calc(var(--sp, 0) * -1 * var(--depth, 1) * 1.5rem);
+  will-change: transform;
+}
+
+/* Vitesse différente du bord au centre de chaque rangée — la même lecture
+ * que Vero applique à sa grille de galerie. Non appliqué sous 640px : à deux
+ * colonnes, « bord contre centre » ne veut rien dire — chaque cellule EST un
+ * bord. --sp est absent sous mouvement réduit, donc --depth n'y a aucun
+ * effet à annuler séparément. */
+@media (640px <= width < 1024px) {
+  .grid-cell-z:nth-child(4n + 1),
+  .grid-cell-z:nth-child(4n) {
+    --depth: 1.4;
+  }
+  .grid-cell-z:nth-child(4n + 2),
+  .grid-cell-z:nth-child(4n + 3) {
+    --depth: 0.7;
+  }
+}
+@media (width >= 1024px) {
+  .grid-cell-z:nth-child(6n + 1),
+  .grid-cell-z:nth-child(6n) {
+    --depth: 1.5;
+  }
+  .grid-cell-z:nth-child(6n + 2),
+  .grid-cell-z:nth-child(6n + 5) {
+    --depth: 1;
+  }
+  .grid-cell-z:nth-child(6n + 3),
+  .grid-cell-z:nth-child(6n + 4) {
+    --depth: 0.55;
+  }
+}
+
+/* Le nom de l'emplacement, en retrait au repos, net au survol — la lecture
+ * que Vero applique à sa galerie sur des photographies ; ici sur l'étiquette
+ * honnête d'un emplacement vide, prête à porter un vrai nom de pièce le jour
+ * où le catalogue s'ouvre. Jamais la seule source de l'information : le nom
+ * reste lisible à 55 % d'opacité au repos, pas masqué derrière le survol. */
+@utility grid-cell-hover-z {
+  transition: scale var(--dur-3) var(--ease-lux);
+  &:hover,
+  &:focus-visible {
+    scale: 1.015;
+  }
+  & .slot-empty-file-z {
+    opacity: 0.55;
+    transition: opacity var(--dur-2) var(--ease-lux);
+  }
+  &:hover .slot-empty-file-z,
+  &:focus-visible .slot-empty-file-z {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-cell-hover-z {
+    transition: none;
   }
 }
 

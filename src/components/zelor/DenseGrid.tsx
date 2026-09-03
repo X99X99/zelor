@@ -1,6 +1,45 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 
 import { Reveal } from "./Reveal";
+
+/**
+ * Progression continue du passage de la planche à travers le viewport — 0
+ * quand son bord haut touche le bas de l'écran, 1 quand son bord bas quitte
+ * le haut. `useScrollSteps` suppose une piste plus haute que l'écran (elle
+ * l'est, pour l'ouverture ou le diptyque) ; mesuré ici, `grid-plate-z` ne
+ * l'est pas (555px pour 900px d'écran) — sa formule y restait bloquée à 0.
+ * Même discipline que partout ailleurs : une écriture par trame, jamais de
+ * transition sur la valeur, rien sous mouvement réduit.
+ */
+function usePlateFlow(ref: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let frame = 0;
+    const write = () => {
+      frame = 0;
+      const rect = node.getBoundingClientRect();
+      const span = window.innerHeight + rect.height;
+      const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / span));
+      node.style.setProperty("--sp", progress.toFixed(4));
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(write);
+    };
+
+    write();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [ref]);
+}
 
 /**
  * ————— La grille dense —————
@@ -25,6 +64,14 @@ const PLANCHE = Array.from({ length: 12 }, (_, index) => ({
 }));
 
 export function DenseGrid({ catalogueVide }: { catalogueVide: boolean }) {
+  // Progression continue du passage de la planche dans l'écran — ni la
+  // révélation d'entrée (gérée par Reveal, sur la section) ni un décalage
+  // chronométré. Bord et centre n'avancent pas à la même vitesse ; c'est ce
+  // qui fait la profondeur d'une planche par ailleurs strictement plate
+  // (même format, même grille).
+  const plateRef = useRef<HTMLDivElement>(null);
+  usePlateFlow(plateRef);
+
   return (
     <Reveal as="section" aria-labelledby="planche-title" className="grid-track-z">
       <div className="grid-head-z">
@@ -37,15 +84,25 @@ export function DenseGrid({ catalogueVide }: { catalogueVide: boolean }) {
         </Link>
       </div>
 
-      <div className="grid-plate-z">
+      <div className="grid-plate-z" ref={plateRef}>
         {PLANCHE.map((slot, index) => (
           <div
             key={slot.fichier}
             className="grid-cell-z"
             style={{ "--i": index } as React.CSSProperties}
           >
-            <div className="slot-empty-z" role="img" aria-label={`Image à venir : ${slot.role}`}>
-              <p className="slot-empty-file-z">{slot.fichier}</p>
+            {/* Couche séparée de grid-cell-z : celle-ci porte la révélation
+                d'entrée (transition, une fois), celle-ci la parallaxe
+                (continue, jamais transitionnée) — les deux sur la même
+                propriété se seraient disputé chaque trame. */}
+            <div className="grid-cell-parallax-z">
+              <div
+                className="slot-empty-z grid-cell-hover-z"
+                role="img"
+                aria-label={`Image à venir : ${slot.role}`}
+              >
+                <p className="slot-empty-file-z">{slot.fichier}</p>
+              </div>
             </div>
           </div>
         ))}
