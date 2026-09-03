@@ -21,32 +21,40 @@ import { OG_IMAGE_URL } from "@/lib/zelor/site";
 
 function NotFoundComponent() {
   return (
-    <main className="container-z flex min-h-[70vh] flex-col justify-center py-20">
-      <p className="eyebrow">Erreur 404</p>
-      <h1 className="mt-4 max-w-2xl font-display text-4xl md:text-6xl">
-        Cette page n'existe plus.
-      </h1>
-      <p className="mt-4 max-w-md text-muted-foreground">
-        Le lien est peut-être ancien ou incomplet. Voici les chemins les plus utiles.
-      </p>
-      <ul className="mt-8 grid max-w-lg gap-3 sm:grid-cols-2">
-        {[
-          { to: "/collection", label: "Voir la collection" },
-          { to: "/nouveautes", label: "Nouveautés" },
-          { to: "/univers", label: "L'univers ZELOR" },
-          { to: "/aide", label: "Aide et contact" },
-        ].map((item) => (
-          <li key={item.to}>
-            <Link
-              to={item.to}
-              className="chip-z lift-z flex min-h-12 items-center justify-center px-5 text-sm text-foreground"
-            >
-              {item.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <>
+      {/* head() de la racine est statique : il ne sait jamais qu'une route
+          échoue à se résoudre, donc rien ne peut y distinguer ce cas. React
+          hisse tout <title> rendu dans l'arbre jusqu'au <head> — y compris en
+          rendu serveur — ce qui permet un titre dédié ici sans mécanisme
+          supplémentaire ni changement du statut HTTP, déjà correct (404). */}
+      <title>Page introuvable — ZELOR</title>
+      <main className="container-z flex min-h-[70vh] flex-col justify-center py-20">
+        <p className="eyebrow">Erreur 404</p>
+        <h1 className="mt-4 max-w-2xl font-display text-4xl md:text-6xl">
+          Cette page n'existe plus.
+        </h1>
+        <p className="mt-4 max-w-md text-muted-foreground">
+          Le lien est peut-être ancien ou incomplet. Voici les chemins les plus utiles.
+        </p>
+        <ul className="mt-8 grid max-w-lg gap-3 sm:grid-cols-2">
+          {[
+            { to: "/collection", label: "Voir la collection" },
+            { to: "/nouveautes", label: "Nouveautés" },
+            { to: "/univers", label: "L'univers ZELOR" },
+            { to: "/aide", label: "Aide et contact" },
+          ].map((item) => (
+            <li key={item.to}>
+              <Link
+                to={item.to}
+                className="chip-z lift-z flex min-h-12 items-center justify-center px-5 text-sm text-foreground"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </main>
+    </>
   );
 }
 
