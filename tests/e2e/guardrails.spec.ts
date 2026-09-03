@@ -534,3 +534,108 @@ test.describe("garde-fou scène d'ouverture", () => {
     expect(libelles).toEqual(["La matière", "Le détail", "La pièce"]);
   });
 });
+
+/**
+ * ————— Garde-fous de l'ouverture automatique —————
+ *
+ * Chacun correspond à un défaut réellement constaté, et à lui seul.
+ * Un échec ici signifie qu'une régression connue est revenue : on corrige le
+ * code, jamais le test.
+ */
+/** Recharge la page en mouvement normal et attend que l'ouverture soit finie. */
+async function openWithOverture(page: import("@playwright/test").Page) {
+  await openPage(page, "/");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.reload({ waitUntil: "load" });
+  await page.waitForFunction(() => {
+    const btn = document.querySelector('header button[aria-label="Rechercher"]');
+    return !!btn && Object.keys(btn).some((k) => k.startsWith("__react"));
+  });
+  await page.waitForFunction(
+    () => document.querySelector<HTMLElement>(".ovt-track-z")?.dataset["loaded"] === "true",
+    undefined,
+    { timeout: 15_000 },
+  );
+}
+
+test.describe("garde-fou ouverture automatique", () => {
+  test("le mot-symbole de l'en-tête reste cliquable quand l'ouverture le retient", async ({
+    page,
+  }) => {
+    // Défaut d'origine : l'ouverture maintenait l'en-tête à sa place alors
+    // qu'il était marqué caché, et la règle de rétractation lui retirait ses
+    // événements de pointeur. Le retour en haut était visible et inerte.
+    await openPage(page, "/");
+    await page.evaluate(() => window.scrollTo(0, 1400));
+    await page.waitForTimeout(200);
+
+    const cible = page.locator('header a[aria-label="ZELOR — accueil"]').first();
+    const box = await cible.boundingBox();
+    expect(box, "le mot-symbole doit avoir une boîte").not.toBeNull();
+
+    const auPoint = await page.evaluate(
+      ([x, y]) => {
+        const el = document.elementFromPoint(x, y);
+        return el ? !!el.closest("header") : false;
+      },
+      [box!.x + box!.width / 2, box!.y + box!.height / 2],
+    );
+    expect(auPoint, "rien ne doit s'interposer devant le mot-symbole").toBe(true);
+  });
+
+  test("l'ouverture n'a pas besoin du défilement pour se lancer", async ({ page }) => {
+    // Défaut d'origine : la séquence ne démarrait qu'au défilement. Une page
+    // qui attend qu'on la pousse ne fait pas attendre, elle reste immobile.
+    await openWithOverture(page);
+
+    // Aucun défilement n'a eu lieu : la position est restée en haut.
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  });
+
+  test("le filet d'attente reste dans l'écran, décalé de ses bords", async ({ page }) => {
+    // Défaut d'origine : l'en-tête occupait le flux, la scène commençait
+    // 123 px plus bas et le filet tombait sous la ligne de flottaison.
+    //
+    // La mesure se prend en mouvement normal : sous mouvement réduit l'attente
+    // est retirée et sa boîte vaut zéro — c'est le régime, pas la géométrie,
+    // que le premier jet de ce garde-fou mesurait.
+    await openWithOverture(page);
+    const mesures = await page.evaluate(() => {
+      const bar = document.querySelector(".ovt-bar-z");
+      if (!bar) return null;
+      const r = bar.getBoundingClientRect();
+      return {
+        bas: Math.round(window.innerHeight - r.bottom),
+        gauche: Math.round(r.left),
+        droite: Math.round(window.innerWidth - r.right),
+        dansEcran: r.bottom <= window.innerHeight,
+      };
+    });
+    expect(mesures, "le filet d'attente doit exister").not.toBeNull();
+    expect(mesures!.dansEcran).toBe(true);
+    expect(mesures!.gauche).toBeGreaterThan(8);
+    expect(mesures!.droite).toBeGreaterThan(8);
+    expect(mesures!.bas).toBeGreaterThan(8);
+  });
+
+  test("aucun mot de la déclaration ne dépasse de sa fenêtre avant son tour", async ({ page }) => {
+    // Défaut d'origine : le rang portait sur le mot et non sur la fenêtre ;
+    // un mot réduit ne se translatait que de sa propre hauteur et restait
+    // lisible neuf pixels au-dessus de la ligne.
+    await openWithOverture(page);
+
+    const debordent = await page.evaluate(() => {
+      const sortis: string[] = [];
+      for (const masque of document.querySelectorAll(".ovt-editorial-z .word-mask-z")) {
+        const corps = masque.firstElementChild;
+        if (!corps) continue;
+        const m = masque.getBoundingClientRect();
+        const c = corps.getBoundingClientRect();
+        const visible = Math.min(m.bottom, c.bottom) - Math.max(m.top, c.top);
+        if (visible > 1) sortis.push(masque.textContent ?? "");
+      }
+      return sortis;
+    });
+    expect(debordent).toEqual([]);
+  });
+});

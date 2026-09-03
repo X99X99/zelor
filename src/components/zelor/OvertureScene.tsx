@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 import detailImage from "@/assets/detail.jpg";
 import detailVideo from "@/assets/video-detail.mp4.asset.json";
+import { useOvertureLoad } from "@/hooks/useOvertureLoad";
 import { useScrollSteps } from "@/hooks/useScrollSteps";
 import { BRAND } from "@/lib/zelor/content";
 import { WordReveal } from "./WordReveal";
@@ -9,44 +10,45 @@ import { WordReveal } from "./WordReveal";
 /**
  * ————— L'ouverture —————
  *
- * Une seule scène collante, trois écrans et demi de piste, et une seule
- * valeur continue — `--sp`, la progression — dont tout le reste est déduit en
- * CSS. Rien n'est animé qui touche à la mise en page : uniquement `transform`,
- * `opacity` et `clip-path`.
+ * Deux temps, et deux valeurs continues.
  *
- * Le déroulé, dans l'ordre où on le voit :
+ * ┌ `--load` ─ automatique, de 0 à 1, écrite par une horloge. Le visiteur n'a
+ * │ rien à faire : la page s'ouvre seule.
+ * │
+ * │   0,00 → 0,18   la déclaration s'inscrit sur le fond clair
+ * │   0,00 → 1,00   le filet se remplit ; le pourcentage chevauche son bord
+ * │   0,60 → 1,00   les deux moitiés de la déclaration s'écartent, et le
+ * │                 masque du média s'ouvre entre elles jusqu'au plein écran
+ * │   1,00          le fond clair et l'attente ont disparu ; la vidéo joue,
+ * │                 le logo clair est au centre, la légende et la flèche sont
+ * │                 en place, l'en-tête n'existe toujours pas
+ * │
+ * └ `--sp` ─ le défilement, un écran, et seulement une fois l'attente finie.
  *
- *   0,00 → 0,10   fond papier, en-tête absent, une ligne d'attente qui s'encre
- *                 et un filet qui se remplit de gauche à droite
- *   0,10 → 0,14   l'attente se retire
- *   0,11 → 0,34   la scène s'ouvre au centre et gagne le plein écran
- *   0,28 → 0,46   le logo paraît, clair, au centre de la scène
- *   0,36 → 0,52   une ligne secondaire s'inscrit par-dessus
- *   0,52 → 0,80   la scène recule ; le logo la suit, se réduit, passe du clair
- *                 au sombre et rejoint sa place dans l'en-tête, revenu
- *                 l'attendre
- *   0,74 → 1,00   la ligne secondaire s'efface, le texte éditorial arrive
+ *     0,00 → 0,85   la scène se réduit, remonte et quitte l'écran par le haut
+ *     0,00 → 0,70   le logo la suit, se réduit, passe du clair au sombre et
+ *                   rejoint exactement sa place dans l'en-tête
+ *     0,62 → 0,74   l'en-tête redescend, une fois le logo posé
+ *     0,55 → 1,00   le texte éditorial arrive mot par mot
  *
- * L'en-tête n'existe pas pendant l'immersion : il est escamoté vers le haut et
- * ne redescend qu'au moment où le logo va se poser, de sorte que le voyageur
- * trouve une place prête plutôt qu'une barre qui l'aurait devancé. Le logo ne
- * se duplique jamais : le mot-symbole de l'en-tête reste effacé tant que le
- * voyageur n'a pas atteint sa place, puis prend le relais exactement quand
- * l'autre disparaît. Le changement clair → sombre est un fondu croisé entre
- * deux copies superposées, faute de pouvoir interpoler une couleur en `calc`.
+ * Le média ne grandit pas par une échelle mais par un masque : le sujet reste
+ * à sa taille, c'est la fenêtre qui s'ouvre. Une échelle aurait fait un zoom —
+ * l'arête de pierre aurait grossi avec le cadre, ce qui se lit comme un
+ * agrandissement d'image, pas comme une ouverture de scène.
  *
- * La destination n'est pas devinée : elle est mesurée sur le vrai mot-symbole
- * de l'en-tête et réécrite à chaque redimensionnement.
+ * Rien n'est animé qui touche à la mise en page : `transform`, `opacity` et
+ * `clip-path`, et rien d'autre.
  */
 
-const LOADING = "Un instant";
-
 export function OvertureScene() {
-  // La progression est miroitée sur la racine : c'est ainsi que l'en-tête sait
-  // rester en place pendant le voyage, puis reprendre la main à l'arrivée.
+  // La progression du défilement est miroitée sur la racine : c'est ainsi que
+  // l'en-tête sait rester escamoté puis reprendre la main à l'arrivée du logo.
   const { ref } = useScrollSteps(1, "--ovt-p");
   const logoRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
+
   /**
    * La vidéo n'est servie que par le pipeline d'assets du déploiement : en
    * développement local son URL répond 404, et le navigateur journalise
@@ -61,14 +63,16 @@ export function OvertureScene() {
    */
   const source = import.meta.env.PROD ? detailVideo.url : null;
 
+  // L'attente attend le vrai média, pas une durée décidée d'avance.
+  const { done } = useOvertureLoad(ref, source ? videoRef : imageRef, counterRef);
+
   /**
    * Signale à la feuille de style qu'une ouverture est en cours sur cette page.
    *
-   * La progression seule ne suffisait pas : une variable absente vaut sa valeur
-   * par défaut, donc `--ovt-p` ne permet pas de distinguer « pas d'ouverture »
-   * de « ouverture terminée ». Or l'en-tête doit se comporter différemment dans
-   * ces deux cas — escamoté et sans transition pendant l'immersion, normal
-   * partout ailleurs. Un attribut se sélectionne ; une variable manquante, non.
+   * La progression seule ne suffit pas : une variable absente vaut sa valeur
+   * par défaut, donc `--ovt-p` ne distingue pas « pas d'ouverture » de
+   * « ouverture terminée ». Un attribut se sélectionne ; une variable
+   * manquante, non.
    */
   useEffect(() => {
     const root = document.documentElement;
@@ -136,8 +140,6 @@ export function OvertureScene() {
 
       if (!from.width || !to.width) return;
 
-      // La mesure est prise au repos, quand la progression vaut zéro : le
-      // voyageur est alors à son échelle de départ, et le rapport est direct.
       track.style.setProperty(
         "--logo-x",
         `${to.left + to.width / 2 - (from.left + from.width / 2)}px`,
@@ -149,18 +151,21 @@ export function OvertureScene() {
       track.style.setProperty("--logo-scale", (to.width / from.width).toFixed(4));
     };
 
-    // La mesure est refaite tant que le voyage n'a pas commencé. Prise au seul
-    // montage, elle tombait 123 px trop haut : la scène collante n'a pas encore
-    // sa géométrie définitive à cet instant, et le logo n'est donc pas là où il
-    // sera au départ. Constaté à la mesure, pas supposé.
+    // La mesure est refaite au défilement tant que le voyage est jeune : prise
+    // au seul montage, elle tombait 123 px trop haut, la scène collante n'ayant
+    // pas encore sa géométrie définitive à cet instant.
     //
+    // Le même attribut neutralise l'escamotage de l'en-tête ET la translation
+    // du voyageur : sans le second, une mesure prise après le moindre
+    // défilement enregistrait un trajet déjà entamé, donc trop court, et le
+    // logo s'arrêtait 145 px avant sa place. Constaté à la mesure.
     let frame = 0;
     const remeasure = () => {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         frame = 0;
         const progress = Number(track.style.getPropertyValue("--sp") || "0");
-        if (progress < 0.45) measure();
+        if (progress < 0.3) measure();
       });
     };
 
@@ -175,32 +180,23 @@ export function OvertureScene() {
   }, [ref]);
 
   return (
-    <section aria-labelledby="ouverture-title" className="ovt-track-z" ref={ref}>
+    <section
+      aria-labelledby="ouverture-title"
+      className="ovt-track-z"
+      data-loaded={done ? "true" : "false"}
+      ref={ref}
+    >
       {/* `data-media-ground` : sous ce texte il y a une scene filmee ou une
           photographie voilee, pas une couleur. Le contraste ne s'y deduit pas
           des styles calcules et se juge a l'oeil. */}
       <div className="ovt-scene-z" data-media-ground="">
-        {/* Le voile passe du papier à l'encre à mesure que la scène s'ouvre. */}
+        {/* Le fond de l'attente. Papier tant que la scène n'est pas ouverte,
+            encre ensuite. */}
         <div className="ovt-ground-z" aria-hidden="true" />
 
-        <p className="ovt-loading-z" aria-hidden="true">
-          {LOADING}
-        </p>
-
-        {/* Le filet d'attente. Il ne feint pas un chargement réseau : il trace
-            l'avancement réel de la séquence, celui-là même que le visiteur
-            pilote. Décalé des bords, comme le reste de la composition. */}
-        <div className="ovt-bar-z" aria-hidden="true">
-          <span className="ovt-bar-fill-z" />
-        </div>
-
-        {/* La scène : une arête de pierre en rotation, filmée. Pas une 3D.
-            La photographie sert d'affiche et de repli — même sujet, même
-            matière, donc rien n'est substitué.
-
-            La boîte occupe tout l'écran et c'est l'échelle qui la réduit : un
-            petit rectangle au centre, aux proportions de la fenêtre, qui gagne
-            le plein écran puis recule. Aucune largeur n'est animée. */}
+        {/* La scène. Elle occupe l'écran entier dès le premier instant ; c'est
+            son masque qui ne laisse voir qu'un rectangle au centre, puis
+            s'ouvre. Le sujet ne bouge donc jamais d'échelle. */}
         <div className="ovt-stage-z">
           {source ? (
             <video
@@ -214,31 +210,38 @@ export function OvertureScene() {
               loop
               playsInline
               autoPlay
-              preload="metadata"
+              preload="auto"
               aria-hidden="true"
               tabIndex={-1}
             />
           ) : (
             <img
               className="ovt-media-z"
+              ref={imageRef}
               src={detailImage}
               width={1408}
               height={1008}
               alt=""
+              fetchPriority="high"
               decoding="async"
             />
           )}
           <div className="ovt-grain-z" aria-hidden="true" />
         </div>
 
-        {/* Deux copies superposées, l'une claire, l'autre sombre. */}
+        {/* Le logo reste clair de bout en bout.
+
+            La référence le fait passer du clair au sombre parce que son en-tête
+            est sombre sur fond crème. Celui de ZELOR est marine et son
+            mot-symbole est clair ; le fond que le logo traverse pendant sa
+            sortie est marine lui aussi. Un logo qui s'assombrirait en route
+            deviendrait un fantôme à mi-parcours puis n'arriverait pas — c'est
+            exactement ce que montrait la capture à 0,55 de la sortie.
+
+            Le geste transposé n'est donc pas de changer de couleur, c'est que
+            le logo prenne celle de sa destination. Ici, les deux coïncident. */}
         <div className="ovt-logo-z" ref={logoRef} aria-hidden="true">
-          <span className="ovt-logo-face-z" data-face="light">
-            {BRAND.name}
-          </span>
-          <span className="ovt-logo-face-z" data-face="dark">
-            {BRAND.name}
-          </span>
+          <span className="ovt-logo-face-z">{BRAND.name}</span>
         </div>
 
         <p className="ovt-caption-z" aria-hidden="true">
@@ -257,11 +260,66 @@ export function OvertureScene() {
           <p className="ovt-promise-z hero-promise-z">Pour faire de chaque détail une promesse.</p>
         </div>
 
+        {/* La flèche seule, sans libellé : à ce moment la page n'a plus qu'une
+            chose à dire, et un mot de plus la ferait bavarder. */}
         <p className="ovt-cue-z" aria-hidden="true">
-          <span className="ovt-cue-line-z" />
-          Faire défiler
           <span className="ovt-cue-arrow-z" />
         </p>
+      </div>
+
+      {/* ——— L'attente ———
+          Elle reste montée, invisible et hors d'atteinte, une fois finie : la
+          démonter ferait un remontage au moindre re-rendu, et un trou à la
+          place de la scène. Aucun élément focalisable, donc rien qui traîne
+          dans l'ordre de tabulation. */}
+      <div className="ovt-loader-z" aria-hidden="true">
+        <div className="ovt-decl-z">
+          <span className="ovt-decl-half-z" data-half="haut">
+            <span className="ovt-decl-line-z">
+              <span className="ovt-w-z" data-rank="liaison">
+                l&rsquo;
+              </span>
+              <span className="ovt-w-z" data-rank="majeur">
+                Élégance
+              </span>
+            </span>
+            {/* Le mot de liaison seul sur sa ligne, juste au-dessus de la
+                fente : c'est une respiration, et c'est ce qui laisse au mot
+                principal toute sa place. */}
+            <span className="ovt-decl-line-z">
+              <span className="ovt-w-z" data-rank="liaison">
+                dans
+              </span>
+            </span>
+          </span>
+
+          {/* La place du média : c'est par cette fente que la scène apparaît,
+              et c'est en l'écartant que les deux moitiés lui font place. */}
+          <span className="ovt-decl-gap-z" />
+
+          <span className="ovt-decl-half-z" data-half="bas">
+            <span className="ovt-decl-line-z">
+              <span className="ovt-w-z" data-rank="median">
+                chaque
+              </span>
+            </span>
+            <span className="ovt-decl-line-z">
+              <span className="ovt-w-z" data-rank="mineur">
+                détail
+              </span>
+              <span className="ovt-w-z" data-rank="point">
+                .
+              </span>
+            </span>
+          </span>
+        </div>
+
+        <div className="ovt-bar-z">
+          <span className="ovt-bar-fill-z" />
+          <span className="ovt-bar-pct-z" ref={counterRef}>
+            0 %
+          </span>
+        </div>
       </div>
     </section>
   );

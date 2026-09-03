@@ -3985,15 +3985,15 @@ nav[aria-label="Fil d'Ariane"] a {
 
 /* ————— L'ouverture —————
  *
- * Une scène collante, trois écrans et demi de piste, et **une seule valeur
- * continue** : `--sp`, la progression, écrite une fois par trame. Tout le
- * reste en est déduit ici, en CSS, par des rampes bornées.
- *
- * Une rampe se lit ainsi : `clamp(0, (p - début) / durée, 1)`. Elle vaut 0
+ * Deux valeurs continues, et tout le reste en est déduit ici par des rampes
+ * bornées. Une rampe se lit `clamp(0, (p - début) / durée, 1)` : elle vaut 0
  * avant son début, 1 après sa fin, et interpole entre les deux. Les phases se
  * chevauchent volontairement — c'est ce recouvrement qui fait qu'une chose
  * commence avant que la précédente n'ait fini, et que la séquence ne se lit
  * pas comme une liste d'étapes.
+ *
+ *   --load   l'attente, automatique, écrite par une horloge
+ *   --sp     la sortie, au défilement, une fois l'attente finie
  *
  * Rien ici n'anime la mise en page. Uniquement `transform`, `opacity` et
  * `clip-path`.
@@ -4001,32 +4001,47 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility ovt-track-z {
   position: relative;
-  height: 350svh;
+  /* Un écran de scène tenue, puis presque un pour la sortie. La référence
+   * n'occupe qu'un écran, mais elle se contente d'un défilement ordinaire ;
+   * une sortie tenue — la scène qui recule, remonte et rend le logo — demande
+   * sa propre course. */
+  height: 185svh;
 
-  --p: var(--sp, 0);
+  --l: var(--load, 1);
+  /* La sortie ne commence pas avant que la scène soit ouverte. */
+  --p: var(--sp, 1);
 
-  /* 0,00 → 0,02 : la ligne d'attente passe du gris à l'encre. Court : elle
-   * doit être lisible presque tout de suite, c'est le filet qui fait attendre. */
-  --ph-ink: clamp(0, calc(var(--p) / 0.02), 1);
-  /* 0,00 → 0,10 : le filet se remplit de gauche à droite. */
-  --ph-bar: clamp(0, calc(var(--p) / 0.1), 1);
-  /* 0,10 → 0,14 : l'attente se retire. */
-  --ph-out: clamp(0, calc((var(--p) - 0.1) / 0.04), 1);
-  /* 0,11 → 0,34 : la scène s'ouvre et gagne le plein écran. */
-  --ph-open: clamp(0, calc((var(--p) - 0.11) / 0.23), 1);
-  /* 0,28 → 0,46 : le logo paraît au centre. */
-  --ph-logo: clamp(0, calc((var(--p) - 0.28) / 0.18), 1);
-  /* 0,36 → 0,52 : la ligne secondaire s'inscrit. */
-  --ph-cap: clamp(0, calc((var(--p) - 0.36) / 0.16), 1);
-  /* 0,52 → 0,80 : la scène recule, le logo la suit jusqu'à l'en-tête. */
-  --ph-travel: clamp(0, calc((var(--p) - 0.52) / 0.28), 1);
-  /* 0,74 → 1,00 : le texte éditorial arrive. */
-  --ph-text: clamp(0, calc((var(--p) - 0.74) / 0.26), 1);
-  /* 0,84 → 0,88 : le voyageur se retire, une fois le mot-symbole entièrement
-   * pris. Sans cela il restait à sa place d'arrivée pendant que l'en-tête
-   * reprenait sa rétractation : les deux logos s'écartaient de 24 px et le
-   * doublon devenait visible. Constaté à la mesure, en fin de piste. */
-  --ph-gone: clamp(0, calc((var(--p) - 0.84) / 0.04), 1);
+  /* La fente par laquelle la scène apparaît, et la place que les deux moitiés
+   * de la déclaration lui laissent. Une seule paire de valeurs pour les deux :
+   * c'est ce qui garantit qu'elles coïncident au pixel. */
+  --gap-w: clamp(9rem, 17vw, 15.2rem);
+  --gap-h: clamp(5rem, 9.4vw, 8.4rem);
+
+  /* ——— L'attente ——— */
+  /* 0,00 → 0,18 : la déclaration s'inscrit. */
+  --lp-ink: clamp(0, calc(var(--l) / 0.18), 1);
+  /* 0,60 → 1,00 : les moitiés s'écartent et le masque s'ouvre. */
+  --lp-open: clamp(0, calc((var(--l) - 0.6) / 0.4), 1);
+  /* 0,88 → 1,00 : le fond clair et l'attente se retirent. */
+  --lp-out: clamp(0, calc((var(--l) - 0.88) / 0.12), 1);
+
+  /* ——— La sortie ——— */
+  /* 0,00 → 0,70 : le logo rejoint l'en-tête. */
+  --xp-logo: clamp(0, calc(var(--p) / 0.7), 1);
+  /* 0,00 → 0,85 : la scène se réduit, remonte et quitte l'écran par le haut. */
+  --xp-media: clamp(0, calc(var(--p) / 0.85), 1);
+  /* 0,74 → 0,80 : le voyageur se retire, le mot-symbole ayant pris le relais. */
+  --xp-gone: clamp(0, calc((var(--p) - 0.74) / 0.06), 1);
+  /* 0,30 → 0,92 : le texte éditorial occupe la place que la scène libère.
+   * Attendre qu'elle soit entièrement partie laissait un demi-écran vide
+   * pendant toute la remontée — un vide sans intention, constaté à l'image. */
+  --xp-text: clamp(0, calc((var(--p) - 0.3) / 0.62), 1);
+
+  &[data-loaded="false"] {
+    /* Tant que l'attente dure, la sortie n'existe pas — même si un défilement
+     * a réussi à passer. */
+    --p: 0;
+  }
 }
 
 @utility ovt-scene-z {
@@ -4039,80 +4054,46 @@ nav[aria-label="Fil d'Ariane"] a {
   isolation: isolate;
 }
 
-/* Le fond passe du papier à l'encre au rythme de l'ouverture. */
+/* Le fond. Papier pendant l'attente, encre ensuite : c'est lui qui porte le
+ * passage du clair au sombre, et non la scène. */
 @utility ovt-ground-z {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: color-mix(
-    in oklab,
-    var(--navy-deep) calc(var(--ph-open) * 100%),
-    var(--color-background)
-  );
+  background: color-mix(in oklab, var(--navy-deep) calc(var(--lp-out) * 100%), var(--color-background));
 }
 
-@utility ovt-loading-z {
-  position: relative;
-  z-index: 3;
-  grid-area: 1 / 1;
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  /* Gris au départ, encre ensuite : c'est la première chose qui bouge. */
-  color: color-mix(
-    in oklab,
-    var(--color-foreground) calc(28% + var(--ph-ink) * 72%),
-    transparent
-  );
-  opacity: calc(1 - var(--ph-out));
-}
-
-/* Le filet d'attente. Il ne feint aucun chargement réseau : il trace
- * l'avancement réel de la séquence. Décalé des bords — collé, il deviendrait
- * une barre de navigateur ; décalé, il appartient à la composition. */
-@utility ovt-bar-z {
-  position: absolute;
-  z-index: 3;
-  left: clamp(1.25rem, 4vw, 3.5rem);
-  right: clamp(1.25rem, 4vw, 3.5rem);
-  bottom: clamp(1.5rem, 5vh, 3rem);
-  height: 1px;
-  background: color-mix(in oklab, var(--color-foreground) 12%, transparent);
-  opacity: calc(1 - var(--ph-out));
-}
-
-@utility ovt-bar-fill-z {
-  display: block;
-  height: 100%;
-  background: var(--color-foreground);
-  /* Le remplissage part de la gauche : c'est l'origine de la transformation
-   * qui le dit, pas une largeur animée. */
-  transform-origin: left center;
-  scale: var(--ph-bar) 1;
-}
-
-/* La scène : elle naît en petit rectangle au centre, aux proportions de la
- * fenêtre, gagne le plein écran, puis recule.
+/* ——— La scène ———
  *
- * La boîte occupe tout l'écran et c'est l'échelle qui la réduit. Animer une
- * largeur aurait fait recalculer la mise en page à chaque image ; une échelle
- * ne coûte rien et donne le vrai plein écran, que la boîte à proportions fixes
- * ne pouvait pas atteindre. */
+ * Elle occupe l'écran entier dès le premier instant. Ce que le visiteur voit
+ * grandir n'est pas elle mais son masque : le sujet garde sa taille et sa
+ * place, et seule la fenêtre s'ouvre.
+ *
+ * Une échelle aurait donné un zoom — l'arête de pierre aurait grossi avec le
+ * cadre, ce qui se lit comme un agrandissement d'image, pas comme l'ouverture
+ * d'une scène. C'est la différence la plus visible avec la version précédente. */
 @utility ovt-stage-z {
   position: absolute;
   inset: 0;
   z-index: 1;
   overflow: hidden;
-  border-radius: 2px;
-  opacity: clamp(0, calc(var(--ph-open) * 3), 1);
-  /* Elle naît à un sixième de l'écran, gagne le plein cadre, recule une
-   * première fois avec le logo, puis une seconde fois pour laisser la colonne
-   * de gauche au texte. Sans ce second retrait, la déclaration se posait sur
-   * la partie claire de la photographie et s'y perdait. Constaté à l'image. */
-  scale: calc(0.17 + var(--ph-open) * 0.83 - var(--ph-travel) * 0.2 - var(--ph-text) * 0.22);
-  translate: calc(var(--ph-text) * 16%) calc(var(--ph-travel) * -3%);
-  will-change: transform;
+
+  /* Fermé, le masque laisse exactement la fente de la déclaration. Ouvert, il
+   * garde un filet de fond clair sur les quatre bords : la scène est posée
+   * dans la page, pas collée à ses arêtes. */
+  --frame: calc(0.55rem * var(--lp-out));
+  --closed: calc(1 - var(--lp-open));
+  clip-path: inset(
+    calc(var(--frame) + (50% - var(--gap-h) / 2 - var(--frame)) * var(--closed))
+      calc(var(--frame) + (50% - var(--gap-w) / 2 - var(--frame)) * var(--closed))
+  );
+
+  /* La sortie : la scène recule, remonte, et quitte l'écran par le haut. Elle
+   * ne part pas de côté et ne devient pas une vignette — elle s'en va. */
+  scale: calc(1 - var(--xp-media) * 0.12);
+  translate: 0 calc(var(--xp-media) * -112%);
+  opacity: clamp(0, calc((1 - var(--xp-media)) * 4), 1);
+  will-change: clip-path, transform;
 }
 
 @utility ovt-media-z {
@@ -4121,16 +4102,13 @@ nav[aria-label="Fil d'Ariane"] a {
   object-fit: cover;
   /* La rotation est dans la prise de vue, pas dans le navigateur : c'est une
    * arête de pierre réellement filmée en rotation lente. */
-  scale: calc(1.06 - var(--ph-travel) * 0.04);
+  scale: 1.04;
 }
 
-/* Le voile de scene. Il ne sert pas qu'a l'ambiance : il garantit que le logo
- * clair reste lisible quel que soit le media affiche. La video est sombre, la
- * photographie de repli est pale — sans ce voile, le logo disparaissait sur le
- * lin creme. Constate a l'image, pas suppose.
- *
- * La bande centrale suit `--ph-logo` : elle arrive avec le logo et se retire
- * avec lui, plutot que d'assombrir la scene du debut a la fin. */
+/* Le voile de scène. Il ne sert pas qu'à l'ambiance : il garantit que le logo
+ * clair reste lisible quel que soit le média affiché. La vidéo est sombre, la
+ * photographie de repli est pâle — sans ce voile, le logo disparaissait sur le
+ * lin crème. Constaté à l'image, pas supposé. */
 @utility ovt-grain-z {
   position: absolute;
   inset: 0;
@@ -4138,55 +4116,61 @@ nav[aria-label="Fil d'Ariane"] a {
     linear-gradient(
       to bottom,
       transparent 4%,
-      color-mix(in oklab, var(--navy-deep) 72%, transparent) 34%,
-      color-mix(in oklab, var(--navy-deep) 72%, transparent) 86%,
+      color-mix(in oklab, var(--navy-deep) 68%, transparent) 34%,
+      color-mix(in oklab, var(--navy-deep) 68%, transparent) 86%,
       transparent 98%
     ),
     radial-gradient(
-      120% 90% at 50% 30%,
-      transparent 30%,
+      120% 90% at 50% 45%,
+      transparent 28%,
       color-mix(in oklab, var(--navy-deep) 62%, transparent) 100%
     );
-  /* Trois régimes : discret au début, appuyé sous le logo, presque fermé sous
-   * le texte. La lisibilité ne doit jamais dépendre du média affiché — la
-   * vidéo est sombre, la photographie de repli est pâle. */
-  opacity: min(1, calc(0.4 + var(--ph-logo) * 0.45 + var(--ph-text) * 0.4));
+  /* La légende et le logo doivent tenir aussi bien sur la vidéo, sombre, que
+   * sur la photographie de repli, très claire. Le voile est donc posé pour le
+   * pire des deux : la lisibilité ne dépend jamais du média affiché. */
+  opacity: min(1, calc(0.34 + var(--lp-out) * 0.46 + var(--xp-text) * 0.2));
 }
 
-/* Le logo voyageur. Il part du centre, suit la scène, se réduit et rejoint
- * l'en-tête. Sa destination est mesurée, jamais devinée. */
+/* ——— Le logo voyageur ———
+ *
+ * Il paraît au centre de la scène ouverte, la suit dans sa sortie, se réduit
+ * et rejoint exactement la place du mot-symbole de l'en-tête. Sa destination
+ * est mesurée sur ce mot-symbole, jamais devinée. */
 @utility ovt-logo-z {
   position: relative;
   z-index: 4;
   grid-area: 1 / 1;
   display: grid;
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 5.4vw, 4.5rem);
+  /* 230 px de large environ, comme la référence : le logo de scène est petit.
+   * Grand, il concurrence la scène au lieu de la signer. */
+  font-size: clamp(1.375rem, 3.2vw, 2.875rem);
   font-weight: 300;
   line-height: 1;
   letter-spacing: 0.4em;
   text-indent: 0.4em;
   text-transform: uppercase;
   white-space: nowrap;
-  opacity: calc(clamp(0, calc(var(--ph-logo) * 1.4), 1) * (1 - var(--ph-gone)));
-  translate: calc(var(--logo-x, 0px) * var(--ph-travel))
-    calc(var(--logo-y, 0px) * var(--ph-travel));
-  scale: calc(1 - (1 - var(--logo-scale, 0.28)) * var(--ph-travel));
+  /* Il n'existe qu'une fois la scène ouverte, et se retire une fois le
+   * mot-symbole entièrement pris. */
+  opacity: calc(clamp(0, calc((var(--l) - 0.9) / 0.1), 1) * (1 - var(--xp-gone)));
+  translate: calc(var(--logo-x, 0px) * var(--xp-logo))
+    calc(var(--logo-y, 0px) * var(--xp-logo));
+  scale: calc(1 - (1 - var(--logo-scale, 0.36)) * var(--xp-logo));
   will-change: transform;
 }
 
-/* Deux copies superposées : une couleur ne s'interpole pas en `calc`, un
- * fondu croisé si. Elles occupent la même cellule, donc aucun décalage. */
+/* Une seule face, claire.
+ *
+ * La référence croise deux copies pour passer du clair au sombre : son en-tête
+ * est sombre sur crème. Celui de ZELOR est marine et son mot-symbole clair, et
+ * le fond que le logo traverse est marine lui aussi. Un logo qui s'assombrirait
+ * en route deviendrait un fantôme à mi-parcours — mesuré à l'image, à 0,55 de
+ * la sortie. Le geste juste n'est pas de changer de couleur mais de prendre
+ * celle de la destination : ici, elles coïncident. */
 @utility ovt-logo-face-z {
   grid-area: 1 / 1;
-  &[data-face="light"] {
-    color: var(--color-navy-foreground);
-    opacity: calc(1 - var(--ph-travel));
-  }
-  &[data-face="dark"] {
-    color: var(--color-foreground);
-    opacity: var(--ph-travel);
-  }
+  color: var(--color-navy-foreground);
 }
 
 @utility ovt-caption-z {
@@ -4194,32 +4178,212 @@ nav[aria-label="Fil d'Ariane"] a {
   z-index: 4;
   grid-area: 1 / 1;
   align-self: end;
-  margin-bottom: clamp(4rem, 14vh, 9rem);
+  margin-bottom: clamp(5rem, 16vh, 10rem);
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-navy-foreground) 72%, transparent);
-  opacity: calc(var(--ph-cap) * (1 - var(--ph-text)));
-  translate: 0 calc((1 - var(--ph-cap)) * 12px);
+  color: color-mix(in oklab, var(--color-navy-foreground) 78%, transparent);
+  opacity: calc(clamp(0, calc((var(--l) - 0.94) / 0.06), 1) * (1 - clamp(0, calc(var(--p) / 0.2), 1)));
 }
+
+/* La flèche seule, sans libellé : à cet instant la page n'a plus qu'une chose
+ * à dire, et un mot de plus la ferait bavarder. */
+@utility ovt-cue-z {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(2rem, 5vh, 3.25rem);
+  z-index: 5;
+  translate: -50% 0;
+  color: color-mix(in oklab, var(--color-navy-foreground) 62%, transparent);
+  opacity: calc(clamp(0, calc((var(--l) - 0.96) / 0.04), 1) * (1 - clamp(0, calc(var(--p) / 0.15), 1)));
+}
+
+@utility ovt-cue-arrow-z {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  rotate: 45deg;
+  animation: ovt-cue-drift 2.6s var(--ease-breathe) infinite;
+}
+
+@keyframes ovt-cue-drift {
+  0%,
+  100% {
+    translate: 0 -0.1em;
+    opacity: 0.5;
+  }
+  50% {
+    translate: 0 0.28em;
+    opacity: 1;
+  }
+}
+
+/* ——— L'attente ———
+ *
+ * Une couche posée par-dessus la scène, mais sans fond à elle : le papier vient
+ * du fond de scène, et c'est par la fente du masque que le média se montre.
+ * Elle reste montée une fois finie — invisible et hors d'atteinte — parce que
+ * la démonter ferait un remontage au moindre re-rendu. */
+@utility ovt-loader-z {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 100svh;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+/* La déclaration. Deux moitiés qui s'écartent pour laisser passer la scène. */
+@utility ovt-decl-z {
+  grid-area: 1 / 1;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  /* 1,02 et non 0,94 : a 0,94 la boite de ligne etait plus courte que les
+   * capitales, si bien que la queue du Q descendait dans la fente et se posait
+   * sur la scene. Constate a l'image. */
+  line-height: 1.02;
+  text-align: center;
+  color: var(--color-foreground);
+  opacity: calc(var(--lp-ink) * (1 - var(--lp-out)));
+}
+
+@utility ovt-decl-half-z {
+  display: grid;
+  justify-items: center;
+  /* Elles s'écartent avec l'ouverture. Le haut monte, le bas descend : la
+   * fente s'agrandit par le milieu, exactement là où la scène apparaît. */
+  &[data-half="haut"] {
+    translate: 0 calc(var(--lp-open) * -2.2rem);
+  }
+  &[data-half="bas"] {
+    translate: 0 calc(var(--lp-open) * 2.2rem);
+  }
+}
+
+@utility ovt-decl-line-z {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.24em;
+}
+
+/* Les rangs de la déclaration.
+ *
+ * La hiérarchie ne passe jamais par la graisse : elle passe par le corps, la
+ * casse, la famille et l'inclinaison. Le mot principal doit se reconnaître
+ * d'un regard ; les mots de liaison sont des respirations, pas des égaux. */
+@utility ovt-w-z {
+  &[data-rank="majeur"] {
+    font-size: clamp(2.5rem, 6.6vw, 5.9rem);
+    text-transform: uppercase;
+    letter-spacing: 0.004em;
+  }
+  &[data-rank="median"] {
+    font-size: clamp(1.75rem, 4.4vw, 3.9rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  &[data-rank="mineur"] {
+    font-size: clamp(1.25rem, 3.1vw, 2.75rem);
+    letter-spacing: 0.005em;
+  }
+  &[data-rank="liaison"] {
+    font-size: clamp(1rem, 2.3vw, 2rem);
+    font-style: italic;
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+  }
+  /* Le point n'est pas une ponctuation posée là : c'est le dernier signe de la
+   * page d'attente, et il est traité comme tel. */
+  &[data-rank="point"] {
+    font-size: clamp(1.25rem, 3.1vw, 2.75rem);
+    color: var(--color-gold);
+    /* Colle au mot : une espace avant le point serait une faute, et
+     * l'espacement de la ligne en fabriquait une. */
+    margin-left: -0.24em;
+  }
+}
+
+/* La fente. Elle a exactement la taille du masque fermé, et c'est elle qui
+ * écarte les deux moitiés au repos. */
+@utility ovt-decl-gap-z {
+  display: block;
+  width: var(--gap-w);
+  height: var(--gap-h);
+  margin-block: clamp(1.25rem, 3vh, 2.25rem);
+}
+
+/* ——— Le filet et le compteur ———
+ *
+ * Deux pixels, décalé des bords, en bas. Le pourcentage chevauche le bord du
+ * remplissage et voyage avec lui : c'est ce détail qui fait qu'on lit une
+ * course, et non une barre avec un chiffre à côté. */
+@utility ovt-bar-z {
+  position: absolute;
+  left: clamp(1.25rem, 2.1vw, 1.875rem);
+  right: clamp(1.25rem, 2.1vw, 1.875rem);
+  bottom: clamp(1.25rem, 2.1vw, 1.875rem);
+  height: 2px;
+  background: color-mix(in oklab, var(--color-foreground) 10%, transparent);
+  opacity: calc(1 - var(--lp-out));
+}
+
+@utility ovt-bar-fill-z {
+  display: block;
+  height: 100%;
+  background: var(--color-foreground);
+  /* Le remplissage part de la gauche : c'est l'origine de la transformation qui
+   * le dit, pas une largeur animée. */
+  transform-origin: left center;
+  scale: var(--l) 1;
+}
+
+@utility ovt-bar-pct-z {
+  position: absolute;
+  bottom: 0.75rem;
+  left: calc(var(--l) * 100%);
+  /* À zéro il s'aligne à gauche du filet, à cent il s'aligne à droite : la
+   * même expression fait les deux, et le chiffre ne sort jamais du cadre. */
+  translate: calc(var(--l) * -100%) 0;
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--color-foreground) 55%, transparent);
+  white-space: nowrap;
+}
+
+/* ——— Le texte éditorial ——— */
 
 @utility ovt-editorial-z {
   position: relative;
   z-index: 5;
   grid-area: 1 / 1;
   align-self: center;
+  /* Il naît dans le tiers bas, là où la scène s'en va, et remonte vers le
+   * centre à mesure qu'elle disparaît : le relais est continu, et l'écran
+   * n'est jamais à moitié vide. */
+  translate: 0 calc((1 - var(--xp-text)) * 22vh);
   width: 100%;
   max-width: 88rem;
   margin-inline: auto;
   padding-inline: clamp(1.25rem, 4vw, 3.5rem);
   pointer-events: none;
+  /* Il n'arrive qu'une fois la scène partie. */
+  opacity: clamp(0, calc(var(--xp-text) * 3), 1);
 }
 
 @utility ovt-statement-z {
-  /* Elle n'avait pas de corps propre et retombait sur celui du texte courant :
-   * une déclaration de dix-sept pixels, illisible sur la photographie. */
-  max-width: 15ch;
+  max-width: 22ch;
+  margin-inline: auto;
+  text-align: center;
+  text-wrap: balance;
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 3.4vw, 3rem);
   font-weight: 300;
@@ -4231,10 +4395,12 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility ovt-promise-z {
   max-width: 34ch;
   margin-top: clamp(1.25rem, 3vh, 2rem);
+  margin-inline: auto;
+  text-align: center;
   font-family: var(--font-display);
   font-size: clamp(1rem, 1.5vw, 1.375rem);
   font-style: italic;
-  opacity: clamp(0, calc((var(--ph-text) - 0.55) / 0.45), 1);
+  opacity: clamp(0, calc((var(--xp-text) - 0.55) / 0.45), 1);
 }
 
 /* La phrase de marque porte deux classes : la sienne, et celle qui la fait
@@ -4244,55 +4410,12 @@ nav[aria-label="Fil d'Ariane"] a {
  * l'égalité entre deux classes de même poids. */
 .ovt-editorial-z .ovt-promise-z {
   color: color-mix(in oklab, var(--color-navy-foreground) 82%, transparent);
-}
-
-@utility ovt-cue-z {
-  position: absolute;
-  left: clamp(1.25rem, 4vw, 3.5rem);
-  bottom: clamp(1.5rem, 4vh, 2.5rem);
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-navy-foreground) 55%, transparent);
-  /* Present pendant que la scene s'ouvre, retire des qu'elle recule. */
-  opacity: calc(var(--ph-open) * (1 - var(--ph-travel)));
-}
-
-@utility ovt-cue-line-z {
-  display: block;
-  width: 2.5rem;
-  height: 1px;
-  background: currentColor;
-}
-
-/* La flèche. Deux filets tournés d'un quart de tour : aucune icône à charger,
- * aucune dépendance, et elle prend la couleur du texte qu'elle accompagne. */
-@utility ovt-cue-arrow-z {
-  display: block;
-  width: 0.4375rem;
-  height: 0.4375rem;
-  border-right: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  rotate: 45deg;
-  translate: 0 -0.09em;
-  animation: ovt-cue-drift 2.6s var(--ease-breathe) infinite;
-}
-
-@keyframes ovt-cue-drift {
-  0%,
-  100% {
-    translate: 0 -0.09em;
-    opacity: 0.55;
-  }
-  50% {
-    translate: 0 0.24em;
-    opacity: 1;
-  }
+  /* L'axe aussi passe par le sélecteur composé : la classe qui fait exister
+   * cette phrase partout ailleurs sur le site l'aligne à gauche, et à poids
+   * égal c'est l'ordre du fichier qui tranchait. Elle restait plaquée au bord
+   * gauche pendant que toute l'ouverture était centrée. Constaté à l'image. */
+  margin-inline: auto;
+  text-align: center;
 }
 
 /* ——— Le texte mot par mot ——— */
@@ -4306,6 +4429,11 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility word-mask-z {
   display: inline-block;
   overflow: hidden;
+  /* Marge de rognage : les jambages du serif descendent bas et seraient
+   * coupés par une fenêtre calée sur la ligne de base. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  vertical-align: bottom;
 
   /* La hiérarchie passe par le corps et la famille, jamais par la graisse.
    * Elle est portée ici, sur la fenêtre, pour que le mot en hérite : une
@@ -4321,12 +4449,6 @@ nav[aria-label="Fil d'Ariane"] a {
   &[data-rank="accent"] {
     font-style: italic;
   }
-
-  /* Marge de rognage : les jambages du serif descendent bas et seraient
-   * coupés par une fenêtre calée sur la ligne de base. */
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
-  vertical-align: bottom;
 }
 
 @utility word-body-z {
@@ -4343,17 +4465,31 @@ nav[aria-label="Fil d'Ariane"] a {
   }
 }
 
-/* Dans l'ouverture, la montée n'est pas chronométrée : elle suit le scroll,
- * chaque mot décalé sur le précédent. */
+/* Dans l'ouverture, la montée n'est pas chronométrée : elle suit le
+ * défilement, chaque mot décalé sur le précédent. */
 .ovt-editorial-z .word-body-z {
-  --wp: clamp(0, calc((var(--ph-text) - var(--word-i, 0) * 0.045) / 0.42), 1);
+  --wp: clamp(0, calc((var(--xp-text) - var(--word-i, 0) * 0.019) / 0.3), 1);
   translate: 0 calc((1 - var(--wp)) * 125%);
   transition: none;
 }
 
-/* ——— L'en-tête pendant l'immersion ——— */
+/* Sur une page qui porte une ouverture, l'en-tête flotte au lieu d'occuper le
+ * flux — comme celui de la référence. Sans cela la scène commençait 123 px
+ * trop bas : le filet d'attente tombait sous la ligne de flottaison et la
+ * déclaration n'était pas centrée.
+ *
+ * La règle passe par le sélecteur, donc elle s'applique dès la première
+ * peinture, sans JavaScript. Une marge négative posée par une mesure aurait
+ * décalé la page entière une fois l'hydratation faite : 0,086 de décalage
+ * cumulé, mesuré au PerformanceObserver. Ici, zéro. */
+html:has(.ovt-track-z) header.header-motion-z {
+  position: fixed;
+  inset-inline: 0;
+}
 
-/* Tout ce bloc est portée par `:root[data-overture]`, posé par la scène tant
+/* ——— L'en-tête pendant l'immersion ———
+ *
+ * Tout ce bloc est porté par `:root[data-overture]`, posé par la scène tant
  * qu'elle est montée. La progression seule ne suffisait pas : une variable
  * absente vaut sa valeur par défaut, donc `--ovt-p` ne distingue pas « pas
  * d'ouverture » de « ouverture terminée ». Un attribut se sélectionne, et les
@@ -4361,9 +4497,10 @@ nav[aria-label="Fil d'Ariane"] a {
  *
  * Deux mouvements se composent sur le même en-tête :
  *
- *   --ovt-h  sa présence. Zéro pendant l'immersion : il est escamoté vers le
- *            haut, hors de l'écran, et le visiteur voit une page entièrement
- *            claire. Il redescend juste avant que le logo ne se pose.
+ *   --ovt-h  sa présence. Zéro pendant toute l'immersion : il est escamoté
+ *            vers le haut, hors de l'écran, et le visiteur voit une page
+ *            entièrement claire. Il redescend juste avant que le logo ne se
+ *            pose.
  *   --ovt-r  sa rétractation ordinaire au défilement vers le bas, neutralisée
  *            tant que l'ouverture n'a pas rendu le logo — sans quoi la
  *            destination se dérobait de 23 px pendant que le voyageur
@@ -4372,15 +4509,24 @@ nav[aria-label="Fil d'Ariane"] a {
  * Le plus grand des deux l'emporte : escamoté ou rétracté, l'en-tête est en
  * haut ; présent et posé, il est à sa place. */
 :root[data-overture] .header-motion-z {
-  --ovt-h: clamp(0, calc((var(--ovt-p, 1) - 0.7) / 0.06), 1);
+  --ovt-h: clamp(0, calc((var(--ovt-p, 1) - 0.62) / 0.12), 1);
   --ovt-r: 0;
-  /* Vaut 1 dès que l'ouverture est en cours, 0 quand elle est finie : c'est ce
+  /* Vaut 1 tant que l'ouverture est en cours, 0 quand elle est finie : c'est ce
    * qui coupe les transitions pendant qu'elles seraient pilotées au défilement,
    * puis les rend à l'en-tête pour sa rétractation normale. */
   --ovt-live: clamp(0, calc((1 - var(--ovt-p, 1)) * 200), 1);
   translate: 0 calc(-100% * max(1 - var(--ovt-h), var(--ovt-r)));
   opacity: var(--ovt-h);
   filter: none;
+  /* La règle de rétractation retire les événements de pointeur à un en-tête
+   * marqué caché. Or l'ouverture le maintient à sa place bien qu'il soit
+   * marqué tel : son mot-symbole était visible et inerte, et le retour en haut
+   * ne répondait plus. Trouvé par un test d'interaction, pas à l'œil.
+   *
+   * Les lui rendre ne réintroduit rien : une fois l'ouverture finie, la
+   * rétractation reprend et sort l'en-tête de l'écran, où il n'y a plus rien à
+   * cliquer. */
+  pointer-events: auto;
   transition-duration: calc(var(--dur-4) * (1 - var(--ovt-live)));
 }
 
@@ -4399,11 +4545,9 @@ nav[aria-label="Fil d'Ariane"] a {
 }
 
 /* Le mot-symbole reste effacé jusqu'à ce que le voyageur ait atteint sa place,
- * puis prend le relais exactement quand l'autre disparaît. Sans cela on
- * verrait deux logos se croiser, ou le voyageur se poser sur une place déjà
- * occupée. */
+ * puis prend le relais exactement quand l'autre disparaît. */
 :root[data-overture] header .wordmark-z {
-  opacity: clamp(0, calc((var(--ovt-p, 1) - 0.79) / 0.05), 1);
+  opacity: clamp(0, calc((var(--ovt-p, 1) - 0.7) / 0.05), 1);
 }
 
 /* Ramené par le clavier, l'en-tête doit être entier : sans cette ligne il
@@ -4413,21 +4557,48 @@ nav[aria-label="Fil d'Ariane"] a {
   opacity: 1;
 }
 
+/* Le temps d'une mesure, l'en-tête reprend sa place au repos.
+ *
+ * La destination du logo se lit sur le mot-symbole réel ; escamoté, il se
+ * trouve au-dessus de l'écran et le voyageur atterrissait hors champ. La scène
+ * pose cet attribut, lit la géométrie, puis le retire — dans la même tâche,
+ * donc avant toute peinture. */
+:root[data-overture-measure] .header-motion-z {
+  --ovt-h: 1;
+  --ovt-r: 0;
+}
+
+/* Et le voyageur reste à son point de départ le temps de la même lecture.
+ * Sans cela, une mesure prise après le moindre défilement enregistrait un
+ * trajet déjà entamé — donc trop court — et le logo s'arrêtait 145 px avant sa
+ * place. Constaté à la mesure, en fin de course. */
+:root[data-overture-measure] .ovt-logo-z {
+  translate: 0 0;
+  scale: 1;
+}
+
 /* ——— Mobile ——— */
 
 @media (max-width: 767px) {
-  .ovt-logo-z {
-    font-size: clamp(1.5rem, 9vw, 2.5rem);
+  .ovt-track-z {
+    --gap-w: clamp(6.5rem, 34vw, 9rem);
+    --gap-h: clamp(4rem, 21vw, 5.5rem);
   }
 
-  /* Aucune colonne à libérer sur un petit écran : la scène reste au centre et
-   * c'est le voile qui porte seul la lisibilité. */
-  .ovt-stage-z {
-    translate: 0 calc(var(--ph-travel) * -3%);
+  .ovt-logo-z {
+    font-size: clamp(1.125rem, 5.4vw, 1.75rem);
+  }
+
+  .ovt-decl-half-z[data-half="haut"] {
+    translate: 0 calc(var(--lp-open) * -1.4rem);
+  }
+
+  .ovt-decl-half-z[data-half="bas"] {
+    translate: 0 calc(var(--lp-open) * 1.4rem);
   }
 
   .ovt-statement-z {
-    max-width: 13ch;
+    max-width: 17ch;
     font-size: clamp(1.625rem, 7.4vw, 2.25rem);
   }
 
@@ -4440,15 +4611,13 @@ nav[aria-label="Fil d'Ariane"] a {
 
 /* ——— Mouvement réduit et sans JavaScript ———
  *
- * `--sp` n'est jamais écrit dans ces deux régimes. Sans repli, la progression
- * resterait à zéro et l'ouverture afficherait sa ligne d'attente pour
- * toujours. On force donc l'état final et l'on déplie la piste.
- */
+ * Ni `--load` ni `--sp` ne sont écrites dans ces deux régimes. Leurs valeurs
+ * par défaut placent déjà la scène à son état final ; il reste à déplier la
+ * piste et à retirer ce qui n'a plus d'objet. */
 
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .ovt-track-z {
     height: auto;
-    --p: 1;
   }
 
   .ovt-scene-z {
@@ -4458,14 +4627,10 @@ nav[aria-label="Fil d'Ariane"] a {
     padding-block: clamp(3rem, 10vh, 6rem);
   }
 
-  .ovt-loading-z,
-  .ovt-bar-z,
-  .ovt-cue-z {
+  .ovt-loader-z {
     display: none;
   }
 
-  /* La scène retrouve une boîte ordinaire : hors de la piste collante, une
-   * boîte absolue calée sur tout l'écran n'aurait plus de repère. */
   .ovt-stage-z {
     position: relative;
     inset: auto;
@@ -4473,9 +4638,9 @@ nav[aria-label="Fil d'Ariane"] a {
     width: min(88vw, 78rem);
     aspect-ratio: 1088 / 768;
     margin-inline: auto;
+    clip-path: none;
     scale: 1;
     translate: 0 0;
-    clip-path: none;
     opacity: 1;
   }
 
@@ -4486,6 +4651,14 @@ nav[aria-label="Fil d'Ariane"] a {
   /* Le voyageur disparaît : l'en-tête garde le sien, et rien ne se croise. */
   .ovt-logo-z {
     display: none;
+  }
+
+  .ovt-cue-z {
+    display: none;
+  }
+
+  .ovt-cue-arrow-z {
+    animation: none;
   }
 
   :root[data-overture] .header-motion-z,
@@ -4499,11 +4672,8 @@ nav[aria-label="Fil d'Ariane"] a {
     opacity: 1;
   }
 
-  .ovt-cue-arrow-z {
-    animation: none;
-  }
-
   .ovt-caption-z,
+  .ovt-editorial-z,
   .ovt-promise-z {
     opacity: 1;
   }
@@ -4511,15 +4681,4 @@ nav[aria-label="Fil d'Ariane"] a {
   .ovt-editorial-z .word-body-z {
     translate: 0 0;
   }
-}
-
-/* Le temps d'une mesure, l'en-tête reprend sa place au repos.
- *
- * La destination du logo se lit sur le mot-symbole réel ; escamoté, il se
- * trouve au-dessus de l'écran et le voyageur atterrissait hors champ. La scène
- * pose cet attribut, lit la géométrie, puis le retire — dans la même tâche,
- * donc avant toute peinture. */
-:root[data-overture-measure] .header-motion-z {
-  --ovt-h: 1;
-  --ovt-r: 0;
 }
