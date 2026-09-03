@@ -16,15 +16,21 @@ import { WordReveal } from "./WordReveal";
  *
  * Le déroulé, dans l'ordre où on le voit :
  *
- *   0,00 → 0,08   fond papier, une ligne d'attente qui passe du gris à l'encre
- *   0,08 → 0,32   la scène s'ouvre au centre et grandit
- *   0,26 → 0,44   le logo paraît, clair, au centre de la scène
- *   0,34 → 0,50   une ligne secondaire s'inscrit par-dessus
- *   0,50 → 0,78   la scène recule ; le logo la suit, se réduit, passe du clair
- *                 au sombre et rejoint sa place dans l'en-tête
- *   0,72 → 1,00   la ligne secondaire s'efface, le texte éditorial arrive
+ *   0,00 → 0,10   fond papier, en-tête absent, une ligne d'attente qui s'encre
+ *                 et un filet qui se remplit de gauche à droite
+ *   0,10 → 0,14   l'attente se retire
+ *   0,11 → 0,34   la scène s'ouvre au centre et gagne le plein écran
+ *   0,28 → 0,46   le logo paraît, clair, au centre de la scène
+ *   0,36 → 0,52   une ligne secondaire s'inscrit par-dessus
+ *   0,52 → 0,80   la scène recule ; le logo la suit, se réduit, passe du clair
+ *                 au sombre et rejoint sa place dans l'en-tête, revenu
+ *                 l'attendre
+ *   0,74 → 1,00   la ligne secondaire s'efface, le texte éditorial arrive
  *
- * Le logo ne se duplique jamais : celui de l'en-tête est masqué tant que le
+ * L'en-tête n'existe pas pendant l'immersion : il est escamoté vers le haut et
+ * ne redescend qu'au moment où le logo va se poser, de sorte que le voyageur
+ * trouve une place prête plutôt qu'une barre qui l'aurait devancé. Le logo ne
+ * se duplique jamais : le mot-symbole de l'en-tête reste effacé tant que le
  * voyageur n'a pas atteint sa place, puis prend le relais exactement quand
  * l'autre disparaît. Le changement clair → sombre est un fondu croisé entre
  * deux copies superposées, faute de pouvoir interpoler une couleur en `calc`.
@@ -54,6 +60,23 @@ export function OvertureScene() {
    * que rien n'est substitué et que la composition est identique.
    */
   const source = import.meta.env.PROD ? detailVideo.url : null;
+
+  /**
+   * Signale à la feuille de style qu'une ouverture est en cours sur cette page.
+   *
+   * La progression seule ne suffisait pas : une variable absente vaut sa valeur
+   * par défaut, donc `--ovt-p` ne permet pas de distinguer « pas d'ouverture »
+   * de « ouverture terminée ». Or l'en-tête doit se comporter différemment dans
+   * ces deux cas — escamoté et sans transition pendant l'immersion, normal
+   * partout ailleurs. Un attribut se sélectionne ; une variable manquante, non.
+   */
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset["overture"] = "";
+    return () => {
+      delete root.dataset["overture"];
+    };
+  }, []);
 
   // La scène ne tourne que lorsqu'on la regarde. Une vidéo qui continue de
   // décoder hors écran coûte une batterie pour rien, et sous mouvement réduit
@@ -95,8 +118,22 @@ export function OvertureScene() {
       const target = document.querySelector<HTMLElement>("header .wordmark-z");
       if (!target) return;
 
+      /**
+       * L'en-tête est escamoté pendant toute la fenêtre de mesure : lu tel
+       * quel, le mot-symbole se trouve 123 px au-dessus de l'écran, et le
+       * voyageur atterrissait donc hors champ. Mesuré, pas supposé.
+       *
+       * On neutralise l'escamotage le temps de la lecture. Le changement de
+       * style et sa reprise ont lieu dans la même tâche, avant toute peinture :
+       * rien n'apparaît à l'écran, seule la géométrie est celle de la place au
+       * repos — celle que le logo doit rejoindre.
+       */
+      const root = document.documentElement;
+      root.dataset["overtureMeasure"] = "";
       const to = target.getBoundingClientRect();
       const from = travelling.getBoundingClientRect();
+      delete root.dataset["overtureMeasure"];
+
       if (!from.width || !to.width) return;
 
       // La mesure est prise au repos, quand la progression vaut zéro : le
@@ -116,6 +153,7 @@ export function OvertureScene() {
     // montage, elle tombait 123 px trop haut : la scène collante n'a pas encore
     // sa géométrie définitive à cet instant, et le logo n'est donc pas là où il
     // sera au départ. Constaté à la mesure, pas supposé.
+    //
     let frame = 0;
     const remeasure = () => {
       if (frame) return;
@@ -149,9 +187,20 @@ export function OvertureScene() {
           {LOADING}
         </p>
 
+        {/* Le filet d'attente. Il ne feint pas un chargement réseau : il trace
+            l'avancement réel de la séquence, celui-là même que le visiteur
+            pilote. Décalé des bords, comme le reste de la composition. */}
+        <div className="ovt-bar-z" aria-hidden="true">
+          <span className="ovt-bar-fill-z" />
+        </div>
+
         {/* La scène : une arête de pierre en rotation, filmée. Pas une 3D.
             La photographie sert d'affiche et de repli — même sujet, même
-            matière, donc rien n'est substitué. */}
+            matière, donc rien n'est substitué.
+
+            La boîte occupe tout l'écran et c'est l'échelle qui la réduit : un
+            petit rectangle au centre, aux proportions de la fenêtre, qui gagne
+            le plein écran puis recule. Aucune largeur n'est animée. */}
         <div className="ovt-stage-z">
           {source ? (
             <video
@@ -211,6 +260,7 @@ export function OvertureScene() {
         <p className="ovt-cue-z" aria-hidden="true">
           <span className="ovt-cue-line-z" />
           Faire défiler
+          <span className="ovt-cue-arrow-z" />
         </p>
       </div>
     </section>

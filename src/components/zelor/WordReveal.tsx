@@ -87,10 +87,17 @@ export function WordReveal({
       {words.map((word, index) => (
         <Fragment key={`${word.text}-${index}`}>
           {index > 0 ? " " : null}
-          <span className="word-mask-z">
+          {/* Le rang porte sur le masque, pas sur le mot.
+              Posé sur le mot, il n'en changeait que le corps : la fenêtre
+              gardait la hauteur du texte courant, tandis que le mot réduit ne
+              se translatait que de sa propre hauteur — plus petite — et
+              dépassait par le bas. « mérite » restait lisible neuf pixels
+              au-dessus de la ligne avant son entrée. Constaté à l'image.
+              Sur le masque, le mot hérite du corps : les deux boîtes ont la
+              même métrique et la fenêtre rogne à nouveau. */}
+          <span className="word-mask-z" data-rank={word.rank}>
             <span
               className="word-body-z"
-              data-rank={word.rank}
               style={
                 {
                   // Deux façons de décaler les mots : un retard, quand la
