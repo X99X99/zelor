@@ -7,9 +7,12 @@ import { StageSequence } from "@/components/zelor/StageSequence";
 import { ManifestScene } from "@/components/zelor/ManifestScene";
 import { SilenceBand } from "@/components/zelor/SilenceBand";
 import { Diptych } from "@/components/zelor/Diptych";
+import { HorizontalScene } from "@/components/zelor/HorizontalScene";
+import { ProcessScene } from "@/components/zelor/ProcessScene";
 import { DenseGrid } from "@/components/zelor/DenseGrid";
 import { ClosingScene } from "@/components/zelor/ClosingScene";
 import { Reassurance } from "@/components/zelor/Reassurance";
+import { BrandSignature } from "@/components/zelor/BrandSignature";
 import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/")({
@@ -70,20 +73,33 @@ function Home() {
           délibérément désalignés : une grille régulière ferait un catalogue. */}
       <Diptych />
 
-      {/* 6 — Seconde déclaration. */}
+      {/* 6 — Le ruban. Une lecture horizontale d'un défilement vertical : des
+          fragments de matière entre le récit de méthode et la sélection. */}
+      <HorizontalScene />
+
+      {/* 7 — Ce que nous vérifions. Quatre critères déjà publiés sur
+          /qualite, mis en séquence plutôt qu'en liste : ils justifient la
+          déclaration qui suit. */}
+      <ProcessScene />
+
+      {/* 8 — Seconde déclaration. */}
       <SilenceBand id="declaration-deux">Peu de pièces, longuement regardées.</SilenceBand>
 
-      {/* 7 — La planche. Après trois écrans où il ne se passe presque rien, la
+      {/* 9 — La planche. Après trois écrans où il ne se passe presque rien, la
           page se remplit d'un coup. Un seul format, serré. */}
       <DenseGrid catalogueVide={catalogueVide} />
 
-      {/* 8 — La clôture. La première moitié est vide, et c'est voulu : on
+      {/* 10 — La clôture. La première moitié est vide, et c'est voulu : on
           arrive au pied de page sans rupture au lieu d'y tomber. */}
       <ClosingScene />
 
-      {/* 9 — La réassurance. La section la plus courte de la page. Elle range
-          trois faits vérifiables et se tait. */}
+      {/* 11 — La réassurance. La section la plus courte de la page. Elle
+          range trois faits vérifiables et se tait. */}
       <Reassurance />
+
+      {/* 12 — La signature. Le mot-symbole seul, en grand, juste avant le
+          pied de page : un instant, pas une scène à plusieurs temps. */}
+      <BrandSignature />
     </>
   );
 }
