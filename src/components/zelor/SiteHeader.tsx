@@ -448,7 +448,7 @@ export function SiteHeader() {
         }`}
       >
         <AnnouncementBar />
-        <div className="container-z flex items-center justify-between gap-4 py-4">
+        <div className="container-z flex items-center justify-between gap-2 py-4 sm:gap-4">
           <div className="flex flex-1 items-center gap-1 lg:hidden">
             <button
               type="button"
@@ -478,9 +478,14 @@ export function SiteHeader() {
             ))}
           </nav>
 
+          {/* Sous 375px, hamburger + mot-symbole + 3 icônes ne tenaient plus
+              dans les 280px de contenu disponibles (mesuré : 46,5px de trop) —
+              l'icône panier débordait hors écran. Resserré ici uniquement ;
+              taille et interlettrage repartent de leur valeur habituelle dès
+              375px, aucune des trois cibles tactiles de 44px n'est réduite. */}
           <BrandLink
             onNavigate={closeMenu}
-            className="wordmark-z font-display text-2xl tracking-[0.4em] lg:text-[1.75rem]"
+            className="wordmark-z max-[374px]:tracking-[0.28em] font-display text-2xl tracking-[0.4em] max-[374px]:text-xl lg:text-[1.75rem]"
           >
             {BRAND.name}
           </BrandLink>
