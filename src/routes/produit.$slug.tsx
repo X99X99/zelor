@@ -17,21 +17,36 @@ import { Reveal } from "@/components/zelor/Reveal";
 import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/produit/$slug")({
-  head: ({ params }) => {
-    const title = `${params.slug} — ZELOR — Maison éditoriale`;
+  // Alimente uniquement le titre et les métadonnées de tête : mêmes
+  // queryKey/queryFn que le useQuery du composant (aucune locale explicite,
+  // à l'identique), donc aucune requête dupliquée côté client. Un échec ne
+  // doit jamais produire un écran d'erreur différent de celui déjà géré par
+  // le composant (isError, plus bas) — on retombe silencieusement sur null,
+  // et le titre garde son repli sur le slug.
+  loader: async ({ context, params }) => {
+    try {
+      return await context.queryClient.ensureQueryData(productQueryOptions(params.slug));
+    } catch {
+      return null;
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const name = loaderData?.node.title;
+    const title = name
+      ? `${name} — ZELOR — Maison éditoriale`
+      : `${params.slug} — ZELOR — Maison éditoriale`;
+    const description = name
+      ? `${name}, une pièce ZELOR choisie pour son allure, sa justesse et sa tenue dans le temps. Livraison en France et dans l'Union européenne.`
+      : "Une pièce ZELOR choisie pour son allure, sa justesse et sa tenue dans le temps. Livraison en France et dans l'Union européenne.";
+    const ogDescription = name
+      ? `${name}, une pièce ZELOR choisie pour son allure et sa tenue dans le temps.`
+      : "Une pièce ZELOR choisie pour son allure et sa tenue dans le temps.";
     return {
       meta: [
         { title },
-        {
-          name: "description",
-          content:
-            "Une pièce ZELOR choisie pour son allure, sa justesse et sa tenue dans le temps. Livraison en France et dans l'Union européenne.",
-        },
+        { name: "description", content: description },
         { property: "og:title", content: title },
-        {
-          property: "og:description",
-          content: "Une pièce ZELOR choisie pour son allure et sa tenue dans le temps.",
-        },
+        { property: "og:description", content: ogDescription },
         { property: "og:type", content: "product" },
         { property: "og:url", content: absoluteUrl(`/produit/${params.slug}`) },
       ],
@@ -43,7 +58,7 @@ export const Route = createFileRoute("/produit/$slug")({
 
 function ProductNotFound() {
   return (
-    <div className="container-z py-24 text-center">
+    <div className="container-z flex min-h-[70vh] flex-col items-center justify-center py-24 text-center">
       <h1 className="font-display text-4xl">Cette pièce n'est pas disponible.</h1>
       <p className="mt-4 text-sm text-muted-foreground">
         Elle a peut-être été retirée du catalogue.
@@ -66,10 +81,15 @@ function ProductPage() {
   } = useQuery(productQueryOptions(slug));
   const { data: catalog } = useQuery(productsQueryOptions(8));
 
+  // Les trois états provisoires (chargement, erreur, absence) partagent la
+  // même hauteur plancher que le 404/l'erreur racine (déjà min-h-[70vh]
+  // ailleurs dans ce dépôt) : mesuré à la trame, le passage chargement →
+  // absence faisait chuter le pied de page d'un plein écran d'un coup (CLS
+  // 0,155 à 0,31 selon l'essai). Rien d'autre ne change dans ces trois blocs.
   if (isLoading) {
     return (
-      <div className="container-z py-24">
-        <div className="skeleton-lux aspect-[4/5] max-w-xl rounded-[var(--radius-media)]" />
+      <div className="container-z flex min-h-[70vh] flex-col items-center justify-center py-24">
+        <div className="skeleton-lux aspect-[4/5] w-full max-w-xl rounded-[var(--radius-media)]" />
       </div>
     );
   }
@@ -79,7 +99,10 @@ function ProductPage() {
   // une sortie.
   if (isError) {
     return (
-      <div className="container-z py-24 text-center" role="alert">
+      <div
+        className="container-z flex min-h-[70vh] flex-col items-center justify-center py-24 text-center"
+        role="alert"
+      >
         <h1 className="font-display text-4xl">Cette pièce ne peut pas être chargée.</h1>
         <p className="mt-4 text-sm text-muted-foreground">
           Le catalogue n'a pas répondu. Veuillez réessayer.
