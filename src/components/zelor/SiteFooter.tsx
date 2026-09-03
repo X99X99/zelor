@@ -69,8 +69,14 @@ export function SiteFooter() {
         </LineReveal>
       </Reveal>
 
-      <div className="container-z grid gap-10 border-t border-navy-foreground/12 py-16 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="lg:col-span-1">
+      {/* Sous 640px, les 4 colonnes de liens s'empilaient en une seule
+          colonne : 17 liens à la file portaient le footer à 2,7 écrans de
+          haut sur un iPhone SE (mesuré). En les répartissant en 2 colonnes
+          dès le mobile — le bloc de marque gardant sa pleine largeur au-dessus
+          — aucun lien ni aucune colonne ne disparaît, seule la hauteur se
+          resserre. */}
+      <div className="container-z grid grid-cols-2 gap-x-6 gap-y-10 border-t border-navy-foreground/12 py-16 sm:gap-10 lg:grid-cols-5">
+        <div className="col-span-2 lg:col-span-1">
           <BrandLink className="wordmark-z inline-block font-display text-2xl tracking-[0.4em]">
             {BRAND.name}
           </BrandLink>
@@ -102,7 +108,7 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
-      <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 py-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 pt-10 pb-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>

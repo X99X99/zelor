@@ -1,21 +1,26 @@
 import { useState } from "react";
 
+import { Reveal } from "./Reveal";
+
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
   return (
-    <section
+    <Reveal
+      as="section"
       aria-labelledby="newsletter-title"
-      className="container-z grid gap-8 py-20 lg:grid-cols-2 lg:items-end"
+      className="container-z grid gap-x-8 gap-y-10 py-24 md:py-28 lg:grid-cols-2 lg:items-end"
     >
       <div>
-        <h2 id="newsletter-title" className="font-display text-3xl md:text-4xl">
+        <p className="eyebrow text-navy-foreground/60">La lettre</p>
+        <h2 id="newsletter-title" className="mt-3 font-display text-3xl md:text-4xl">
           Entrez dans l'univers ZELOR.
         </h2>
-        <p className="mt-3 max-w-md text-sm text-navy-foreground/75">
-          Recevez nos nouveautés, nos histoires et nos sélections directement dans votre boîte mail.
+        <p className="mt-4 max-w-md text-sm text-navy-foreground/75">
+          Le Journal, les nouveautés et nos sélections, réunis dans une lettre — pas plus souvent
+          qu'il n'y a quelque chose à dire.
         </p>
       </div>
       <form
@@ -51,7 +56,7 @@ export function Newsletter() {
             />
           </div>
           <button type="submit" className="btn-veil shrink-0 px-8">
-            S'inscrire
+            Recevoir la lettre
           </button>
         </div>
         {error && (
@@ -73,6 +78,6 @@ export function Newsletter() {
           vous envoyer nos communications.
         </p>
       </form>
-    </section>
+    </Reveal>
   );
 }
