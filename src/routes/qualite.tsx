@@ -34,7 +34,14 @@ export const Route = createFileRoute("/qualite")({
           src={detailImage}
           width={1408}
           height={1008}
-          loading="lazy"
+          // Rendue dans la colonne aside, juste sous le titre : visible sans
+          // défilement sur la plupart des écrans. Un chargement paresseux y
+          // retardait une image déjà dans le premier écran — corrigé, comme
+          // c'est déjà fait pour le premier plan de la séquence et le repli
+          // de l'ouverture.
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           alt="Détail de finition : arête lisse contre un tissu de lin."
           className="aspect-4/3 w-full object-cover"
         />
