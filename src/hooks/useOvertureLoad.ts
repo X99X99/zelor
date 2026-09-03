@@ -29,10 +29,12 @@ import { useEffect, useState, type RefObject } from "react";
  * défaut de la variable place la scène à son état final.
  */
 
-/** Durée du premier temps, celui de l'attente installée. */
-const SETTLE_MS = 1500;
-/** Durée du second, celui de l'ouverture — plancher, jamais plafond. */
-const OPEN_MS = 1100;
+/** Durée du premier temps, celui de l'attente installée.
+ * Resserré de 1500 à 1100ms : signalé trop lent, comparé à la référence. */
+const SETTLE_MS = 1100;
+/** Durée du second, celui de l'ouverture — plancher, jamais plafond.
+ * Resserré de 1100 à 850ms, même raison. */
+const OPEN_MS = 850;
 /** Part de la course consacrée au premier temps. */
 const SETTLE_END = 0.6;
 

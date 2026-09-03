@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 
 import detailImage from "@/assets/detail.jpg";
 import detailVideo from "@/assets/video-detail.mp4.asset.json";
@@ -284,7 +284,18 @@ export function OvertureScene() {
             Le geste transposé n'est donc pas de changer de couleur, c'est que
             le logo prenne celle de sa destination. Ici, les deux coïncident. */}
         <div className="ovt-logo-z" ref={logoRef} aria-hidden="true">
-          <span className="ovt-logo-face-z">{BRAND.name}</span>
+          <span className="ovt-logo-face-z">
+            {BRAND.name.split("").map((letter, index) => (
+              <span key={index} className="ovt-logo-letter-mask-z">
+                <span
+                  className="ovt-logo-letter-z"
+                  style={{ "--letter-i": index } as CSSProperties}
+                >
+                  {letter}
+                </span>
+              </span>
+            ))}
+          </span>
         </div>
 
         <p className="ovt-caption-z" aria-hidden="true">

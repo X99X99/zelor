@@ -4492,8 +4492,12 @@ nav[aria-label="Fil d'Ariane"] a {
   /* ——— L'attente ——— */
   /* 0,00 → 0,18 : la déclaration s'inscrit. */
   --lp-ink: clamp(0, calc(var(--l) / 0.18), 1);
-  /* 0,60 → 1,00 : les moitiés s'écartent et le masque s'ouvre. */
-  --lp-open: clamp(0, calc((var(--l) - 0.6) / 0.4), 1);
+  /* 0,85 → 1,00 : les moitiés s'écartent et le masque s'ouvre — seulement une
+   * fois le compteur presque à 100 %. Mesuré à l'image avant correctif : sur
+   * (var(--l) - 0.6) / 0.4, le masque était déjà largement ouvert à 83 % de
+   * chargement affiché, alors que le compteur annonçait encore une attente en
+   * cours — deux messages contradictoires en même temps. */
+  --lp-open: clamp(0, calc((var(--l) - 0.85) / 0.15), 1);
   /* 0,88 → 1,00 : le fond clair et l'attente se retirent. */
   --lp-out: clamp(0, calc((var(--l) - 0.88) / 0.12), 1);
 
@@ -4502,8 +4506,9 @@ nav[aria-label="Fil d'Ariane"] a {
   --xp-logo: clamp(0, calc(var(--p) / 0.7), 1);
   /* 0,00 → 0,85 : la scène se réduit, remonte et quitte l'écran par le haut. */
   --xp-media: clamp(0, calc(var(--p) / 0.85), 1);
-  /* 0,74 → 0,80 : le voyageur se retire, le mot-symbole ayant pris le relais. */
-  --xp-gone: clamp(0, calc((var(--p) - 0.74) / 0.06), 1);
+  /* 0,74 → 0,78 : le voyageur se retire, exactement la fenêtre où le
+   * mot-symbole de l'en-tête prend le relais — les deux coïncident désormais. */
+  --xp-gone: clamp(0, calc((var(--p) - 0.74) / 0.04), 1);
   /* 0,30 → 0,92 : le texte éditorial occupe la place que la scène libère.
    * Attendre qu'elle soit entièrement partie laissait un demi-écran vide
    * pendant toute la remontée — un vide sans intention, constaté à l'image. */
@@ -4623,13 +4628,33 @@ nav[aria-label="Fil d'Ariane"] a {
   text-indent: 0.4em;
   text-transform: uppercase;
   white-space: nowrap;
-  /* Il n'existe qu'une fois la scène ouverte, et se retire une fois le
-   * mot-symbole entièrement pris. */
-  opacity: calc(clamp(0, calc((var(--l) - 0.9) / 0.1), 1) * (1 - var(--xp-gone)));
+  /* N'existe qu'une fois la scène ouverte — un simple interrupteur, pas un
+   * fondu : c'est chaque lettre, ci-dessous, qui porte désormais la
+   * révélation. Se retire une fois le mot-symbole entièrement pris. */
+  opacity: calc(clamp(0, calc((var(--l) - 0.83) / 0.02), 1) * (1 - var(--xp-gone)));
   translate: calc(var(--logo-x, 0px) * var(--xp-logo))
     calc(var(--logo-y, 0px) * var(--xp-logo));
   scale: calc(1 - (1 - var(--logo-scale, 0.36)) * var(--xp-logo));
   will-change: transform;
+}
+
+/* Les lettres du voyageur, révélées une à une plutôt qu'en bloc — du Z vers
+ * le R, chacune remontant depuis le bas de sa propre fenêtre de rognage,
+ * décalée de 0,015 sur la précédente. Portée par --l : la même horloge que
+ * tout le reste de l'attente, aucune horloge parallèle. */
+@utility ovt-logo-letter-mask-z {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+@utility ovt-logo-letter-z {
+  display: inline-block;
+  --lb: clamp(0, calc((var(--l, 1) - 0.85 - var(--letter-i, 0) * 0.015) / 0.07), 1);
+  translate: 0 calc((1 - var(--lb)) * 100%);
+  opacity: var(--lb);
 }
 
 /* Une seule face, claire.
@@ -5028,9 +5053,16 @@ html:has(.ovt-track-z) header.header-motion-z {
 }
 
 /* Le mot-symbole reste effacé jusqu'à ce que le voyageur ait atteint sa place,
- * puis prend le relais exactement quand l'autre disparaît. */
+ * puis prend le relais exactement quand l'autre disparaît.
+ *
+ * Le relais démarrait à 0,70 alors que --ovt-h (la présence de l'en-tête, donc
+ * sa position réelle) n'atteint 1 qu'à 0,74 : entre les deux, le mot-symbole
+ * montait en opacité pendant que l'en-tête glissait encore vers sa place de
+ * repos, à une position différente de celle — déjà fixe — du voyageur. Deux
+ * « ZELOR » lisibles, décalés verticalement, capturés à l'image à 0,72. Le
+ * relais ne commence donc plus avant que l'en-tête soit réellement arrivé. */
 :root[data-overture] header .wordmark-z {
-  opacity: clamp(0, calc((var(--ovt-p, 1) - 0.7) / 0.05), 1);
+  opacity: clamp(0, calc((var(--ovt-p, 1) - 0.74) / 0.04), 1);
 }
 
 /* Ramené par le clavier, l'en-tête doit être entier : sans cette ligne il
