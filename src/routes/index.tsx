@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { productsQueryOptions } from "@/lib/shopify/client";
-import { StageOpening } from "@/components/zelor/StageOpening";
+import { OvertureScene } from "@/components/zelor/OvertureScene";
 import { StageSequence } from "@/components/zelor/StageSequence";
 import { ManifestScene } from "@/components/zelor/ManifestScene";
 import { SilenceBand } from "@/components/zelor/SilenceBand";
@@ -48,9 +48,11 @@ function Home() {
           0,26. C'est le rapport entre la plus longue et la plus courte — plus
           de treize — qui fait le rythme, pas la longueur totale. */}
 
-      {/* 1 — L'ouverture. Un écran. Le titre reste petit : c'est l'image et le
-          vide qui portent, jamais le corps de la lettre. */}
-      <StageOpening />
+      {/* 1 — L'ouverture. Une scene collante de trois ecrans et demi : la
+          scene s'ouvre au centre, le logo la suit puis rejoint l'en-tete, et
+          le texte editorial arrive mot par mot. Une seule valeur continue
+          pilote tout. */}
+      <OvertureScene />
 
       {/* 2 — Le manifeste. Trois écrans sans une seule image, où la phrase se
           relaie proposition par proposition. */}
