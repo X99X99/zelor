@@ -1,34 +1,67 @@
-import { beaconStyle, useScrollSteps } from "@/hooks/useScrollSteps";
+import { useEffect, useRef } from "react";
+
 import { WordReveal } from "./WordReveal";
 
 /**
  * ————— Le manifeste —————
  *
- * Trois écrans de piste, aucune image, un seul écran de scène.
+ * Trois propositions, aucune image — mais elles ne restent plus épinglées à
+ * l'écran pendant trois écrans de défilement. Mesuré sur le site publié,
+ * cette version-là se lisait comme un vide : le décor ne bougeait pas, une
+ * seule phrase relayait la précédente à un seuil discret, et rien d'autre ne
+ * se passait entre deux relais. Signalé, comparé au comportement réel de la
+ * référence : chez elle, ce texte se déplace avec la page — il apparaît en
+ * sortant d'un bord, reste lisible le temps de passer par le centre, puis
+ * repart et s'efface à un point précis, sans jamais s'arrêter.
  *
- * C'est le geste le plus difficile à admettre du modèle relevé : après
- * l'ouverture vient une section de trois écrans **entièrement vide d'images**,
- * où seule une phrase se tient au centre. Elle ne se lit pas d'un coup — elle
- * se relaie, une proposition à la fois, à mesure que l'on descend.
- *
- * Le corps employé n'est pas celui d'un titre : c'est le palier d'accroche,
- * en sans, graisse 500, approche resserrée. Le contraste des deux familles à
- * cet endroit précis fait toute la respiration de la page — un serif y serait
- * décoratif, un corps de titre y serait bruyant.
- *
- * Chaque proposition se révèle mot par mot — `WordReveal`, déjà éprouvé dans
- * l'ouverture — plutôt qu'en un seul bloc translaté. La translation de bloc
- * d'origine (`translate: 0 110%` sur la ligne entière) faisait arriver la
- * phrase d'un coup, comme un carton plutôt que comme une pensée qui se forme ;
- * le mot par mot est la seule composition du site qui installe une durée dans
- * la lecture elle-même, pas seulement dans son arrivée.
- *
- * Le déclenchement reste celui déjà en place : `data-active`, porté par
- * `step`, la même valeur discrète qui relaie les trois propositions. Réversible
- * par construction — la valeur de repos de `word-body-z` est l'état caché ;
- * quand `data-active` retombe à `false` puis revient à `true` en remontant, la
- * transition rejoue d'elle-même, sans état à réinitialiser.
+ * Reprend donc exactement le mécanisme du diptyque (`--ep`, la distance de
+ * chaque élément au centre du viewport, ramenée en continu entre 0 et 1) —
+ * déjà prouvé réversible et sans fuite — appliqué ici à du texte plutôt qu'à
+ * des figures. Chaque proposition a sa propre place dans le flux normal de
+ * la page, avec sa respiration ; aucune n'est plus jamais « la seule
+ * visible » pendant que les deux autres attendent, invisibles, au même
+ * endroit.
  */
+
+const TRACKED = "[data-ep-track]";
+
+function useManifestFlow(trackRef: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const elements = Array.from(track.querySelectorAll<HTMLElement>(TRACKED));
+    if (!elements.length) return;
+
+    let frame = 0;
+    const write = () => {
+      frame = 0;
+      const viewportHeight = window.innerHeight;
+      const viewportCenter = viewportHeight / 2;
+      for (const el of elements) {
+        const rect = el.getBoundingClientRect();
+        const elementCenter = rect.top + rect.height / 2;
+        const reach = viewportCenter + rect.height / 2;
+        const distance = Math.abs(elementCenter - viewportCenter);
+        const progress = reach > 0 ? Math.max(0, Math.min(1, 1 - distance / reach)) : 1;
+        el.style.setProperty("--ep", progress.toFixed(4));
+      }
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(write);
+    };
+
+    write();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [trackRef]);
+}
 
 const PROPOSITIONS = [
   "Les objets que l'on garde ne sont pas ceux que l'on remarque en premier.",
@@ -37,35 +70,24 @@ const PROPOSITIONS = [
 ] as const;
 
 export function ManifestScene() {
-  const { ref, step } = useScrollSteps(PROPOSITIONS.length);
+  const trackRef = useRef<HTMLElement>(null);
+  useManifestFlow(trackRef);
 
   return (
-    <section aria-labelledby="manifeste-title" className="manifest-track-z" ref={ref}>
+    <section aria-labelledby="manifeste-title" className="manifest-track-z" ref={trackRef}>
       <h2 id="manifeste-title" className="sr-only">
         Le parti de la maison
       </h2>
 
-      {PROPOSITIONS.map((_, index) => (
-        <span
-          key={`beacon-${index}`}
-          className="scene-beacon-z"
-          data-beacon={index}
-          style={beaconStyle(index, PROPOSITIONS.length)}
-        />
-      ))}
-
-      <div className="manifest-scene-z" data-step={step}>
-        <div className="manifest-stack-z">
-          {PROPOSITIONS.map((texte, index) => (
-            <WordReveal
-              key={texte}
-              text={texte}
-              className="manifest-line-z"
-              data-active={step === index}
-            />
-          ))}
+      {PROPOSITIONS.map((texte) => (
+        // La fenêtre de centrage est un conteneur séparé, jamais l'hôte de
+        // WordReveal lui-même : flex/grid annule les espaces entre ses mots
+        // (nœuds de texte nus entre les fenêtres de rognage) — constaté à
+        // l'image, « Cesontceuxdontlamain... » soudé.
+        <div key={texte} className="manifest-slot-z" data-ep-track="">
+          <WordReveal text={texte} className="manifest-line-z" />
         </div>
-      </div>
+      ))}
     </section>
   );
 }

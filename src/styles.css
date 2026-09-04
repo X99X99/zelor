@@ -3563,41 +3563,45 @@ nav[aria-label="Fil d'Ariane"] a {
   pointer-events: none;
 }
 
-/* ——— Le manifeste : 3 écrans, aucune image ——— */
-
+/* ——— Le manifeste : trois propositions qui se déplacent avec la page ———
+ *
+ * Épinglé pendant trois écrans, ce texte se lisait comme un vide : le décor
+ * ne bougeait pas, une proposition en remplaçait une autre à un seuil
+ * discret, rien d'autre ne se passait entre deux relais. Chaque proposition
+ * a maintenant sa propre place dans le flux normal — elle arrive, se tient
+ * le temps de traverser le centre du viewport, repart et s'efface, comme le
+ * reste de la page défile. Continu, réversible, la même mécanique --ep que
+ * le diptyque (distance au centre du viewport), jamais dupliquée : voir
+ * useManifestFlow. */
 @utility manifest-track-z {
-  position: relative;
-  height: 300svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: clamp(3rem, 8vh, 5rem);
 }
 
-@utility manifest-scene-z {
-  position: sticky;
-  top: 0;
-  display: grid;
-  height: 100svh;
-  place-items: center;
-  padding-inline: 1.25rem;
-}
-
-@utility manifest-stack-z {
-  display: grid;
+/* La fenêtre de centrage — jamais l'hôte de WordReveal : flex/grid annule les
+ * espaces entre ses mots (nœuds de texte nus entre les fenêtres de rognage,
+ * traités comme des éléments flex/grid anonymes et vidés de leur espace).
+ * Constaté à l'image : « Cesontceuxdontlamain... », soudé, quand cette
+ * couche et manifest-line-z n'en faisaient qu'une. --ep y est écrit par
+ * useManifestFlow ; manifest-line-z en hérite pour le mot par mot. */
+@utility manifest-slot-z {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 76vh;
   width: 100%;
   max-width: 46rem;
+  padding-inline: 1.25rem;
+  opacity: var(--ep, 1);
 }
 
 /* Le palier d'accroche : sans, graisse 500, approche resserrée. C'est le seul
  * endroit de la page où le sans porte un grand corps, et ce contraste avec le
- * serif des titres fait toute la respiration.
- *
- * Porte à la fois le rôle de carte empilée (grid-area: 1 / 1, une seule
- * proposition visible à la fois) et celui d'hôte de WordReveal : les deux
- * vivaient déjà sur le même élément avant ce changement, seul l'enfant direct
- * a changé de forme — un mot par mot plutôt qu'un bloc unique. */
+ * serif des titres fait toute la respiration. Purement typographique — la
+ * mise en page vit sur manifest-slot-z, au-dessus. */
 @utility manifest-line-z {
-  grid-area: 1 / 1;
-  overflow: hidden;
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
   text-align: center;
   font-family: var(--font-sans);
   font-size: clamp(1.375rem, 2.6vw, 1.875rem);
@@ -3607,24 +3611,19 @@ nav[aria-label="Fil d'Ariane"] a {
   text-wrap: balance;
 }
 
-/* Le mot par mot du manifeste : chaque mot monte à son tour plutôt que la
- * ligne entière d'un seul bloc translaté. word-body-z porte déjà l'état caché
- * comme valeur de repos (translate: 0 125%) ; cette règle ne fait que révéler
- * les mots de la proposition active — exactement ce que faisait l'ancien
- * sélecteur sur le bloc entier, adapté en descendant : les mots sont
- * maintenant nichés dans leur propre fenêtre de rognage, pas enfants directs. */
-.manifest-line-z[data-active="true"] .word-body-z {
-  translate: 0 0;
+/* Le mot par mot : chaque mot monte à son tour, légèrement en retard sur le
+ * précédent (0,05 par rang), dans la même fenêtre --ep que la ligne qui le
+ * porte — jamais de transition sur une valeur déjà pilotée en continu. */
+.manifest-line-z .word-body-z {
+  --wp: clamp(0, calc((var(--ep, 1) - var(--word-i, 0) * 0.05) / 0.7), 1);
+  translate: 0 calc((1 - var(--wp)) * 125%);
+  transition: none;
 }
 
-/* Sous mouvement réduit, le passage d'une proposition à l'autre reste — data-
- * active continue de basculer avec le défilement, ce n'est pas un mouvement au
- * sens de la préférence — mais la montée mot à mot, elle, disparaît : les mots
- * de la proposition active sont déjà à leur place, sans transition ni délai
- * étagé, donc rien à attendre pour lire. */
 @media (prefers-reduced-motion: reduce) {
-  .manifest-line-z .word-body-z {
-    transition: none;
+  .manifest-slot-z {
+    min-height: auto;
+    padding-block: clamp(1.5rem, 4vh, 2.5rem);
   }
 }
 
