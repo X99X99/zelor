@@ -155,14 +155,25 @@ export function Diptych() {
           />
         </figure>
 
-        <figure className="diptych-minor-z" data-scale="petit" data-ep-track="">
-          <MediaSlot
-            source={null}
-            fichier="zelor-maison-03"
-            role="Détail rapproché"
-            format="4:5 — 1200 × 1500"
-          />
-        </figure>
+        {/* Un troisième plan — « détail rapproché » — vivait ici sans
+            photographie : un rectangle hachuré portant son nom de fichier et
+            son format attendu, sur la plus grande partie d'un écran. Note de
+            production juste, mais adressée au visiteur.
+
+            Mesuré sur la page publique : sept écrans sur dix-neuf sans la
+            moindre image, celui-ci compris. La règle ne change pas — on ne
+            substitue jamais une photographie à une autre, le diptyque
+            mentirait sur son sujet. On cesse seulement de montrer le trou. Le
+            jour où le plan existe, il se repose ici tel quel :
+
+              <figure className="diptych-minor-z" data-scale="petit"
+                      data-ep-track="">
+                <MediaSlot source={…} fichier="zelor-maison-03"
+                           role="Détail rapproché" format="4:5 — 1200 × 1500" />
+              </figure>
+
+            L'échelle « petit » et son placement restent définis dans la
+            feuille de style, intacts. */}
       </div>
     </section>
   );

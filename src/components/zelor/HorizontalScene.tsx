@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import detailImage from "@/assets/detail.jpg";
 import editorialImage from "@/assets/editorial.jpg";
 import { useScrollSteps } from "@/hooks/useScrollSteps";
@@ -78,9 +80,24 @@ const PANELS = [
     label: "Le socle",
     note: "Le même intérieur, cadré vers le sol.",
   },
-  { source: null, label: "Assemblage", note: "Aucune image du dépôt ne montre cette jonction." },
-  { source: null, label: "Patine", note: "Aucune image du dépôt ne montre cet usage." },
-  { source: null, label: "Lumière rasante", note: "Aucune image du dépôt ne montre ce plan." },
+  /* Trois panneaux sans photographie fermaient le ruban — « Assemblage »,
+     « Patine », « Lumière rasante » —, chacun avec sa note : « Aucune image du
+     dépôt ne montre cette jonction. » Trois cinquièmes d'une archive qui
+     n'archivait rien, et le visiteur les faisait défiler au doigt.
+
+     Ils vivent maintenant dans ce commentaire, qui garde intact leur cahier
+     des charges de prise de vue :
+
+       { source: null, label: "Assemblage",
+         note: "Aucune image du dépôt ne montre cette jonction." },
+       { source: null, label: "Patine",
+         note: "Aucune image du dépôt ne montre cet usage." },
+       { source: null, label: "Lumière rasante",
+         note: "Aucune image du dépôt ne montre ce plan." },
+
+     Le jour où l'une de ces photographies existe, on la repose dans la liste
+     avec son `source` : le compte de panneaux et la course du ruban s'y
+     ajustent seuls, ils se déduisent désormais de la longueur de la liste. */
 ] as const;
 
 export function HorizontalScene() {
@@ -89,7 +106,16 @@ export function HorizontalScene() {
   const { ref } = useScrollSteps(1);
 
   return (
-    <section aria-labelledby="ruban-title" className="hscene-track-z" ref={ref}>
+    // Le compte de panneaux était écrit en dur dans la feuille de style. C'est
+    // lui qui donne la largeur du ruban, donc sa course : en retirer un sans
+    // le corriger aurait fait défiler la piste bien au-delà du dernier plan,
+    // sur du vide.
+    <section
+      aria-labelledby="ruban-title"
+      className="hscene-track-z"
+      ref={ref}
+      style={{ "--panel-count": PANELS.length } as CSSProperties}
+    >
       <h2 id="ruban-title" className="sr-only">
         Un ruban de fragments
       </h2>

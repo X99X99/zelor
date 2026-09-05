@@ -3375,9 +3375,14 @@ nav[aria-label="Fil d'Ariane"] a {
  * Les trois temps ne durent pas également : 1,25 / 1,50 / 1,50 écran. Le
  * premier temps s'installe vite, les deux suivants respirent, et le dernier
  * laisse au bouton le temps d'arriver sans bousculer la lecture. */
+/* Un écran et demi de piste par temps — 4,25 écrans pour trois, la proportion
+ * relevée sur la référence. La valeur était écrite en dur : le jour où la
+ * séquence n'a plus affiché que les temps réellement pourvus d'une
+ * photographie, elle gardait ses 4,25 écrans pour deux plans, et le dernier
+ * restait épinglé un écran et demi sans que rien n'arrive. */
 @utility stage-track-z {
   position: relative;
-  height: 425svh;
+  height: calc(var(--stages, 3) * 142svh);
 }
 
 @utility stage-beacon-z {
@@ -3391,19 +3396,12 @@ nav[aria-label="Fil d'Ariane"] a {
    * l'intersection d'une hauteur nulle avec une fenêtre de hauteur nulle est
    * un cas dégénéré que le moteur ne rapporte pas — mesuré, pas supposé.
    *
-   * Parts inégales : 1,25 / 1,50 / 1,50 écran sur 4,25. */
-  &[data-beacon="0"] {
-    top: 0;
-    height: 29.4118%;
-  }
-  &[data-beacon="1"] {
-    top: 29.4118%;
-    height: 35.2941%;
-  }
-  &[data-beacon="2"] {
-    top: 64.7059%;
-    height: 35.2941%;
-  }
+   * Parts égales, déduites du nombre de temps. Elles étaient écrites en dur
+   * pour trois (29,4 / 35,3 / 35,3 %) : à deux temps, le dernier tiers de la
+   * piste n'appartenait plus à aucune balise, et le temps courant restait
+   * bloqué sur le second jusqu'au bas de la section. */
+  top: calc(var(--i, 0) / var(--stages, 3) * 100%);
+  height: calc(100% / var(--stages, 3));
 }
 
 @utility stage-scene-z {
@@ -3716,11 +3714,17 @@ nav[aria-label="Fil d'Ariane"] a {
  * Constaté à l'image : « Cesontceuxdontlamain... », soudé, quand cette
  * couche et manifest-line-z n'en faisaient qu'une. --ep y est écrit par
  * useManifestFlow ; manifest-line-z en hérite pour le mot par mot. */
+/* 76vh par proposition faisaient 2,44 écrans pour trois phrases et pas une
+ * image — mesuré, la deuxième plus longue étendue vide de la page, et celle
+ * qu'on traverse le plus tôt. Une phrase a besoin d'air autour d'elle, pas
+ * des trois quarts d'un écran : à 44vh elle occupe toujours son propre temps
+ * de lecture, la suivante entre dans le champ pendant que la précédente sort,
+ * et la section passe de 2,44 à 1,4 écran. */
 @utility manifest-slot-z {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 76vh;
+  min-height: 44vh;
   width: 100%;
   max-width: 46rem;
   padding-inline: 1.25rem;
@@ -3898,7 +3902,12 @@ nav[aria-label="Fil d'Ariane"] a {
     var(--panel-count) * var(--panel-w) + (var(--panel-count) - 1) * var(--panel-gap) + 2 *
       var(--edge-pad)
   );
-  --travel: calc(var(--strip-w) - 100vw);
+  /* Jamais négative. Avec cinq panneaux le ruban dépassait toujours l'écran,
+   * quelle que soit la largeur ; à deux, il tient entièrement dans un écran
+   * large et la course devenait négative — le ruban partait alors vers la
+   * droite au lieu de rester en place. `max()` le fige tant qu'il n'y a rien
+   * à parcourir. */
+  --travel: max(0px, calc(var(--strip-w) - 100vw));
 }
 
 @utility hscene-scene-z {
@@ -4192,9 +4201,13 @@ nav[aria-label="Fil d'Ariane"] a {
     padding-block: clamp(3rem, 10vh, 5rem);
   }
 
+  /* Bord à bord, comme le diptyque. Le plafond de 20rem tenait la figure à
+   * 320px au centre d'un écran de 390 : mesurée, la section ne couvrait que
+   * 28 % de sa propre surface en image. Le retrait négatif annule exactement
+   * le `padding-inline` de la scène, jamais davantage. */
   .process-anchor-z {
-    max-width: 20rem;
-    margin-inline: auto;
+    max-width: none;
+    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 3.5rem));
     margin-bottom: clamp(2.5rem, 8vh, 4rem);
   }
 
@@ -4242,9 +4255,13 @@ nav[aria-label="Fil d'Ariane"] a {
     padding-block: clamp(3rem, 10vh, 5rem);
   }
 
+  /* Bord à bord, comme le diptyque. Le plafond de 20rem tenait la figure à
+   * 320px au centre d'un écran de 390 : mesurée, la section ne couvrait que
+   * 28 % de sa propre surface en image. Le retrait négatif annule exactement
+   * le `padding-inline` de la scène, jamais davantage. */
   .process-anchor-z {
-    max-width: 20rem;
-    margin-inline: auto;
+    max-width: none;
+    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 3.5rem));
     margin-bottom: clamp(2.5rem, 8vh, 4rem);
   }
 }
@@ -4255,6 +4272,13 @@ nav[aria-label="Fil d'Ariane"] a {
   min-height: 141svh;
   padding-block: clamp(4rem, 10vh, 8rem);
   padding-inline: clamp(1.25rem, 4vw, 2rem);
+
+  /* Sans planche, la hauteur réservée n'a plus de raison d'être : elle tenait
+   * douze vignettes. Laissée telle quelle, elle produisait un écran et demi de
+   * crème sous une seule phrase. */
+  &[data-vide] {
+    min-height: 0;
+  }
 }
 
 @utility grid-head-z {
@@ -4522,10 +4546,17 @@ nav[aria-label="Fil d'Ariane"] a {
     min-height: 0;
   }
 
+  /* Bord à bord. La piste porte `padding-inline: clamp(1.25rem, 4vw, 2rem)`
+   * pour son texte ; les figures, elles, n'ont aucune raison de s'y plier —
+   * sur la référence aucune photographie ne laisse de marge au téléphone, et
+   * c'est ce qui fait qu'elles occupent le regard entier. Le retrait négatif
+   * annule exactement le padding de la piste, jamais davantage : mesuré, la
+   * largeur de défilement du document ne bouge pas. */
   .diptych-anchor-z {
     position: static;
-    width: 100%;
+    width: auto;
     left: auto;
+    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 2rem));
   }
 
   .diptych-major-z {
@@ -4551,9 +4582,17 @@ nav[aria-label="Fil d'Ariane"] a {
     clip-path: none;
   }
 
-  .diptych-minor-z[data-scale="moyen"],
+  /* 72 % laissait plus d'un quart de l'écran vide de chaque côté. Le plan
+   * passe bord à bord comme le grand : c'est le seul autre plan de la section
+   * depuis que le troisième — sans photographie — a quitté la page, et rien
+   * ne justifie plus qu'il s'excuse d'être là. */
+  .diptych-minor-z[data-scale="moyen"] {
+    width: auto;
+    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 2rem));
+  }
+
   .diptych-minor-z[data-scale="petit"] {
-    width: 72%;
+    width: 62%;
     margin-inline: 0;
   }
 

@@ -71,9 +71,38 @@ export const STAGE_ASSETS: Record<Stage, StageSource | null> = {
     height: 1008,
   },
 
-  // Aucune image du dépôt ne montre une jonction de fabrication. On ne
-  // substitue rien : l'emplacement reste visible et documenté.
-  detail: null,
+  // ——— Le détail : la même photographie, recadrée sur l'arête ———
+  //
+  // Ce temps était à `null`, et la séquence affichait à sa place un écran
+  // entier de hachures grises portant « Plan manquant » et « Aucune image du
+  // dépôt ne montre ce sujet ». Note de production juste, mais adressée au
+  // visiteur, sur la page d'accueil d'une boutique. Mesuré : sept écrans sur
+  // dix-neuf sans la moindre image, celui-ci compris.
+  //
+  // Ce n'est pas une substitution. `detail.jpg` tient deux sujets dans un seul
+  // cadre : une arête métallique brossée posée sur une trame de lin. Le temps
+  // « matière » l'emploie déjà décalée vers la droite, pour que la trame
+  // domine et que l'arête reste en entrée de champ. Ici le cadrage part dans
+  // l'autre sens et pose l'arête au centre — c'est bien la jonction que
+  // demande le brief, dans la même prise de vue, pas un autre objet déguisé.
+  //
+  // Le ruban de fragments fait déjà exactement cela avec cette photographie :
+  // « La même arête, resserrée. » Le procédé est établi ici, pas inventé.
+  //
+  // `reserve` dit ce qui manque encore, et la règle de fond ne bouge pas : le
+  // jour où une prise de vue dédiée à la jonction existe, elle remplace ce
+  // cadrage, et rien d'autre ne change.
+  detail: {
+    src: detailImage,
+    position: "22% 48%",
+    // En portrait, le cadre se resserre : on descend un peu pour garder la
+    // longueur de l'arête plutôt que son seul point de contact.
+    positionMobile: "26% 52%",
+    width: 1408,
+    height: 1008,
+    reserve:
+      "Recadrage de la photographie de matière sur l'arête, non une prise de vue dédiée à la jonction. Provisoire, et dit.",
+  },
 
   // Intérieur : vase sur socle de travertin dans une niche vert profond. Le
   // plan est juste — la pièce entière, à distance de regard — mais c'est une

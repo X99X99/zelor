@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
-import { STAGES, STAGE_ASSETS, STAGE_INTENT, STAGE_LABELS, type Stage } from "@/lib/zelor/stages";
+import { STAGES, STAGE_ASSETS, STAGE_LABELS, type Stage } from "@/lib/zelor/stages";
 
 /**
  * ————— La séquence : matière, détail, pièce —————
@@ -39,51 +39,64 @@ import { STAGES, STAGE_ASSETS, STAGE_INTENT, STAGE_LABELS, type Stage } from "@/
 /** Profondeur simulée : trois calques, trois vitesses. Ce n'est pas de la 3D. */
 const LAYERS = ["fond", "sujet", "voile"] as const;
 
+/**
+ * Les temps réellement pourvus d'une photographie.
+ *
+ * La séquence en affichait trois quoi qu'il arrive, et le troisième — la
+ * jonction de fabrication, dont aucune image du dépôt ne montre le sujet —
+ * occupait un écran entier de hachures grises portant « Plan manquant » et
+ * « Aucune image du dépôt ne montre ce sujet ». C'est une note de production
+ * juste, et elle a servi : elle a tenu tant qu'on n'avait pas décidé si la
+ * photographie viendrait. Mais elle était adressée au visiteur, sur la page
+ * d'accueil d'une boutique, et lui demandait de contempler une absence.
+ *
+ * Mesuré sur la page publique : sept écrans sur dix-neuf sans la moindre
+ * image, dont celui-ci. La règle de fond ne bouge pas d'un pouce — on ne
+ * substitue jamais une photographie à une autre, la scène mentirait sur son
+ * sujet. On ne montre simplement plus le trou : la séquence tient sur les
+ * temps qui existent, et le jour où la troisième photographie est renseignée
+ * dans `STAGE_ASSETS`, le temps revient tout seul, sans toucher à ce fichier.
+ */
+function usableStages(): Stage[] {
+  return STAGES.filter((stage) => STAGE_ASSETS[stage] !== null);
+}
+
 function StageMedia({ stage, index }: { stage: Stage; index: number }) {
-  const source = STAGE_ASSETS[stage];
+  // Jamais nul : `usableStages` a déjà écarté les temps sans photographie.
+  const source = STAGE_ASSETS[stage]!;
 
-  // Photographie posée sur ce temps. `object-position` fait tout le cadrage :
-  // la scène est en plein cadre, l'image y est recoupée, et c'est ce réglage
-  // qui décide de ce qui reste dans le champ, en paysage comme en portrait.
-  if (source) {
-    return (
-      <img
-        className="stage-media-z"
-        src={source.src}
-        style={
-          {
-            "--pos": source.position,
-            "--pos-mobile": source.positionMobile ?? source.position,
-          } as CSSProperties
-        }
-        width={source.width}
-        height={source.height}
-        sizes="100vw"
-        // Seul le premier temps entre dans le chemin critique.
-        fetchPriority={index === 0 ? "high" : "low"}
-        loading={index === 0 ? "eager" : "lazy"}
-        decoding="async"
-        alt=""
-      />
-    );
-  }
-
-  // Aucune photographie : un emplacement qui se déclare comme tel. On ne
-  // substitue jamais une autre image ZELOR — la scène mentirait sur son sujet.
+  // `object-position` fait tout le cadrage : la scène est en plein cadre,
+  // l'image y est recoupée, et c'est ce réglage qui décide de ce qui reste
+  // dans le champ, en paysage comme en portrait.
   return (
-    <div className="stage-slot-z" data-stage={stage}>
-      <p className="stage-slot-label-z">Plan manquant — {STAGE_LABELS[stage]}</p>
-      <p className="stage-slot-note-z">{STAGE_INTENT[stage]}</p>
-      <p className="stage-slot-note-z">
-        Aucune image du dépôt ne montre ce sujet. Rien n'est substitué.
-      </p>
-    </div>
+    <img
+      className="stage-media-z"
+      src={source.src}
+      style={
+        {
+          "--pos": source.position,
+          "--pos-mobile": source.positionMobile ?? source.position,
+        } as CSSProperties
+      }
+      width={source.width}
+      height={source.height}
+      sizes="100vw"
+      // Seul le premier temps entre dans le chemin critique.
+      fetchPriority={index === 0 ? "high" : "low"}
+      loading={index === 0 ? "eager" : "lazy"}
+      decoding="async"
+      alt=""
+    />
   );
 }
 
 export function StageSequence() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
+  // Une seule liste gouverne les balises, les panneaux, les libellés du titre
+  // et le seuil d'apparition du bouton : elles doivent rester du même
+  // cardinal, sinon une balise pointe un panneau qui n'existe pas.
+  const stages = usableStages();
 
   // Le temps courant est décidé par des balises de hauteur nulle : une balise
   // qui franchit le milieu de l'écran devient le temps actif.
@@ -137,21 +150,35 @@ export function StageSequence() {
   }, []);
 
   return (
-    <section aria-labelledby="sequence-title" className="stage-track-z" ref={trackRef}>
+    // La hauteur de piste et le découpage des balises se déduisent du nombre
+    // de temps : elles étaient écrites en dur pour trois, si bien qu'à deux la
+    // piste gardait ses 4,25 écrans et le dernier plan restait épinglé pendant
+    // un écran et demi sans que rien n'arrive.
+    <section
+      aria-labelledby="sequence-title"
+      className="stage-track-z"
+      ref={trackRef}
+      style={{ "--stages": stages.length } as CSSProperties}
+    >
       <h2 id="sequence-title" className="sr-only">
-        Trois temps du regard : la matière, le détail, la pièce
+        Les temps du regard : {stages.map((stage) => STAGE_LABELS[stage].toLowerCase()).join(", ")}
       </h2>
 
       {/* Déclencheurs sans hauteur ni apparence : ils ne servent qu'à marquer
-          le tiers de piste où le temps bascule. */}
-      {STAGES.map((stage, index) => (
-        <span key={`beacon-${stage}`} className="stage-beacon-z" data-beacon={index} />
+          la portion de piste où le temps bascule. */}
+      {stages.map((stage, index) => (
+        <span
+          key={`beacon-${stage}`}
+          className="stage-beacon-z"
+          data-beacon={index}
+          style={{ "--i": index } as CSSProperties}
+        />
       ))}
 
       {/* Même raison que pour l'ouverture : le fond est une photographie, le
           contraste ne se calcule pas depuis les styles. */}
       <div className="stage-scene-z" data-media-ground="" data-step={step}>
-        {STAGES.map((stage, index) => (
+        {stages.map((stage, index) => (
           <div
             key={stage}
             className="stage-panel-z"
@@ -171,7 +198,7 @@ export function StageSequence() {
         {/* Le grand titre ne bouge pas : ce sont ses libellés qui se relaient,
             chacun derrière sa propre fenêtre de rognage. */}
         <div className="stage-title-z" aria-hidden="true">
-          {STAGES.map((stage, index) => (
+          {stages.map((stage, index) => (
             <span key={stage} className="stage-title-line-z" data-active={step === index}>
               <span className="stage-title-word-z">{STAGE_LABELS[stage]}</span>
             </span>
@@ -180,7 +207,7 @@ export function StageSequence() {
 
         {/* Le bouton appartient au dernier temps : il n'a pas à flotter
             au-dessus de la scène du début à la fin. */}
-        <div className="stage-cta-z" data-visible={step === STAGES.length - 1}>
+        <div className="stage-cta-z" data-visible={step === stages.length - 1}>
           {/* Enveloppé : un conteneur flex — ce qu'est `btn-lux` — supprime
               les nœuds de texte qui ne contiennent qu'une espace, et le
               libellé se rendait soudé. */}

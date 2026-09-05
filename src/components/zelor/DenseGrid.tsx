@@ -53,9 +53,18 @@ function usePlateFlow(ref: React.RefObject<HTMLElement | null>) {
  * densité. Une grille de formats mêlés se lit comme un désordre ; une grille
  * d'un seul format se lit comme une planche-contact.
  *
- * Le catalogue Shopify est vide aujourd'hui. On n'invente ni pièce, ni prix,
- * ni disponibilité : la planche montre ses emplacements, chacun nommé, et la
- * grille est prête à recevoir les vraies données sans changer d'un pixel.
+ * ——— Tant que le catalogue est vide ———
+ *
+ * La règle ne bouge pas : on n'invente ni pièce, ni prix, ni disponibilité.
+ * Mais la planche montrait douze cases hachurées, portant chacune son nom de
+ * fichier à venir, sur deux écrans pleins. Mesuré sur la page publique : sept
+ * écrans sur dix-neuf sans la moindre image, dont ces deux-là — la plus
+ * longue étendue vide de tout le parcours, et la plus grise.
+ *
+ * Douze rectangles vides ne disent pas « bientôt », ils disent « rien ». Une
+ * phrase le dit mieux, en un dixième de la hauteur. Le jour où le catalogue
+ * s'ouvre, `catalogueVide` passe à faux et la planche revient telle quelle,
+ * avec sa parallaxe et son survol — rien de tout cela n'est supprimé.
  */
 
 const PLANCHE = Array.from({ length: 12 }, (_, index) => ({
@@ -73,7 +82,12 @@ export function DenseGrid({ catalogueVide }: { catalogueVide: boolean }) {
   usePlateFlow(plateRef);
 
   return (
-    <Reveal as="section" aria-labelledby="planche-title" className="grid-track-z">
+    <Reveal
+      as="section"
+      aria-labelledby="planche-title"
+      className="grid-track-z"
+      data-vide={catalogueVide ? "" : undefined}
+    >
       <div className="grid-head-z">
         <p className="eyebrow-mixed-z">
           <em>la</em> SÉLECTION
@@ -86,36 +100,36 @@ export function DenseGrid({ catalogueVide }: { catalogueVide: boolean }) {
         </Link>
       </div>
 
-      <div className="grid-plate-z" ref={plateRef}>
-        {PLANCHE.map((slot, index) => (
-          <div
-            key={slot.fichier}
-            className="grid-cell-z"
-            style={{ "--i": index } as React.CSSProperties}
-          >
-            {/* Couche séparée de grid-cell-z : celle-ci porte la révélation
-                d'entrée (transition, une fois), celle-ci la parallaxe
-                (continue, jamais transitionnée) — les deux sur la même
-                propriété se seraient disputé chaque trame. */}
-            <div className="grid-cell-parallax-z">
-              <div
-                className="slot-empty-z grid-cell-hover-z"
-                role="img"
-                aria-label={`Image à venir : ${slot.role}`}
-              >
-                <p className="slot-empty-file-z">{slot.fichier}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
       {catalogueVide ? (
         <p className="grid-note-z">
-          Le catalogue n'est pas encore ouvert. Ces emplacements attendent les pièces réelles et
-          leurs photographies — aucune n'est inventée ici.
+          Le catalogue ouvre bientôt. Les pièces et leurs photographies seront publiées ici — aucune
+          n'est inventée en attendant.
         </p>
-      ) : null}
+      ) : (
+        <div className="grid-plate-z" ref={plateRef}>
+          {PLANCHE.map((slot, index) => (
+            <div
+              key={slot.fichier}
+              className="grid-cell-z"
+              style={{ "--i": index } as React.CSSProperties}
+            >
+              {/* Couche séparée de grid-cell-z : celle-ci porte la révélation
+                  d'entrée (transition, une fois), celle-ci la parallaxe
+                  (continue, jamais transitionnée) — les deux sur la même
+                  propriété se seraient disputé chaque trame. */}
+              <div className="grid-cell-parallax-z">
+                <div
+                  className="slot-empty-z grid-cell-hover-z"
+                  role="img"
+                  aria-label={`Image à venir : ${slot.role}`}
+                >
+                  <p className="slot-empty-file-z">{slot.fichier}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </Reveal>
   );
 }
