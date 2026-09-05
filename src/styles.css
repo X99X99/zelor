@@ -4549,7 +4549,13 @@ nav[aria-label="Fil d'Ariane"] a {
    * sa propre course. */
   height: 185svh;
 
-  --l: var(--load, 1);
+  /* Au repos, la scène est dans son état d'attente : la valeur par défaut
+   * doit être 0, pas 1. Avec 1, le rendu serveur peignait d'abord la scène
+   * achevée, puis l'horloge écrivait 0 à l'hydratation et la page semblait
+   * « charger à l'envers » — retour au compteur 0 % puis réouverture. Les
+   * régimes sans attente (mouvement réduit, sans JavaScript) forcent
+   * explicitement 1 plus bas. */
+  --l: var(--load, 0);
   /* La sortie ne commence pas avant que la scène soit ouverte. */
   --p: var(--sp, 1);
 
@@ -5203,6 +5209,10 @@ html:has(.ovt-track-z) header.header-motion-z {
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .ovt-track-z {
     height: auto;
+    /* Sans horloge, personne n'écrira --load : ces régimes forcent l'état
+     * final puisque le repos par défaut est désormais l'attente. */
+    --load: 1;
+    --sp: 1;
   }
 
   .ovt-scene-z {
