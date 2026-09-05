@@ -4557,7 +4557,7 @@ nav[aria-label="Fil d'Ariane"] a {
    * explicitement 1 plus bas. */
   --l: var(--load, 0);
   /* La sortie ne commence pas avant que la scène soit ouverte. */
-  --p: var(--sp, 0);
+  --p: var(--sp, 1);
 
   /* La fente par laquelle la scène apparaît, et la place que les deux moitiés
    * de la déclaration lui laissent. Une seule paire de valeurs pour les deux :
@@ -5209,6 +5209,10 @@ html:has(.ovt-track-z) header.header-motion-z {
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .ovt-track-z {
     height: auto;
+    /* Sans horloge, personne n'écrira --load : ces régimes forcent l'état
+     * final puisque le repos par défaut est désormais l'attente. */
+    --load: 1;
+    --sp: 1;
   }
 
   .ovt-scene-z {
