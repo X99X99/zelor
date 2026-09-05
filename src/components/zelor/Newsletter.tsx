@@ -45,18 +45,10 @@ export function Newsletter() {
             « Recevoir la lettre » vit désormais dans le nom accessible du
             bouton : il n'a jamais rien appris à qui voit le champ, et il
             reste entier pour qui ne le voit pas. */}
-        {/* Le libellé du champ redevient visible. Il était masqué aux seuls
-            voyants ; chez la référence il est posé au-dessus du filet, en
-            sans-serif 12 px capitales à 0,08 em — « STAY IN TOUCH WITH THE
-            STUDIO ». Un formulaire qui ne s'annonce que par un texte de
-            substitution perd son libellé dès qu'on commence à taper. */}
-        <label
-          htmlFor="newsletter-email"
-          className="field-label-z mb-2.5 block text-navy-foreground/75"
-        >
-          Votre adresse email
-        </label>
         <div className="field-rule-z text-navy-foreground">
+          <label htmlFor="newsletter-email" className="sr-only">
+            Votre adresse email
+          </label>
           <input
             id="newsletter-email"
             type="email"
@@ -65,6 +57,7 @@ export function Newsletter() {
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "newsletter-error" : undefined}
             onChange={(event) => setEmail(event.target.value)}
+            placeholder="Votre adresse email"
           />
           <button type="submit" className="field-arrow-z" aria-label="Recevoir la lettre">
             <ArrowRight className="size-5" aria-hidden="true" />

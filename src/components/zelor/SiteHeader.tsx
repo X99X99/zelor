@@ -488,7 +488,7 @@ export function SiteHeader() {
               375px, aucune des trois cibles tactiles de 44px n'est réduite. */}
           <BrandLink
             onNavigate={closeMenu}
-            className="wordmark-z max-[374px]:tracking-[0.28em] font-display text-2xl tracking-[0.4em] max-[374px]:text-xl lg:text-[1.75rem]"
+            className="wordmark-z max-[374px]:tracking-[0.16em] font-display text-2xl tracking-[0.22em] max-[374px]:text-xl lg:text-[1.75rem]"
           >
             {BRAND.name}
           </BrandLink>
@@ -594,7 +594,7 @@ export function SiteHeader() {
             </button>
             <BrandLink
               onNavigate={closeMenu}
-              className="wordmark-z font-display text-2xl tracking-[0.4em]"
+              className="wordmark-z font-display text-2xl tracking-[0.22em]"
             >
               {BRAND.name}
             </BrandLink>

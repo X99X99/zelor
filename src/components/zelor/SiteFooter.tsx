@@ -1,7 +1,5 @@
 import { BRAND } from "@/lib/zelor/content";
 import { BrandLink, NavLink, scrollToTop } from "@/components/zelor/NavLink";
-import { LineReveal } from "./LineReveal";
-import { Reveal } from "./Reveal";
 import { Newsletter } from "./Newsletter";
 
 const columns = [
@@ -44,58 +42,49 @@ const columns = [
   },
 ] as const;
 
+/**
+ * ————— Le pied de page —————
+ *
+ * ——— Ce qui a été retiré ———
+ *
+ * Le nom de la maison y apparaissait quatre fois en quelques centimètres : un
+ * bloc « MAISON ZELOR » avec sa promesse en grand, un petit mot-symbole en
+ * tête des colonnes avec sa ligne de description, le mot-symbole géant en bas,
+ * et la lettre. Répété à ce rythme, un nom cesse d'être une signature : il
+ * devient un tic.
+ *
+ * Il n'en reste qu'un, le grand, et il ouvre le pied de page au lieu de le
+ * fermer. La lettre passe dessous, à la place qu'occupait la promesse.
+ *
+ * ——— L'ordre ———
+ *
+ * Le nom, l'invitation, les liens, les mentions. On quitte la maison en la
+ * nommant, pas en lisant une ligne de droits réservés.
+ */
 export function SiteFooter() {
   return (
     <footer className="overlay-navy grain-z shoreline-z mt-28 text-navy-foreground">
+      {/* Le nom ouvre le pied de page. C'est un lien vers l'accueil, pas une
+          image : il répond au clavier et il se lit. */}
+      <div className="container-z pt-20 pb-4 md:pt-28">
+        <BrandLink className="wordmark-z footer-wordmark-z text-navy-foreground">
+          {BRAND.name}
+        </BrandLink>
+      </div>
+
       <Newsletter />
 
-      {/* ————— La clôture —————
-          Un pied de page de maison n'est pas une barre de liens : c'est la fin
-          de l'expérience, et elle mérite la même respiration que son ouverture.
-          Chez Vero il occupe presque un écran entier. On y pose la signature en
-          entier — l'accueil n'en montre que la seconde moitié — au palier
-          d'affichage, révélée derrière une fenêtre.
-
-          Les dix-sept liens qui suivent ne bougent pas d'une ligne : c'est la
-          composition qui change, jamais la navigation. */}
-      <Reveal
-        as="section"
-        aria-labelledby="footer-signature"
-        className="container-z border-t border-navy-foreground/12 py-24 md:py-32"
-      >
-        <p className="eyebrow-mixed-z text-navy-foreground">
-          MAISON <em>ZELOR</em>
-        </p>
-        <LineReveal
-          id="footer-signature"
-          className="mixed-caps-z mt-6 max-w-5xl text-left text-[clamp(1.75rem,4.2vw,3.75rem)]"
-        >
-          L'ÉLÉGANCE <em>dans chaque détail, pour faire de chaque détail une</em> PROMESSE.
-        </LineReveal>
-      </Reveal>
-
-      {/* Sous 640px, les 4 colonnes de liens s'empilaient en une seule
-          colonne : 17 liens à la file portaient le footer à 2,7 écrans de
-          haut sur un iPhone SE (mesuré). En les répartissant en 2 colonnes
-          dès le mobile — le bloc de marque gardant sa pleine largeur au-dessus
-          — aucun lien ni aucune colonne ne disparaît, seule la hauteur se
-          resserre. */}
-      <div className="container-z grid grid-cols-2 gap-x-6 gap-y-10 border-t border-navy-foreground/12 py-16 sm:gap-10 lg:grid-cols-5">
-        <div className="col-span-2 lg:col-span-1">
-          <BrandLink className="wordmark-z inline-block font-display text-2xl tracking-[0.4em]">
-            {BRAND.name}
-          </BrandLink>
-          <p className="mt-4 max-w-56 text-sm leading-relaxed text-navy-foreground/75">
-            Maison éditoriale française, pensée à Nice et tournée vers l'international.
-          </p>
-        </div>
+      {/* Sous 640px, les 4 colonnes s'empilaient en une seule : 17 liens à la
+          file portaient le footer à 2,7 écrans sur un iPhone SE (mesuré).
+          Réparties en 2 colonnes dès le mobile, aucun lien ne disparaît et
+          seule la hauteur se resserre. */}
+      <div className="container-z grid grid-cols-1 gap-x-6 gap-y-10 border-t border-navy-foreground/12 py-16 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
         {columns.map((column) => (
-          <nav key={column.title} aria-label={column.title}>
+          <nav key={column.title} aria-label={column.title} className="min-w-0">
             <h2 className="eyebrow text-navy-foreground/60">{column.title}</h2>
             {/* Le retrait négatif annule le `padding-inline` de la capsule :
-                sans lui, le libellé du lien se posait 12 px à droite du titre
-                de sa propre colonne. Même compensation que la navigation du
-                header, qui porte déjà `-ml-3` pour la même raison. */}
+                sans lui, le libellé se posait 12 px à droite du titre de sa
+                propre colonne. Même compensation que la navigation du header. */}
             <ul className="-ml-3 mt-4 space-y-3">
               {column.links.map((link) => (
                 <li key={link.to}>
@@ -113,23 +102,8 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
-      {/* ————— Le nom, en dernier —————
-          On ne quitte pas une maison sur une ligne de droits réservés. Chez la
-          référence, chaque page se termine sur le mot-symbole en très grand,
-          pleine mesure. C'est un lien vers l'accueil, pas une image : il
-          répond au clavier et il se lit. */}
-      <div className="container-z border-t border-navy-foreground/12 pt-16 pb-4">
-        {/* `wordmark-z` en plus du corps : c'est bien un mot-symbole, il doit
-            porter la signature lumineuse partagée par tous les autres — et
-            deux garde-fous s'appuient dessus, l'un pour vérifier que les
-            logos se comportent à l'identique, l'autre pour les exclure du
-            recensement des capsules. */}
-        <BrandLink className="wordmark-z footer-wordmark-z text-navy-foreground">
-          {BRAND.name}
-        </BrandLink>
-      </div>
 
-      <div className="container-z flex flex-col gap-3 pt-10 pb-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 pt-10 pb-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>

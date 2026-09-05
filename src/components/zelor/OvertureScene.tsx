@@ -67,10 +67,54 @@ export function OvertureScene() {
   const { done } = useOvertureLoad(ref, source ? videoRef : imageRef, counterRef);
 
   /**
-   * Signale à la feuille de style qu'une ouverture est en cours sur cette page.
+   * ————— L en-tête est rendu à lui-même une fois l ouverture franchie —————
+   *
+   * Tant que la scène est montée, l en-tête lui obéit : escamoté pendant
+   * l immersion, redescendu quand le logo se pose. C est juste pendant
+   * l ouverture, et faux après.
+   *
+   * Mesuré : passé 1200 px de défilement, l en-tête restait à opacité 0 et
+   * translation -100 %, définitivement. Il ne revenait plus, ni en
+   * remontant, ni en cliquant le mot-symbole — qui ramène en haut de page
+   * et donc réactivait l escamotage. Signalé comme un en-tête cassé, et
+   * c en était un.
+   *
+   * Dès que la piste est entièrement parcourue, la scène le relâche : elle
+   * pose un attribut que la feuille de style lit pour rendre à l en-tête sa
+   * rétractation ordinaire. Une seule fois, sans retour en arrière — une
+   * ouverture ne se rejoue pas.
+   */
+  useEffect(() => {
+    const track = ref.current;
+    if (!track) return;
+    const root = document.documentElement;
+
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const progress = Number(track.style.getPropertyValue("--sp") || "0");
+      if (progress < 0.999) return;
+      root.dataset["overtureDone"] = "";
+      window.removeEventListener("scroll", schedule);
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(check);
+    };
+
+    check();
+    window.addEventListener("scroll", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
+      delete root.dataset["overtureDone"];
+    };
+  }, [ref]);
+
+  /**
+   * Signale à la feuille de style qu une ouverture est en cours sur cette page.
    *
    * La progression seule ne suffit pas : une variable absente vaut sa valeur
-   * par défaut, donc `--ovt-p` ne distingue pas « pas d'ouverture » de
+   * par défaut, donc `--ovt-p` ne distingue pas « pas d ouverture » de
    * « ouverture terminée ». Un attribut se sélectionne ; une variable
    * manquante, non.
    */

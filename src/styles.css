@@ -104,6 +104,33 @@
    * 1 : réponse immédiate (états pressés) · 2 : micro-interaction
    * 3 : transition de matière · 4 : mouvement éditorial · 5 : reveal au scroll
    */
+  /* ————— Rythme vertical —————
+   *
+   * Cinq paliers nommés, redéclarés une seule fois au palier
+   * structurant. Aucune interpolation.
+   *
+   * Ce fichier comptait cent vingt clamp() et quatorze valeurs de
+   * padding-block toutes différentes — 3/10vh/5, 4/10vh/8, 5/18vh/9,
+   * 8/32vh/21. Chacune se défendait seule ; ensemble elles ne faisaient
+   * aucun rythme. Une page dont chaque section respire d une quantité
+   * légèrement différente de sa voisine n a pas de rythme : elle a une
+   * moyenne, et c est ce qui la rend molle.
+   *
+   * Une valeur interpolée est aussi un aveu. Elle dit qu on ignore
+   * laquelle est la bonne, alors on prend toutes celles du milieu. Un
+   * palier dit qu on a choisi.
+   *
+   * Ce qui reste en clamp() après ce passage l est pour une raison
+   * nommée sur place : un corps qui doit suivre la largeur, une hauteur
+   * de scène qui doit suivre l écran.
+   */
+  --step-tight: 1rem;
+  --step-read: 2rem;
+  --step-block: 4rem;
+  --step-section: 6.25rem;
+  --step-scene: 8rem;
+  --step-pause: 10.625rem;
+
   --dur-1: 180ms;
   --dur-2: 380ms;
   --dur-3: 620ms;
@@ -679,23 +706,31 @@
 }
 
 /* 168 px chez eux. Le titre d'ouverture, et lui seul. */
+/* Le plus grand corps de la page, et lui seul. Interlignage 0,94 : à cent
+ * quatre-vingts pixels une ligne de capitales n a ni jambage ni hampe, et un
+ * interligne de 1 y laisse un couloir vide que le regard lit comme une
+ * hésitation. Le rapport se resserre à mesure que le corps grandit — c est la
+ * règle, et non une valeur unique appliquée à tous les paliers. */
 @utility display-hero-z {
-  font-size: clamp(2.75rem, 11.6vw, 10.5rem);
-  line-height: 1;
+  font-size: clamp(2.75rem, 11.6vw, 11.5rem);
+  line-height: 0.94;
   letter-spacing: -0.01em;
 }
 
 /* 120 px. Les titres de section majeurs. */
+/* Les titres de section majeurs. Plafond porté de 7,5 à 8,5 rem : sur grand
+ * écran ce palier manquait de présence, et un titre qui ne domine pas son
+ * écran ne fait pas une scène, il fait une légende. */
 @utility display-1-z {
-  font-size: clamp(2.25rem, 8.3vw, 7.5rem);
-  line-height: 1.02;
+  font-size: clamp(2.25rem, 8.3vw, 8.5rem);
+  line-height: 0.96;
   letter-spacing: -0.008em;
 }
 
 /* 67,7 px. Le palier intermédiaire, pour les titres de page. */
 @utility display-2-z {
-  font-size: clamp(1.875rem, 4.7vw, 4.25rem);
-  line-height: 1.04;
+  font-size: clamp(1.875rem, 4.7vw, 5rem);
+  line-height: 1;
   letter-spacing: -0.004em;
 }
 
@@ -799,9 +834,18 @@
 /* 30 px en sans, graisse 500, approche resserrée. C'est la seule chose que
  * Vero ne compose pas en serif : le paragraphe d'accroche. Le contraste des
  * deux familles à cet endroit précis fait toute la respiration de la page. */
+/* Le paragraphe d accroche est passé sous le titre, au lieu de le dominer.
+ *
+ * Il montait à 1,875 rem quand le titre de page plafonne à 5 : sur la page
+ * Collection, constaté à l image, le paragraphe se lisait avant le titre et
+ * la hiérarchie s inversait. Un chapeau annonce, il ne déclare pas.
+ *
+ * L interlignage reste serré — 1,06 — parce que c est un bloc court et
+ * dense, pas du texte courant : celui-là est à 1,5, plus bas.
+ */
 @utility lead-z {
   font-family: var(--font-sans);
-  font-size: clamp(1.25rem, 2.1vw, 1.875rem);
+  font-size: clamp(1.0625rem, 1.35vw, 1.375rem);
   line-height: 1.06;
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -862,33 +906,47 @@
 }
 
 /* Fermeture — le dernier souffle avant le pied de page. */
+/* Les cinq paliers de module, réglés sur le barème de rythme et non plus
+ * chacun sur sa propre valeur interpolée.
+ *
+ * L échelle des noms est celle des intentions, et elle se lit dans cet
+ * ordre : on ferme, on se tait, on respire, on développe, on immerge.
+ * Chacun prend le palier qui lui correspond, et deux modules de même
+ * intention prennent désormais exactement la même valeur — ce qui n était
+ * le cas d aucun.
+ *
+ * `breath` a d abord reçu le palier `section` par erreur de tri : mesuré
+ * à 1440, l en-tête de la page Collection passait de 80 à 150 px de
+ * rembourrage haut et bas, et ouvrait quatre cents pixels de vide entre le
+ * chapeau et les filtres. Une respiration n est pas une section.
+ */
 @utility module-close-z {
   min-height: var(--module-close);
-  padding-block: clamp(2.5rem, 5vw, 4rem);
+  padding-block: var(--step-read);
 }
 
 /* Silence — une section qui ponctue, jamais qui développe. */
 @utility module-silence-z {
   min-height: var(--module-silence);
-  padding-block: clamp(3rem, 6vw, 5rem);
+  padding-block: var(--step-block);
 }
 
 /* Respiration — une section qui pose une idée et s'arrête. */
 @utility module-breath-z {
   min-height: var(--module-breath);
-  padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  padding-block: var(--step-block);
 }
 
 /* Développement — une section qui affirme, avec image ou grille. */
 @utility module-develop-z {
   min-height: var(--module-develop);
-  padding-block: clamp(6rem, 12vw, 10rem);
+  padding-block: var(--step-section);
 }
 
 /* Immersion — réservé aux scènes. Une seule par page, jamais deux. */
 @utility module-immersion-z {
   min-height: var(--module-immersion);
-  padding-block: clamp(7rem, 15vw, 12rem);
+  padding-block: var(--step-scene);
 }
 
 /* ————— Composition éditoriale décalée —————
@@ -3719,7 +3777,7 @@ nav[aria-label="Fil d'Ariane"] a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-block: clamp(3rem, 8vh, 5rem);
+  padding-block: var(--step-block);
 }
 
 /* La fenêtre de centrage — jamais l'hôte de WordReveal : flex/grid annule les
@@ -3771,7 +3829,7 @@ nav[aria-label="Fil d'Ariane"] a {
 @media (prefers-reduced-motion: reduce) {
   .manifest-slot-z {
     min-height: auto;
-    padding-block: clamp(1.5rem, 4vh, 2.5rem);
+    padding-block: var(--step-read);
   }
 }
 
@@ -3794,7 +3852,7 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility silence-line-z {
   @apply mixed-caps-z;
   max-width: 20ch;
-  font-size: clamp(2.25rem, 7.4vw, 6.5rem);
+  font-size: clamp(2.5rem, 7.6vw, 8.25rem);
   text-align: center;
 }
 
@@ -3836,7 +3894,7 @@ nav[aria-label="Fil d'Ariane"] a {
   z-index: 1;
   display: grid;
   justify-items: end;
-  gap: clamp(4rem, 12vh, 10rem);
+  gap: var(--step-section);
   padding-top: 18svh;
   padding-bottom: 12svh;
   margin-left: auto;
@@ -3878,7 +3936,17 @@ nav[aria-label="Fil d'Ariane"] a {
   aspect-ratio: 392 / 542;
   opacity: calc(0.55 + var(--ep, 1) * 0.45);
   scale: calc(0.94 + var(--ep, 1) * 0.06);
-  clip-path: inset(calc((1 - var(--ep, 1)) * 6%));
+  /* Aperture dissymétrique : le retrait est plus large à gauche qu à droite,
+   * et plus faible en haut et en bas que sur les côtés. Une ouverture
+   * parfaitement centrée — ce que faisait le retrait uniforme de 6 % — se lit
+   * comme un zoom arrière ; décentrée, elle se lit comme un geste, parce qu
+   * elle a une direction. Les proportions suivent la figure, plus haute que
+   * large : le retrait latéral y pèse davantage, et c est lui qui porte le
+   * mouvement. */
+  --ap: calc(1 - var(--ep, 1));
+  clip-path: inset(
+    calc(var(--ap) * 4%) calc(var(--ap) * 7%) calc(var(--ap) * 4%) calc(var(--ap) * 13%)
+  );
   will-change: opacity, transform, clip-path;
   &[data-scale="moyen"] {
     width: min(27vw, 22rem);
@@ -3929,7 +3997,7 @@ nav[aria-label="Fil d'Ariane"] a {
   top: 0;
   display: grid;
   align-content: center;
-  gap: clamp(1.5rem, 4vh, 2.5rem);
+  gap: var(--step-read);
   height: 100svh;
   overflow: hidden;
 }
@@ -4025,7 +4093,7 @@ nav[aria-label="Fil d'Ariane"] a {
   .hscene-scene-z {
     position: static;
     height: auto;
-    padding-block: clamp(3rem, 10vh, 5rem);
+    padding-block: var(--step-block);
     overflow: visible;
   }
 
@@ -4073,7 +4141,7 @@ nav[aria-label="Fil d'Ariane"] a {
   .hscene-scene-z {
     position: static;
     height: auto;
-    padding-block: clamp(3rem, 10vh, 5rem);
+    padding-block: var(--step-block);
     overflow: visible;
   }
 
@@ -4085,7 +4153,11 @@ nav[aria-label="Fil d'Ariane"] a {
   }
 
   .hscene-panel-z {
-    flex: 0 1 min(var(--panel-w), 42vw);
+    /* 78vw au téléphone : à 42 le panneau tombait à 164 px dans un écran
+     * de 390, soit deux tiers de crème autour d une image censée porter
+     * la scène. Le partage à deux colonnes ne reprend qu à 768, là où il
+     * tient réellement. */
+    flex: 0 1 min(var(--panel-w), 78vw);
   }
 
   .hscene-bar-z {
@@ -4186,7 +4258,7 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility process-bar-z {
   width: min(100%, 20rem);
   height: 1px;
-  margin-top: clamp(2rem, 5vh, 3rem);
+  margin-top: var(--step-read);
   background: color-mix(in oklab, var(--color-foreground) 12%, transparent);
 }
 
@@ -4200,7 +4272,7 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility process-link-z {
   display: inline-block;
-  margin-top: clamp(1.5rem, 4vh, 2.25rem);
+  margin-top: var(--step-read);
 }
 
 @media (max-width: 767px) {
@@ -4212,17 +4284,37 @@ nav[aria-label="Fil d'Ariane"] a {
     position: static;
     display: block;
     height: auto;
-    padding-block: clamp(3rem, 10vh, 5rem);
+    padding-block: var(--step-block);
   }
 
   /* Bord à bord, comme le diptyque. Le plafond de 20rem tenait la figure à
    * 320px au centre d'un écran de 390 : mesurée, la section ne couvrait que
    * 28 % de sa propre surface en image. Le retrait négatif annule exactement
    * le `padding-inline` de la scène, jamais davantage. */
+  /* Le média gagne le bord à bord au défilement, au lieu de l occuper
+   * d emblée. Il est posé pleine largeur dans la mise en page — le
+   * retrait négatif annule la gouttière — puis découvert de la largeur
+   * du conteneur jusqu aux deux bords.
+   *
+   * C est un rognage et non une échelle : le sujet ne bouge pas d un
+   * pixel, seule la fenêtre s ouvre. Une échelle aurait agrandi le sujet
+   * avec le cadre, ce qui se lit comme un zoom, et aurait pu découvrir
+   * un bord. Un rognage ne le peut pas.
+   *
+   * Une seule scène du site porte ce geste. Répété partout il
+   * deviendrait un tic ; ici il marque le passage à la méthode. */
   .process-anchor-z {
     max-width: none;
-    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 3.5rem));
-    margin-bottom: clamp(2.5rem, 8vh, 4rem);
+    margin-bottom: var(--step-block);
+    margin-inline: 0;
+  }
+
+  .process-figure-z {
+    --bleed-gutter: 1.25rem;
+    --bleed-p: clamp(0, calc(var(--sp, 1) / 0.55), 1);
+    margin-inline: calc(-1 * var(--bleed-gutter));
+    clip-path: inset(0 calc(var(--bleed-gutter) * (1 - var(--bleed-p))));
+    will-change: clip-path;
   }
 
   /* Sans épinglage, les quatre temps ne se relaient plus derrière une seule
@@ -4266,17 +4358,37 @@ nav[aria-label="Fil d'Ariane"] a {
     position: static;
     display: block;
     height: auto;
-    padding-block: clamp(3rem, 10vh, 5rem);
+    padding-block: var(--step-block);
   }
 
   /* Bord à bord, comme le diptyque. Le plafond de 20rem tenait la figure à
    * 320px au centre d'un écran de 390 : mesurée, la section ne couvrait que
    * 28 % de sa propre surface en image. Le retrait négatif annule exactement
    * le `padding-inline` de la scène, jamais davantage. */
+  /* Le média gagne le bord à bord au défilement, au lieu de l occuper
+   * d emblée. Il est posé pleine largeur dans la mise en page — le
+   * retrait négatif annule la gouttière — puis découvert de la largeur
+   * du conteneur jusqu aux deux bords.
+   *
+   * C est un rognage et non une échelle : le sujet ne bouge pas d un
+   * pixel, seule la fenêtre s ouvre. Une échelle aurait agrandi le sujet
+   * avec le cadre, ce qui se lit comme un zoom, et aurait pu découvrir
+   * un bord. Un rognage ne le peut pas.
+   *
+   * Une seule scène du site porte ce geste. Répété partout il
+   * deviendrait un tic ; ici il marque le passage à la méthode. */
   .process-anchor-z {
     max-width: none;
-    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 3.5rem));
-    margin-bottom: clamp(2.5rem, 8vh, 4rem);
+    margin-bottom: var(--step-block);
+    margin-inline: 0;
+  }
+
+  .process-figure-z {
+    --bleed-gutter: 1.25rem;
+    --bleed-p: clamp(0, calc(var(--sp, 1) / 0.55), 1);
+    margin-inline: calc(-1 * var(--bleed-gutter));
+    clip-path: inset(0 calc(var(--bleed-gutter) * (1 - var(--bleed-p))));
+    will-change: clip-path;
   }
 }
 
@@ -4284,7 +4396,7 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility grid-track-z {
   min-height: 141svh;
-  padding-block: clamp(4rem, 10vh, 8rem);
+  padding-block: var(--step-section);
   padding-inline: clamp(1.25rem, 4vw, 2rem);
 
   /* Sans planche, la hauteur réservée n'a plus de raison d'être : elle tenait
@@ -4301,13 +4413,13 @@ nav[aria-label="Fil d'Ariane"] a {
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem 2rem;
-  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+  margin-bottom: var(--step-block);
 }
 
 @utility grid-title-z {
   @apply mixed-caps-z;
   flex: 1 1 20rem;
-  font-size: clamp(1.75rem, 4.2vw, 3.75rem);
+  font-size: clamp(2rem, 4.6vw, 4.5rem);
   text-align: left;
 }
 
@@ -4347,10 +4459,29 @@ nav[aria-label="Fil d'Ariane"] a {
  * chaque trame de défilement, exactement l'erreur que ce dépôt évite
  * partout ailleurs (voir Diptych, --ep). Débordement de 14 % de chaque
  * côté : la fenêtre de la cellule reste pleine quelle que soit la vitesse. */
+/* Parallaxe compensée, à la place de la réserve choisie au jugé.
+ *
+ * Elle valait `inset: -14%` pour une course de 1,5 rem multipliée par une
+ * profondeur allant jusqu à 1,5 : rien ne garantissait que la seconde
+ * tienne dans la première, et la vérification tenait de l espoir.
+ *
+ * La réserve se déduit maintenant de la course, et de la même profondeur
+ * qu elle. Une cellule qui voyage de ± 9 % réserve 9 % de chaque côté ;
+ * une cellule qui voyage de ± 4 % en réserve 4. Le débord est toujours
+ * égal à la course, quelle que soit la profondeur : aucun bord ne peut se
+ * découvrir, à la descente comme à la remontée.
+ *
+ * Une première écriture fixait la réserve à --px-range / 2 sans la
+ * profondeur, et les cellules les plus rapides la dépassaient — le
+ * commentaire promettait alors ce que la formule ne tenait pas.
+ */
 @utility grid-cell-parallax-z {
+  --px-range: 12;
+  --px-p: var(--sp, 0.5);
+  --px-reach: calc(var(--px-range) * var(--depth, 1) * 0.5%);
   position: absolute;
-  inset: -14% 0;
-  translate: 0 calc(var(--sp, 0) * -1 * var(--depth, 1) * 1.5rem);
+  inset: calc(-1 * var(--px-reach)) 0;
+  translate: 0 calc((var(--px-p) * 2 - 1) * -1 * var(--px-reach));
   will-change: transform;
 }
 
@@ -4413,7 +4544,7 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility grid-note-z {
   max-width: 34rem;
-  margin-top: clamp(2rem, 5vh, 3rem);
+  margin-top: var(--step-read);
   font-family: var(--font-sans);
   font-size: 0.875rem;
   line-height: 1.5;
@@ -4428,7 +4559,7 @@ nav[aria-label="Fil d'Ariane"] a {
   gap: 2rem;
   min-height: 153svh;
   align-content: center;
-  padding-block: clamp(8rem, 32vh, 21rem) clamp(4rem, 17vh, 11rem);
+  padding-block: var(--step-pause) var(--step-scene);
   padding-inline: clamp(1.25rem, 4vw, 2rem);
 }
 
@@ -4439,7 +4570,7 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility closing-line-z {
   @apply mixed-caps-z;
   max-width: 17ch;
-  font-size: clamp(2rem, 5.8vw, 4.75rem);
+  font-size: clamp(2.25rem, 6.2vw, 6rem);
   text-align: left;
 }
 
@@ -4455,13 +4586,13 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility reassure-track-z {
   min-height: 26svh;
-  padding-block: clamp(3rem, 8vh, 6rem);
+  padding-block: var(--step-block);
   padding-inline: clamp(1.25rem, 4vw, 2rem);
 }
 
 @utility reassure-cols-z {
   display: grid;
-  gap: clamp(1.5rem, 4vw, 3rem);
+  gap: var(--step-read);
   @media (width >= 768px) {
     grid-template-columns: repeat(3, minmax(0, 18rem));
   }
@@ -4482,7 +4613,7 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility reassure-note-z {
   max-width: 34rem;
-  margin-top: clamp(2rem, 5vh, 3rem);
+  margin-top: var(--step-read);
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   line-height: 1.5;
@@ -4625,7 +4756,7 @@ nav[aria-label="Fil d'Ariane"] a {
   }
 
   .closing-track-z {
-    padding-block: clamp(5rem, 18vh, 9rem) clamp(3rem, 10vh, 5rem);
+    padding-block: var(--step-scene) var(--step-block);
   }
 }
 
@@ -4738,14 +4869,11 @@ nav[aria-label="Fil d'Ariane"] a {
   /* ——— L'attente ——— */
   /* 0,00 → 0,18 : la déclaration s'inscrit. */
   --lp-ink: clamp(0, calc(var(--l) / 0.18), 1);
-  /* 0,85 → 1,00 : les moitiés s'écartent et le masque s'ouvre — seulement une
-   * fois le compteur presque à 100 %. Mesuré à l'image avant correctif : sur
-   * (var(--l) - 0.6) / 0.4, le masque était déjà largement ouvert à 83 % de
-   * chargement affiché, alors que le compteur annonçait encore une attente en
-   * cours — deux messages contradictoires en même temps. */
-  --lp-open: clamp(0, calc((var(--l) - 0.85) / 0.15), 1);
-  /* 0,88 → 1,00 : le fond clair et l'attente se retirent. */
-  --lp-out: clamp(0, calc((var(--l) - 0.88) / 0.12), 1);
+  /* L ouverture et le retrait du fond clair ne dépendent plus de la course du
+   * compteur mais de `--ovt-open`, l animation qui ne démarre qu une fois la
+   * barre à cent pour cent. La barre finit, puis la scène s ouvre. */
+  --lp-open: var(--ovt-open, 1);
+  --lp-out: clamp(0, calc((var(--ovt-open, 1) - 0.15) / 0.5), 1);
 
   /* ——— La sortie ——— */
   /* 0,00 → 0,70 : le logo rejoint l'en-tête. */
@@ -4891,8 +5019,8 @@ nav[aria-label="Fil d'Ariane"] a {
   font-size: clamp(1.375rem, 3.2vw, 2.875rem);
   font-weight: 300;
   line-height: 1;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
   text-transform: uppercase;
   white-space: nowrap;
   /* N'existe qu'une fois la scène ouverte — un simple interrupteur, pas un
@@ -5221,7 +5349,7 @@ nav[aria-label="Fil d'Ariane"] a {
 
 @utility ovt-promise-z {
   max-width: 34ch;
-  margin-top: clamp(1.25rem, 3vh, 2rem);
+  margin-top: var(--step-tight);
   margin-inline: auto;
   text-align: center;
   font-family: var(--font-display);
@@ -5486,7 +5614,7 @@ html:has(.ovt-track-z) header.header-motion-z {
     position: static;
     min-height: 100svh;
     height: auto;
-    padding-block: clamp(3rem, 10vh, 6rem);
+    padding-block: var(--step-block);
   }
 
   .ovt-loader-z {
@@ -5598,7 +5726,11 @@ html:has(.ovt-track-z) header.header-motion-z {
 @utility menu-entry-z {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(2rem, 9.5vw, 3.5rem);
+  /* Le plancher suit enfin la largeur. À 2 rem il ne descendait plus sous
+   * 32 px, si bien qu à 320 px « L UNIVERS ZELOR » — le plus long des six —
+   * débordait de sa capsule une fois la réserve de survol ajoutée. Mesuré par
+   * le garde-fou des libellés longs, pas supposé. */
+  font-size: clamp(1.5rem, 8.4vw, 3.5rem);
   line-height: 1.04;
   letter-spacing: 0.004em;
   text-transform: uppercase;
@@ -5613,7 +5745,7 @@ html:has(.ovt-track-z) header.header-motion-z {
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.5rem 2rem;
-  margin-top: clamp(2rem, 7vh, 4rem);
+  margin-top: var(--step-block);
   font-size: 0.8125rem;
   line-height: 1.5;
 }
@@ -5753,8 +5885,8 @@ html:has(.ovt-track-z) header.header-motion-z {
    * plafond en découlent et sont vérifiés de 320 à 1920 px. */
   font-size: clamp(1.75rem, 11.5vw, 10.5rem);
   line-height: 1;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
   text-transform: uppercase;
   text-align: center;
   color: inherit;
@@ -5897,4 +6029,337 @@ html:has(.ovt-track-z) header.header-motion-z {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: inherit;
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Le rythme vertical au palier structurant
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * 930 px, et non 768. C est là que la mise en page bascule réellement : deux
+ * colonnes deviennent douze, la gouttière passe de 20 à 30 px. Un seul point
+ * de redéclaration pour tout le rythme de la page.
+ */
+@media (width >= 930px) {
+  :root {
+    --step-tight: 1.25rem;
+    --step-read: 2rem;
+    --step-block: 5rem;
+    --step-section: 9.375rem;
+    --step-scene: 12.5rem;
+    --step-pause: 15.625rem;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * La parallaxe compensée
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * La parallaxe posée jusqu ici choisissait sa marge de sécurité au jugé —
+ * `inset: -14%` d un côté, `scale: 1.04` de l autre, et l espoir que la course
+ * ne dépasse jamais la réserve. Elle la dépassait parfois.
+ *
+ * Ici la géométrie est déterministe. L amplitude est exprimée en pourcentage
+ * de la hauteur de l élément, et l échelle qui l absorbe s en déduit :
+ *
+ *     course   = ±  --px-range / 2  %  de la hauteur
+ *     échelle  = 1 + --px-range / 100
+ *
+ * À 12, l élément voyage de ± 6 % autour de son repos et se dilate de 12 %,
+ * soit 6 % de débord de chaque côté. Le débord absorbe exactement la course :
+ * aucun bord ne peut se découvrir, à la descente comme à la remontée, et
+ * personne n a plus à deviner une réserve.
+ *
+ * Exprimé en pourcentage et non en pixels : la formule n a alors besoin de
+ * connaître aucune dimension, donc rien à passer depuis le script, donc rien
+ * qui puisse se désynchroniser d un redimensionnement.
+ *
+ * `--px-p` est la progression 0→1 déjà écrite par le site (`--sp`, `--ep`).
+ * Sans elle, l élément se pose à mi-course, c est-à-dire à sa place.
+ */
+@utility parallax-z {
+  overflow: hidden;
+
+  & > * {
+    --px-range: 12;
+    --px-p: var(--sp, 0.5);
+    translate: 0 calc((var(--px-p) * 2 - 1) * var(--px-range) * -0.5%);
+    scale: calc(1 + var(--px-range) / 100);
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-z > * {
+    translate: none;
+    scale: 1;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Le média qui gagne le bord à bord
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Le média est posé en pleine largeur dès la mise en page — le retrait négatif
+ * annule la gouttière du conteneur — puis **découvert** progressivement, de la
+ * largeur du conteneur jusqu aux deux bords.
+ *
+ * C est un rognage, pas une échelle. Une échelle agrandirait le sujet en même
+ * temps que le cadre, ce qui se lit comme un zoom ; ici le sujet ne bouge pas
+ * d un pixel, seule la fenêtre s ouvre. Et un rognage ne peut pas, par
+ * construction, découvrir un bord vide.
+ *
+ * Aucune propriété de mise en page n est animée : `clip-path` seul.
+ *
+ * À réserver à une ou deux scènes. Le geste vaut par sa rareté ; répété à
+ * chaque image il devient un tic.
+ */
+@utility bleed-grow-z {
+  --bleed-gutter: 1.25rem;
+  --bleed-p: clamp(0, calc(var(--sp, 1) / 0.62), 1);
+  margin-inline: calc(-1 * var(--bleed-gutter));
+  clip-path: inset(0 calc(var(--bleed-gutter) * (1 - var(--bleed-p))));
+  will-change: clip-path;
+}
+
+@media (width >= 930px) {
+  .bleed-grow-z {
+    --bleed-gutter: 1.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bleed-grow-z {
+    clip-path: none;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * La révélation d une figure
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Un fondu uniforme ne dit rien : l image était absente, elle est là. Un
+ * masque qui s ouvre dit d où elle vient.
+ *
+ * L état fermé est volontairement dissymétrique — le retrait est plus large à
+ * gauche qu à droite, et plus faible en haut et en bas qu il ne l est sur les
+ * côtés. Une ouverture parfaitement centrée se lit comme un zoom arrière ;
+ * une ouverture décentrée se lit comme un geste, parce qu elle a une
+ * direction.
+ *
+ * Les proportions sont calées sur les figures verticales de ZELOR, plus
+ * étroites que larges : le retrait latéral y pèse davantage, et c est lui qui
+ * porte le mouvement.
+ */
+@utility figure-open-z {
+  clip-path: inset(6% 12% 6% 22%);
+  transition: clip-path var(--dur-reveal) var(--ease-out-expo);
+  will-change: clip-path;
+
+  [data-visible="true"] &,
+  &[data-visible="true"] {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Plus calme au téléphone : sur un cadrage déjà serré, un retrait de 22 % ne
+ * laisse presque plus de sujet à voir pendant l ouverture. */
+@media (max-width: 767px) {
+  .figure-open-z {
+    clip-path: inset(4% 8% 4% 14%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure-open-z {
+    clip-path: none;
+    transition: none;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Le pied de page en une seule colonne tant que deux ne tiennent pas
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * La capsule refuse la coupure pour épouser son libellé. Deux colonnes au
+ * téléphone laissaient donc 163 px à des libellés qui en demandent 224 —
+ * « Conditions générales de vente », « Retours et remboursements » — et ils
+ * sortaient de leur colonne : signalé comme du texte partant vers la gauche,
+ * et mesuré.
+ *
+ * Leur rendre la coupure réglait le débordement et en créait un autre : un
+ * libellé sur deux lignes, ce qu un garde-fou interdit à juste titre — une
+ * capsule est une capsule.
+ *
+ * Le passage à deux colonnes est donc reporté à 640 px, là où deux fois 224
+ * plus la gouttière tiennent réellement. Le pied de page est plus haut au
+ * téléphone, et c est le prix juste : personne ne fait défiler une page
+ * latéralement pour lire un lien de bas de page.
+ *
+ * Réglé dans le composant, par les classes de grille, et non ici : c est la
+ * mise en page qui change, pas un correctif de fin de fichier.
+ */
+
+/* ————————————————————————————————————————————————————————————————————————
+ * La légende du ruban aux largeurs étroites
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Le panneau mesure 164 px au téléphone. Sa légende y tenait trois colonnes
+ * sur une même ligne de base — rang, intitulé, note — soit une cinquantaine de
+ * pixels chacune, et l intitulé se cassait un mot par ligne : « Au / plus /
+ * près ». Constaté à l image.
+ *
+ * Le rang reste en tête de ligne, l intitulé le suit, la note passe dessous et
+ * dispose enfin de toute la largeur du panneau.
+ */
+@media (max-width: 767px) {
+  .hscene-caption-z {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
+    align-items: baseline;
+  }
+
+  .hscene-note-z {
+    grid-column: 2;
+  }
+}
+
+/* Deux panneaux côte à côte redeviennent possibles dès que la largeur les
+ * porte. Sous ce palier, un seul par ligne mais en pleine présence. */
+@media (prefers-reduced-motion: reduce) and (width >= 768px), (scripting: none) and (width >= 768px) {
+  .hscene-panel-z {
+    flex: 0 1 min(var(--panel-w), 42vw);
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * L ouverture commence à cent pour cent, et pas avant
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Le masque s ouvrait à partir de 0,85 de la course : la scène commençait donc
+ * à s écarter pendant que le compteur annonçait encore une attente. Deux
+ * messages contradictoires au même instant.
+ *
+ * `--ovt-open` est une variable enregistrée, donc interpolable : elle passe de
+ * 0 à 1 par une animation qui ne démarre qu une fois la piste marquée chargée.
+ * La barre va jusqu au bout, puis la scène s ouvre. L une après l autre.
+ */
+@property --ovt-open {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes zelor-ovt-open {
+  from {
+    --ovt-open: 0;
+  }
+  to {
+    --ovt-open: 1;
+  }
+}
+
+.ovt-track-z[data-loaded="true"] {
+  animation: zelor-ovt-open 1200ms var(--ease-glide) both;
+}
+
+/* Le média passe **par-dessus** le texte d attente.
+ *
+ * Il passait dessous — `z-index: 1` contre 3 — si bien qu il s ouvrait
+ * derrière la déclaration et que celle-ci le barrait pendant tout
+ * l agrandissement. Le texte garde exactement son animation de sortie ; c est
+ * l ordre des plans qui change, et la scène recouvre le texte au lieu d être
+ * recouverte par lui. */
+.ovt-stage-z {
+  z-index: 4;
+}
+
+/* Le logo, lettre après lettre.
+ *
+ * Le décalage valait 0,015 par lettre sur une fenêtre de 0,07 : les cinq
+ * lettres se chevauchaient presque entièrement et le mot semblait arriver d un
+ * bloc. Il est porté à 0,16, sur une fenêtre de 0,3 — Z, puis E, puis L, puis
+ * O, puis R, chacune distincte, l ensemble tenant en un peu plus d une demi-
+ * seconde. Assez lent pour qu on lise l ordre, assez rapide pour que ce ne
+ * soit jamais une machine à écrire.
+ *
+ * Piloté par `--ovt-open` et non plus par `--load` : le mot se compose
+ * pendant que la scène s ouvre, pas pendant qu on attend. */
+.ovt-logo-letter-z {
+  --lb: clamp(0, calc((var(--ovt-open, 1) - var(--letter-i, 0) * 0.16) / 0.3), 1);
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * L en-tête, une fois l ouverture franchie
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Passé la piste d ouverture, il redevient un en-tête ordinaire : présent, et
+ * rétracté au défilement vers le bas comme sur toutes les autres pages.
+ *
+ * Sans cette libération il restait indéfiniment piloté par la scène. Mesuré :
+ * à partir de 1200 px, opacité 0 et translation -100 %, définitivement — et
+ * cliquer le mot-symbole, qui ramène en haut de page, replaçait la scène en
+ * début de course et l escamotait de nouveau. L en-tête paraissait cassé
+ * parce qu il l était.
+ *
+ * `--ovt-h` est forcé à 1 : la scène ne le cache plus. `--ovt-live` tombe à 0
+ * pour lui rendre ses transitions, coupées pendant l immersion parce qu elles
+ * y étaient pilotées au défilement.
+ */
+:root[data-overture][data-overture-done] .header-motion-z {
+  --ovt-h: 1;
+  --ovt-live: 0;
+}
+
+/* Et sa rétractation ordinaire reprend : `--ovt-r` ne dépend plus de la
+ * progression de la scène mais du seul état `data-hidden`, celui que porte
+ * tout en-tête du site. */
+:root[data-overture][data-overture-done] .header-motion-z[data-hidden="true"] {
+  --ovt-r: 1;
+}
+
+:root[data-overture][data-overture-done] .header-motion-z:not([data-hidden="true"]) {
+  --ovt-r: 0;
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Les entrées du menu : de l air à droite du libellé
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * La capsule épouse son libellé et le laisse à 12 px de son bord droit. Au
+ * survol le libellé glisse de `--cap-pad`, soit exactement ces 12 px : mesuré,
+ * il arrive alors au ras du bord — texte et capsule finissent au même pixel.
+ * À douze pixels de corps cela ne se voit pas ; à trente-sept, le mot semble
+ * sortir de sa bulle.
+ *
+ * La capsule reçoit donc, pour ces entrées seulement, la place du glissement
+ * en plus de sa réserve. Le libellé garde son air à droite en toutes
+ * circonstances.
+ */
+.menu-index-list-z .menu-entry-z {
+  padding-right: calc(var(--cap-pad) * 1.75);
+}
+
+/* Le panneau de langue, dans le menu du téléphone.
+ *
+ * Il s ouvre ancré à droite — juste dans l en-tête, où le contrôle est à
+ * droite de l écran. Dans le pied du menu il est à gauche, et le même ancrage
+ * poussait le panneau à x = -54 : cinquante-quatre pixels hors de l écran,
+ * donc des langues qu on ne pouvait pas lire. Mesuré.
+ *
+ * Dans la feuille, il s ancre à gauche.
+ */
+[role="dialog"] #zelor-language-panel {
+  right: auto;
+  left: 0;
+}
+
+/* Et il parle la langue du menu. Il était en sans-serif quand toutes les
+ * entrées autour de lui sont en serif : deux familles dans un même panneau,
+ * sans raison. */
+[role="dialog"] #zelor-language-panel button {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
 }

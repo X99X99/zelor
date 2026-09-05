@@ -35,13 +35,9 @@ const SETTLE_MS = 1100;
 /** Durée du second, celui de l'ouverture — plancher, jamais plafond.
  * Resserré de 1100 à 850ms, même raison. */
 const OPEN_MS = 850;
-/** Part de la course consacrée au premier temps. */
-const SETTLE_END = 0.6;
-
-/** Amortissement : rapide au début, posé à l'arrivée. */
-function easeOutCubic(t: number): number {
-  return 1 - Math.pow(1 - t, 3);
-}
+/** Durée nominale totale de la course. Le média local est prêt bien avant,
+ * si bien que la progression est linéaire de bout en bout. */
+const TOTAL_MS = SETTLE_MS + OPEN_MS;
 
 export function useOvertureLoad(
   track: RefObject<HTMLElement | null>,
@@ -122,19 +118,19 @@ export function useOvertureLoad(
         return;
       }
 
-      if (elapsed < SETTLE_MS) {
-        write(easeOutCubic(elapsed / SETTLE_MS) * SETTLE_END);
-        frame = window.requestAnimationFrame(step);
-        return;
-      }
-
-      const openElapsed = elapsed - SETTLE_MS;
-      const floor = Math.min(1, openElapsed / OPEN_MS);
-      // Le second temps ne dépasse pas 0,96 tant que le média n'est pas là :
-      // la barre continue d'avancer, sans jamais annoncer une fin qui
-      // n'existe pas.
-      const cap = ready() ? 1 : 0.96;
-      const value = SETTLE_END + Math.min(floor, cap) * (1 - SETTLE_END);
+      // ——— Une seule rampe, linéaire ———
+      //
+      // Elle se faisait en deux temps : un amortissement cubique jusqu à
+      // 0,6, puis une seconde course repartant de zéro. À l écran la barre
+      // ralentissait vers 60 %, marquait un arrêt, puis repartait — signalé,
+      // et exact. Deux courbes bout à bout ne font pas une progression.
+      //
+      // Une seule pente, du premier pixel au dernier. Le plafond à 0,97 tant
+      // que le média n est pas décodable reste : la barre ne peut pas
+      // annoncer une fin qui n existe pas. Sur un média local il n est
+      // jamais atteint, et la course est donc strictement linéaire.
+      const cap = ready() ? 1 : 0.97;
+      const value = Math.min(elapsed / TOTAL_MS, cap);
       write(value);
 
       if (value >= 1) return finish();

@@ -39,7 +39,7 @@ export function PageShell({
               qui convient à un titre de maison et pas à « Conditions générales
               de vente » : le masque de fenêtre dit la même chose sans faire
               attendre, et laisse le texte en un seul morceau. */}
-          <LineReveal as="h1" className="display-2-z max-w-4xl">
+          <LineReveal as="h1" className="display-1-z max-w-4xl">
             {title}
           </LineReveal>
           {intro && (
