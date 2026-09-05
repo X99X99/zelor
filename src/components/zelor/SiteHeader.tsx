@@ -41,7 +41,21 @@ function AnnouncementBar() {
   );
 }
 
-function LanguageMenu() {
+/**
+ * Le sélecteur de langue.
+ *
+ * Deux formes, un seul comportement. Dans l en-tête il reste une pastille
+ * de 44 px — l espace y est compté. Dans la feuille mobile il devient une
+ * rangée entière : « Langue » à gauche, la langue courante à droite, et
+ * c est le mot qui ouvre le panneau.
+ *
+ * Il fallait viser « FR » pour l ouvrir alors que « Langue » était écrit
+ * juste à côté, dans une autre police et une autre taille que les six
+ * entrées au-dessus : deux éléments distincts pour une seule intention, et
+ * un mot qui semblait ajouté après coup. La rangée est maintenant un seul
+ * bouton, composé comme les autres entrées.
+ */
+function LanguageMenu({ variant = "icon" }: { variant?: "icon" | "row" }) {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -92,7 +106,7 @@ function LanguageMenu() {
 
   return (
     <div
-      className="relative"
+      className={variant === "row" ? "relative w-full" : "relative"}
       ref={ref}
       // On ne ferme que si le focus quitte réellement le conteneur : une cible
       // liée nulle signifie hors fenêtre ou zone non focalisable, et fermer
@@ -115,10 +129,30 @@ function LanguageMenu() {
         // Posé seulement quand le panneau est monté : référencer un
         // identifiant absent serait une erreur d'accessibilité de plus.
         aria-controls={open ? "zelor-language-panel" : undefined}
-        className={`utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`}
+        // Le marqueur focal est porté par le bouton et non par un conteneur :
+        // c est lui qui doit recevoir la chorégraphie de la liste, et un
+        // garde-fou compare sa signature de mouvement à celle des six entrées.
+        {...(variant === "row" ? { "data-focal": "" } : {})}
+        className={
+          variant === "row"
+            ? "menu-row menu-lang-row-z w-full"
+            : `utility-z flex size-11 items-center justify-center rounded-full text-[0.6875rem] tracking-[0.14em] uppercase ${open ? "bg-navy-foreground/12 opacity-100 shadow-[0_0_0_1px_color-mix(in_oklab,currentColor_18%,transparent)]" : "opacity-90"} hover:opacity-100`
+        }
       >
-        FR
-        <span className="sr-only"> — changer de langue</span>
+        {variant === "row" ? (
+          <>
+            <span>Langue</span>
+            <span className="menu-lang-code-z" aria-hidden="true">
+              FR
+            </span>
+            <span className="sr-only"> — français, changer de langue</span>
+          </>
+        ) : (
+          <>
+            FR
+            <span className="sr-only"> — changer de langue</span>
+          </>
+        )}
       </button>
       {open && (
         <ul
@@ -642,10 +676,12 @@ export function SiteHeader() {
                 signature de mouvement, et tout ce qu'on ajouterait après lui
                 changerait ce à quoi les six entrées sont comparées. */}
             <div className="menu-foot-z text-navy-foreground/70">
-              <div data-focal="" className="menu-row text-sm tracking-[0.08em]">
-                <span>Langue</span>
-                <LanguageMenu />
-              </div>
+              {/* La rangée entière est le déclencheur : « Langue » ouvre le
+                  sélecteur, et non plus le seul code à deux lettres posé à
+                  côté. Elle est composée comme les six entrées au-dessus.
+                  `data-focal` reste porté ici — un garde-fou compare la
+                  signature de mouvement de toutes les rangées du panneau. */}
+              <LanguageMenu variant="row" />
             </div>
           </nav>
         </div>

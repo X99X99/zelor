@@ -1,6 +1,9 @@
+import type { CSSProperties } from "react";
+
 import { BRAND } from "@/lib/zelor/content";
 import { BrandLink, NavLink, scrollToTop } from "@/components/zelor/NavLink";
 import { Newsletter } from "./Newsletter";
+import { Reveal } from "./Reveal";
 
 const columns = [
   {
@@ -66,11 +69,35 @@ export function SiteFooter() {
     <footer className="overlay-navy grain-z shoreline-z mt-28 text-navy-foreground">
       {/* Le nom ouvre le pied de page. C'est un lien vers l'accueil, pas une
           image : il répond au clavier et il se lit. */}
-      <div className="container-z pt-20 pb-4 md:pt-28">
+      {/* L observateur est posé sur le conteneur, pas dans le lien : un span
+          inline à l intérieur d une ancre ne rapporte pas d intersection
+          fiable, et les cinq lettres restaient à opacité zéro — signature
+          invisible, constaté à la mesure. */}
+      <Reveal as="div" className="container-z pt-20 pb-4 md:pt-28">
+        {/* Le nom se compose lettre par lettre, du même geste que le logo
+            d ouverture : chaque lettre derrière sa propre fenêtre de
+            rognage, décalée sur la précédente. Même famille, même
+            décalage, même courbe — c est la même signature, à l autre
+            bout de la page.
+
+            Le `aria-label` du lien porte déjà le nom entier : le
+            découpage est purement visuel, et un lecteur d écran entend
+            « ZELOR — accueil », jamais cinq lettres à la file. */}
         <BrandLink className="wordmark-z footer-wordmark-z text-navy-foreground">
-          {BRAND.name}
+          <span className="signature-letters-z">
+            {BRAND.name.split("").map((lettre, index) => (
+              <span key={index} className="signature-letter-mask-z">
+                <span
+                  className="signature-letter-z"
+                  style={{ "--letter-i": index } as CSSProperties}
+                >
+                  {lettre}
+                </span>
+              </span>
+            ))}
+          </span>
         </BrandLink>
-      </div>
+      </Reveal>
 
       <Newsletter />
 

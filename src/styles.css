@@ -1669,17 +1669,16 @@ nav[aria-label="Fil d'Ariane"] a {
 
 /* ————— CTA statutaire : matière marine translucide, réponse sensible —————
  *
- * Un rectangle franc, plus une capsule. C'est le seul écart assumé au reste
- * du répertoire, où tout — navigation, liens de pied de page, entrées de
- * menu — est arrondi en gélule : sur la référence l'appel à l'action est la
- * seule forme à angles vifs de la page, et c'est ce contraste qui le fait
- * lire comme un bouton plutôt que comme un lien de plus.
+ * La capsule, et non l angle vif. Tout le répertoire du site est arrondi en
+ * gélule — navigation, liens de pied de page, entrées de menu, contrôles —
+ * et un bouton à angles droits au milieu de cela n était pas une intention,
+ * c était une famille de plus. Un CTA se distingue par sa matière et son
+ * poids, pas en changeant de géométrie.
  *
- * Le libellé passe en serif, dans la grammaire d'affichage de la maison :
- * capitales pour le verbe et l'objet, bas-de-casse penché pour la liaison —
- * « VOIR *la* COLLECTION ». Le sans-serif capitalé à 0,16 em d'approche que
- * portait ce bouton était une typographie d'interface, pas de maison ; elle
- * ne ressemblait à aucun autre texte du site.
+ * Le libellé reste en serif dans la grammaire de la maison : capitales pour
+ * le verbe et l objet, bas-de-casse penché pour la liaison — « VOIR *la*
+ * COLLECTION ». C est cela qui le rattache au site ; le rayon, lui, le
+ * rattache à tous les autres contrôles.
  */
 @utility btn-lux {
   position: relative;
@@ -1693,7 +1692,7 @@ nav[aria-label="Fil d'Ariane"] a {
   font-weight: 400;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background-image: var(--gradient-cta-glass);
   background-size: 170% 170%;
   background-position: 0% 50%;
@@ -1804,7 +1803,7 @@ nav[aria-label="Fil d'Ariane"] a {
   font-weight: 400;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   border: 1px solid color-mix(in oklab, var(--navy) 24%, transparent);
   background-color: color-mix(in oklab, var(--navy) 3%, transparent);
   backdrop-filter: blur(10px) saturate(130%);
@@ -2703,8 +2702,14 @@ nav[aria-label="Fil d'Ariane"] a {
   justify-content: center;
   min-height: 3rem;
   padding-inline: 1.6rem;
-  font-size: 0.8125rem;
-  letter-spacing: 0.16em;
+  /* Même famille que le CTA principal. Il était en sans 13 px à 0,16 em
+   * quand celui-ci est en serif 17 à 0,09 : deux familles de boutons dans
+   * la même page, ce qui ne se lit pas comme une hiérarchie mais comme deux
+   * sites. Un bouton secondaire se distingue par sa matière et son poids —
+   * ici un voile au lieu d une matière pleine — jamais par sa typographie. */
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   border-radius: var(--radius-pill);
   color: var(--navy-foreground);
@@ -6362,4 +6367,103 @@ html:has(.ovt-track-z) header.header-motion-z {
   font-family: var(--font-display);
   font-size: 1.0625rem;
   letter-spacing: 0.01em;
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * La rangée de langue, dans la feuille
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Elle était composée en sans-serif 14 px à 0,08 em d approche, sous six
+ * entrées en serif à trente-trois pixels. Deux familles, deux corps, deux
+ * approches, dans le même panneau : le mot « Langue » semblait ajouté après
+ * coup, et il l était.
+ *
+ * Il prend la famille des entrées, un cran en dessous en corps — c est un
+ * contrôle, pas une destination, et la hiérarchie doit se lire. Le code de
+ * langue courant se pose à droite, plus petit encore, en gris : il informe,
+ * il n appelle pas.
+ */
+@utility menu-lang-row-z {
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 4.6vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+@utility menu-lang-code-z {
+  font-family: var(--font-display);
+  font-size: 0.8125em;
+  letter-spacing: 0.06em;
+  color: color-mix(in oklab, currentColor 62%, transparent);
+}
+
+/* Le panneau des langues : composé comme le menu qui le contient, et centré
+ * verticalement dans chacune de ses rangées. */
+[role="dialog"] #zelor-language-panel button {
+  align-items: center;
+  min-height: 3rem;
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * La signature de pied de page, lettre par lettre
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Le même geste que le logo d ouverture, à l autre bout de la page : chaque
+ * lettre glisse depuis sa gauche derrière sa propre fenêtre de rognage,
+ * décalée sur la précédente. Z, puis E, puis L, puis O, puis R.
+ *
+ * Le décalage est celui de l ouverture — 0,16 par rang sur une fenêtre de
+ * 0,3 — mais rapporté au temps plutôt qu à une progression : ici rien ne
+ * pilote de valeur continue, la signature se révèle une fois quand elle entre
+ * dans le champ. `Reveal` pose `data-visible`, et c est tout.
+ *
+ * Sans mouvement ou sans script, les cinq lettres sont simplement là : la
+ * translation part de zéro et l opacité de un.
+ */
+@utility signature-letters-z {
+  display: inline-block;
+}
+
+@utility signature-letter-mask-z {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Même rognage sur les quatre côtés que les masques de mots : à ce corps,
+   * une fenêtre calée sur la ligne de base couperait la panse du O. */
+  padding: 0.08em;
+  margin: -0.08em;
+}
+
+@utility signature-letter-z {
+  display: inline-block;
+  translate: -110% 0;
+  opacity: 0;
+  transition:
+    translate var(--dur-reveal) var(--ease-out-expo),
+    opacity var(--dur-reveal) var(--ease-out-expo);
+  transition-delay: calc(var(--letter-i, 0) * 90ms);
+
+  [data-visible="true"] & {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .signature-letter-z {
+    translate: 0 0;
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* La rangée de langue vit en pied de panneau : un sélecteur qui s ouvre vers
+ * le bas y sort de l écran. Il s ouvre donc vers le haut, au-dessus de son
+ * déclencheur, où la place existe. */
+[role="dialog"] #zelor-language-panel {
+  top: auto;
+  bottom: calc(100% + 0.5rem);
+  margin-top: 0;
 }

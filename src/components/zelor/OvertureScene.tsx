@@ -170,7 +170,13 @@ export function OvertureScene() {
       });
     };
 
-    if (video.readyState >= 3) attemptPlay();
+    // Trois portes plutôt qu une : la vidéo peut être déjà décodable au
+    // montage, le devenir à `loadeddata`, ou seulement à `canplay`. On tente
+    // à chacune. Signalé comme une première image figée qui s agrandit — et
+    // une seule porte suffit à la produire si le navigateur franchit les deux
+    // autres avant que l écouteur ne soit posé.
+    attemptPlay();
+    video.addEventListener("loadeddata", attemptPlay);
     video.addEventListener("canplay", attemptPlay);
 
     // Une fois lancée, la scène s'arrête quand elle quitte réellement l'écran.
@@ -189,6 +195,7 @@ export function OvertureScene() {
     observer.observe(video);
 
     return () => {
+      video.removeEventListener("loadeddata", attemptPlay);
       video.removeEventListener("canplay", attemptPlay);
       observer.disconnect();
     };
