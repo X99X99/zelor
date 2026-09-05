@@ -298,8 +298,13 @@ export function OvertureScene() {
           </span>
         </div>
 
+        {/* La baseline est composée dans la grammaire de la maison, comme
+            celle de la référence — « Custom SCULPTURE of your WEDDING DRESS »,
+            capitales et italique au même corps, sur la même ligne. Elle était
+            en sans 11 px à 0,24 em d'approche : la typographie d'une
+            interface, pas d'une maison. */}
         <p className="ovt-caption-z" aria-hidden="true">
-          Archives sculptées
+          ARCHIVES <em>sculptées</em>
         </p>
 
         <div className="ovt-editorial-z">

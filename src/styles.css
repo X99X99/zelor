@@ -4698,9 +4698,28 @@ nav[aria-label="Fil d'Ariane"] a {
 
   /* La fente par laquelle la scène apparaît, et la place que les deux moitiés
    * de la déclaration lui laissent. Une seule paire de valeurs pour les deux :
-   * c'est ce qui garantit qu'elles coïncident au pixel. */
-  --gap-w: clamp(9rem, 17vw, 15.2rem);
-  --gap-h: clamp(5rem, 9.4vw, 8.4rem);
+   * c'est ce qui garantit qu'elles coïncident au pixel.
+   *
+   * ——— Le format de la fente ———
+   *
+   * Elle était en paysage : 17vw de large pour 9,4vw de haut. Relevé sur la
+   * référence, la sienne est en portrait, et surtout elle a très exactement le
+   * format de l'écran :
+   *
+   *     --hole-w: 15.6vw
+   *     --hole-h: calc(15.6vw * (100lvh / 100vw))
+   *
+   * Une miniature de la fenêtre, donc — et c'est ce qui fait qu'elle s'ouvre
+   * si naturellement en plein cadre : elle ne change pas de proportion en
+   * chemin, elle ne fait que grandir. Une fente paysage qui s'ouvre sur un
+   * écran portrait doit, elle, se déformer pendant tout le trajet.
+   *
+   * Le rapport est écrit sans `calc` : une division de deux longueurs n'a pas
+   * de sens seule, mais substituée dans `calc(15.6vw * ...)` elle donne bien
+   * une longueur. C'est la façon dont la référence l'écrit, et elle est juste. */
+  --gap-ratio: 100lvh / 100vw;
+  --gap-w: 15.6vw;
+  --gap-h: calc(15.6vw * var(--gap-ratio));
 
   /* ——— L'attente ——— */
   /* 0,00 → 0,18 : la déclaration s'inscrit. */
@@ -4768,14 +4787,35 @@ nav[aria-label="Fil d'Ariane"] a {
   z-index: 1;
   overflow: hidden;
 
-  /* Fermé, le masque laisse exactement la fente de la déclaration. Ouvert, il
-   * garde un filet de fond clair sur les quatre bords : la scène est posée
-   * dans la page, pas collée à ses arêtes. */
-  --frame: calc(0.55rem * var(--lp-out));
+  /* ——— Aucun filet sur les bords ———
+   *
+   * Il y en avait un : `--frame: calc(0.55rem * var(--lp-out))`, soit 8,8 px
+   * de fond clair sur les quatre côtés une fois la scène ouverte, posé
+   * délibérément — « la scène est posée dans la page, pas collée à ses
+   * arêtes ». C'était une erreur de lecture de la référence, et c'est
+   * exactement le bord qui a été signalé à l'image. Chez elle, la scène est
+   * plein cadre : `object-fit: cover` sur toute la fenêtre, la vidéo
+   * légèrement surdimensionnée (1 %) pour qu'aucun bord ne se découvre.
+   *
+   * ——— La fermeture à la sortie ———
+   *
+   * Relevée telle quelle :
+   *
+   *     --mask-scale-v: calc(1 - .3 * var(--mask-progress))
+   *     --mask-scale-h: calc(1 - .3 * max(0, calc(var(--mask-progress) - .1)))
+   *
+   * Deux choses s'y lisent, et aucune ne s'invente. La fenêtre ne se referme
+   * qu'à 70 % — jamais davantage, la scène ne devient jamais une vignette. Et
+   * les côtés partent un dixième de course après le haut et le bas : c'est ce
+   * décalage, minuscule, qui fait que la fermeture se lit comme un geste et
+   * non comme une réduction homothétique. */
+  --frame: 0px;
   --closed: calc(1 - var(--lp-open));
+  --shut-v: calc(0.3 * var(--xp-media));
+  --shut-h: calc(0.3 * max(0, calc(var(--xp-media) - 0.1)));
   clip-path: inset(
-    calc(var(--frame) + (50% - var(--gap-h) / 2 - var(--frame)) * var(--closed))
-      calc(var(--frame) + (50% - var(--gap-w) / 2 - var(--frame)) * var(--closed))
+    calc((50% - var(--gap-h) / 2) * var(--closed) + 50% * var(--shut-v))
+      calc((50% - var(--gap-w) / 2) * var(--closed) + 50% * var(--shut-h))
   );
 
   /* La sortie : la scène recule, remonte, et quitte l'écran par le haut. Elle
@@ -4863,10 +4903,22 @@ nav[aria-label="Fil d'Ariane"] a {
   margin-bottom: -0.08em;
 }
 
+/* ——— Le balayage, de gauche à droite ———
+ *
+ * Les lettres montaient : `translate: 0 calc((1 - --lb) * 100%)`. Elles
+ * balaient maintenant sur l'axe horizontal, chacune entrant par sa gauche
+ * derrière sa propre fenêtre de rognage. Avec le décalage déjà en place par
+ * `--letter-i`, le mot se découvre de la gauche vers la droite.
+ *
+ * 110 % et non 100 : à cent, l'approche de la lettre laissait dépasser un
+ * cheveu de sa panse hors de la fenêtre au premier tiers du balayage.
+ *
+ * L'opacité reste du voyage : une lettre qui glisse sans s'allumer se lit
+ * comme un objet qui passe, pas comme un mot qui vient. */
 @utility ovt-logo-letter-z {
   display: inline-block;
   --lb: clamp(0, calc((var(--l, 1) - 0.85 - var(--letter-i, 0) * 0.015) / 0.07), 1);
-  translate: 0 calc((1 - var(--lb)) * 100%);
+  translate: calc((1 - var(--lb)) * -110%) 0;
   opacity: var(--lb);
 }
 
@@ -4889,11 +4941,20 @@ nav[aria-label="Fil d'Ariane"] a {
   grid-area: 1 / 1;
   align-self: end;
   margin-bottom: clamp(5rem, 16vh, 10rem);
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  letter-spacing: 0.24em;
+  /* Serif 18 px, 0,02 em — les valeurs de la baseline de la référence, qui la
+   * compose dans `--font-display-5`, la même que son texte courant. */
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-navy-foreground) 78%, transparent);
+  color: color-mix(in oklab, var(--color-navy-foreground) 88%, transparent);
+
+  & em {
+    text-transform: none;
+    font-style: italic;
+    letter-spacing: 0;
+  }
   opacity: calc(clamp(0, calc((var(--l) - 0.94) / 0.06), 1) * (1 - clamp(0, calc(var(--p) / 0.2), 1)));
 }
 
@@ -4961,19 +5022,48 @@ nav[aria-label="Fil d'Ariane"] a {
   line-height: 1.02;
   text-align: center;
   color: var(--color-foreground);
-  opacity: calc(var(--lp-ink) * (1 - var(--lp-out)));
+
+  /* ——— La venue du texte, en deux temps ———
+   *
+   * C'était un simple fondu linéaire, de zéro à un. Relevé sur la référence,
+   * chaque ligne y porte **deux** animations superposées :
+   *
+   *     dynamic-fade-in 1.5s ease-out-sine  →  opacity: .14
+   *     fade-in          .6s ease-out-sine  →  opacity: 1     (retard 1,5 s)
+   *
+   * Le texte monte d'abord jusqu'à quatorze pour cent — un fantôme, presque
+   * le fond — et il y reste. Puis, une seconde et demie plus tard, il vient
+   * franchement. Ce n'est pas un fondu plus lent : ce sont deux gestes, et
+   * c'est le premier qui fait attendre le second.
+   *
+   * Transposé ici sur `--l`, l'horloge de chargement, puisque toute la scène
+   * en dépend déjà — les seuils tiennent les mêmes proportions. */
+  --ink-ghost: clamp(0, calc(var(--l) / 0.55), 1);
+  --ink-full: clamp(0, calc((var(--l) - 0.55) / 0.25), 1);
+  opacity: calc(
+    (var(--ink-ghost) * 0.14 + var(--ink-full) * 0.86) * (1 - var(--lp-out))
+  );
 }
 
+/* Le corps est porté par la moitié, plus par le rang — les deux mots d'une
+ * même ligne se composent au même corps, seule la casse et l'inclinaison les
+ * distinguent. Formules relevées sur la référence, plancher et plafond
+ * compris : 32 px au plus étroit, 120 et 130 px au plus large. */
 @utility ovt-decl-half-z {
   display: grid;
   justify-items: center;
-  /* Elles s'écartent avec l'ouverture. Le haut monte, le bas descend : la
-   * fente s'agrandit par le milieu, exactement là où la scène apparaît. */
+
   &[data-half="haut"] {
-    translate: 0 calc(var(--lp-open) * -2.2rem);
+    font-size: clamp(2rem, calc(7.05vw - 1.85px), 7.5rem);
+    /* Elles s'écartent avec l'ouverture, d'exactement la demi-hauteur de la
+     * fente : la place qu'elles libèrent est celle que la scène occupe, au
+     * pixel. C'était une valeur fixe de 2,2 rem, sans rapport avec la
+     * fente. */
+    translate: 0 calc(var(--lp-open) * -0.5 * var(--gap-h));
   }
   &[data-half="bas"] {
-    translate: 0 calc(var(--lp-open) * 2.2rem);
+    font-size: clamp(2rem, calc(7.85vw - 5.69px), 8.125rem);
+    translate: 0 calc(var(--lp-open) * 0.5 * var(--gap-h));
   }
 }
 
@@ -4989,30 +5079,38 @@ nav[aria-label="Fil d'Ariane"] a {
  * La hiérarchie ne passe jamais par la graisse : elle passe par le corps, la
  * casse, la famille et l'inclinaison. Le mot principal doit se reconnaître
  * d'un regard ; les mots de liaison sont des respirations, pas des égaux. */
+/* ——— Les rangs, à corps égal ———
+ *
+ * Quatre corps différents cohabitaient ici : 5,9 rem pour le mot principal,
+ * 3,9 pour le médian, 2,75 pour le mineur, 2 pour la liaison. Le mot de
+ * liaison faisait donc **un tiers** du mot principal, et se retrouvait seul
+ * sur sa ligne.
+ *
+ * Relevé sur la référence, à 390 px : « where » est composé à 32 px, et
+ * « your » — l'italique — à 32 px aussi. Même corps, même ligne. La casse et
+ * l'inclinaison portent seules la hiérarchie ; le corps ne s'en mêle pas.
+ * C'est ce qui permet de lire « WHERE *your* WEDDING » d'un trait plutôt que
+ * comme un titre suivi d'une annotation.
+ *
+ * Les deux moitiés gardent le léger écart de la référence — 7,05vw en haut,
+ * 7,85vw en bas —, porté par la moitié et non par le rang. */
 @utility ovt-w-z {
-  &[data-rank="majeur"] {
-    font-size: clamp(2.5rem, 6.6vw, 5.9rem);
-    text-transform: uppercase;
-    letter-spacing: 0.004em;
-  }
+  &[data-rank="majeur"],
   &[data-rank="median"] {
-    font-size: clamp(1.75rem, 4.4vw, 3.9rem);
     text-transform: uppercase;
     letter-spacing: 0.01em;
   }
   &[data-rank="mineur"] {
-    font-size: clamp(1.25rem, 3.1vw, 2.75rem);
-    letter-spacing: 0.005em;
+    letter-spacing: 0.01em;
   }
   &[data-rank="liaison"] {
-    font-size: clamp(1rem, 2.3vw, 2rem);
     font-style: italic;
-    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    letter-spacing: 0;
+    color: color-mix(in oklab, var(--color-foreground) 82%, transparent);
   }
   /* Le point n'est pas une ponctuation posée là : c'est le dernier signe de la
    * page d'attente, et il est traité comme tel. */
   &[data-rank="point"] {
-    font-size: clamp(1.25rem, 3.1vw, 2.75rem);
     color: var(--color-gold);
     /* Colle au mot : une espace avant le point serait une faute, et
      * l'espacement de la ligne en fabriquait une. */
@@ -5061,11 +5159,16 @@ nav[aria-label="Fil d'Ariane"] a {
   /* À zéro il s'aligne à gauche du filet, à cent il s'aligne à droite : la
    * même expression fait les deux, et le chiffre ne sort jamais du cadre. */
   translate: calc(var(--l) * -100%) 0;
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  letter-spacing: 0.16em;
+  /* Serif, 18 px, 0,02 em — la valeur relevée sur la référence, qui compose
+   * son pourcentage dans `--font-display-5`, c'est-à-dire la même famille et
+   * le même corps que son texte courant. Il était ici en sans 10 px à 0,16 em
+   * d'approche : une typographie d'interface, la seule du chargement, et elle
+   * ne ressemblait à rien d'autre sur la page. */
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--color-foreground) 55%, transparent);
+  color: color-mix(in oklab, var(--color-foreground) 62%, transparent);
   white-space: nowrap;
 }
 
@@ -5218,8 +5321,17 @@ html:has(.ovt-track-z) header.header-motion-z {
  *
  * Le plus grand des deux l'emporte : escamoté ou rétracté, l'en-tête est en
  * haut ; présent et posé, il est à sa place. */
+/* Le repli par défaut passe de 1 à 0. La progression du défilement est
+ * miroitée sur la racine par le script ; entre la première peinture et cette
+ * écriture, `var(--ovt-p, 1)` valait 1, donc `--ovt-h` valait 1, et l'en-tête
+ * — bandeau d'annonce compris, soit 123 px de chrome — se peignait par-dessus
+ * l'écran de chargement. Constaté à l'image, à 300 ms. L'écran de chargement
+ * de la référence est nu : aucun en-tête, aucun bandeau.
+ *
+ * Le repli à 0 ne peut pas laisser l'en-tête caché pour de bon : sous
+ * mouvement réduit et sans script, le bloc plus bas force `--ovt-h: 1`. */
 :root[data-overture] .header-motion-z {
-  --ovt-h: clamp(0, calc((var(--ovt-p, 1) - 0.62) / 0.12), 1);
+  --ovt-h: clamp(0, calc((var(--ovt-p, 0) - 0.62) / 0.12), 1);
   --ovt-r: 0;
   /* Vaut 1 tant que l'ouverture est en cours, 0 quand elle est finie : c'est ce
    * qui coupe les transitions pendant qu'elles seraient pilotées au défilement,
@@ -5308,21 +5420,15 @@ html:has(.ovt-track-z) header.header-motion-z {
 /* ——— Mobile ——— */
 
 @media (max-width: 767px) {
-  .ovt-track-z {
-    --gap-w: clamp(6.5rem, 34vw, 9rem);
-    --gap-h: clamp(4rem, 21vw, 5.5rem);
-  }
-
+  /* La fente n'a plus de réglage mobile propre : sa formule est déjà
+   * relative à la fenêtre — 15,6vw de large, et une hauteur dans le format
+   * même de l'écran. Elle se règle donc seule, du plus étroit au plus large,
+   * et un correctif mobile ne pourrait que la sortir de son format.
+   *
+   * L'écartement des deux moitiés suit la fente pour la même raison, et n'a
+   * plus de valeur fixe à corriger ici non plus. */
   .ovt-logo-z {
     font-size: clamp(1.125rem, 5.4vw, 1.75rem);
-  }
-
-  .ovt-decl-half-z[data-half="haut"] {
-    translate: 0 calc(var(--lp-open) * -1.4rem);
-  }
-
-  .ovt-decl-half-z[data-half="bas"] {
-    translate: 0 calc(var(--lp-open) * 1.4rem);
   }
 
   .ovt-statement-z {
