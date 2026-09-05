@@ -687,6 +687,95 @@
   letter-spacing: -0.004em;
 }
 
+/* ————— Capitales romaines et bas-de-casse penché —————
+ *
+ * La grammaire d'affichage relevée sur vingt-cinq écrans de la référence, et
+ * la seule chose qu'on y reconnaît immédiatement : les mots qui portent le
+ * sens sont en capitales romaines, les mots de liaison — articles,
+ * prépositions, conjonctions — restent en bas-de-casse et penchent.
+ *
+ *   « a PROCESS BUILT for PERFECTION »
+ *   « so THAT YOU BECOME ART. »
+ *   « will FOREVER be a MASTERPIECE. »
+ *
+ * Ce n'est pas un ornement : la casse encode la fonction du mot dans la
+ * phrase. C'est ce contraste — et non la taille — qui permet à un titre de
+ * six mots tenant sur trois lignes de se lire comme une phrase plutôt que
+ * comme un bloc. Un titre entièrement capitalisé, à ce corps, se lit comme un
+ * panneau ; le même titre avec deux mots penchés se lit comme une voix.
+ *
+ * L'interlignage descend sous 1. Une ligne de capitales n'a ni jambage ni
+ * hampe : l'interligne normal, calculé pour du bas-de-casse, y laisserait un
+ * couloir vide entre deux lignes qui doivent presque se toucher.
+ *
+ * Le mot penché est aussi légèrement agrandi. À corps égal, un bas-de-casse
+ * italique pèse visuellement moins qu'une capitale romaine — sans cette
+ * compensation il s'enfonce au lieu de se poser.
+ */
+@utility mixed-caps-z {
+  font-family: var(--font-display);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+/* Le surtitre dans la même grammaire, un cran au-dessus de `eyebrow` : chez
+ * la référence il n'est pas gris ni minuscule, il fait partie du titre — même
+ * famille, même casse mêlée, simplement plus petit et plus clair. */
+@utility eyebrow-mixed-z {
+  font-family: var(--font-display);
+  font-size: clamp(0.9375rem, 2.4vw, 1.3125rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+}
+
+/* ————— Le mot penché, partout où la grammaire s'applique —————
+ *
+ * Écrit une fois, en règle ordinaire, et non répété dans chaque `@utility`
+ * qui hérite de la grammaire. Deux raisons, dont une purement pratique :
+ *
+ * 1. Trois utilitaires reprennent `mixed-caps-z` par `@apply` (la bande de
+ *    silence, la clôture, le titre de planche). `@apply` inline des
+ *    déclarations ; se reposer sur lui pour transporter aussi une règle
+ *    imbriquée, c'est parier sur un détail d'implémentation. Ici, aucun pari.
+ *
+ * 2. Les boutons n'héritent d'aucun hôte typographique — ils se posent où on
+ *    les met —, mais appartiennent à la même grammaire. Une seule liste les
+ *    couvre tous.
+ *
+ * `em` est le chemin de l'auteur, `[data-rank="accent"]` celui du mot marqué
+ * `*ainsi*` dans WordReveal. Les deux mènent au même traitement, sans quoi la
+ * grammaire se briserait au passage du texte brut au mot par mot.
+ *
+ * `font-style: italic` est redit alors qu'`em` penche déjà : `[data-rank]`
+ * porte un `span`, qui ne penche pas.
+ */
+.mixed-caps-z em,
+.mixed-caps-z i,
+.mixed-caps-z [data-rank="accent"],
+.silence-line-z em,
+.silence-line-z i,
+.closing-line-z em,
+.closing-line-z i,
+.grid-title-z em,
+.grid-title-z i,
+.eyebrow-mixed-z em,
+.eyebrow-mixed-z i,
+.btn-lux em,
+.btn-lux i,
+.btn-lux-ghost em,
+.btn-lux-ghost i {
+  text-transform: none;
+  font-style: italic;
+  font-size: 1.06em;
+  letter-spacing: 0;
+}
+
 /* 21 px en capitales. Les intertitres. */
 @utility subhead-z {
   font-size: 1.3125rem;
@@ -1371,11 +1460,14 @@ nav[aria-label="Fil d'Ariane"] a {
     position: absolute;
     inset-inline: 0;
     bottom: 100%;
-    /* Étendu de 11rem à ce clamp : sur l'accueil, ce fondu remonte dans la
-     * scène du logo final (BrandSignature, 70svh) — 11rem n'en couvrait
-     * qu'une fraction mesurée trop courte pour lier les deux ; ce fondu
-     * reste par ailleurs le seul lien visuel entre elles, aucune répétition
-     * du mot-symbole n'est ajoutée ici. */
+    /* Étendu de 11rem à ce clamp : ce fondu remonte dans la section qui
+     * précède le pied de page, et 11rem n'en couvrait qu'une fraction —
+     * mesurée trop courte pour lier les deux.
+     *
+     * Le mot-symbole en très grand qui fermait l'accueil vit maintenant dans
+     * le pied de page (`footer-wordmark-z`), donc sur toutes les pages et
+     * non plus sur une seule. Le garde-fou d'origine tient toujours : il
+     * n'apparaît qu'une fois par page. */
     height: clamp(11rem, 24vh, 19rem);
     pointer-events: none;
     /* La dernière teinte est exactement celle du haut du bas de page :
@@ -1503,18 +1595,33 @@ nav[aria-label="Fil d'Ariane"] a {
   }
 }
 
-/* CTA statutaire : matière marine translucide, réponse sensible. */
+/* ————— CTA statutaire : matière marine translucide, réponse sensible —————
+ *
+ * Un rectangle franc, plus une capsule. C'est le seul écart assumé au reste
+ * du répertoire, où tout — navigation, liens de pied de page, entrées de
+ * menu — est arrondi en gélule : sur la référence l'appel à l'action est la
+ * seule forme à angles vifs de la page, et c'est ce contraste qui le fait
+ * lire comme un bouton plutôt que comme un lien de plus.
+ *
+ * Le libellé passe en serif, dans la grammaire d'affichage de la maison :
+ * capitales pour le verbe et l'objet, bas-de-casse penché pour la liaison —
+ * « VOIR *la* COLLECTION ». Le sans-serif capitalé à 0,16 em d'approche que
+ * portait ce bouton était une typographie d'interface, pas de maison ; elle
+ * ne ressemblait à aucun autre texte du site.
+ */
 @utility btn-lux {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3rem;
-  padding-inline: 1.9rem;
-  font-size: 0.8125rem;
-  letter-spacing: 0.16em;
+  min-height: 3.375rem;
+  padding-inline: 2.25rem;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  border-radius: var(--radius-pill);
+  border-radius: 0;
   background-image: var(--gradient-cta-glass);
   background-size: 170% 170%;
   background-position: 0% 50%;
@@ -1611,16 +1718,21 @@ nav[aria-label="Fil d'Ariane"] a {
   }
 }
 
+/* Le second appel, à côté du premier : même forme, même famille, une seule
+ * matière en moins. Deux boutons voisins de géométries différentes se
+ * liraient comme deux systèmes. */
 @utility btn-lux-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3rem;
-  padding-inline: 1.6rem;
-  font-size: 0.8125rem;
-  letter-spacing: 0.16em;
+  min-height: 3.375rem;
+  padding-inline: 2rem;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  border-radius: var(--radius-pill);
+  border-radius: 0;
   border: 1px solid color-mix(in oklab, var(--navy) 24%, transparent);
   background-color: color-mix(in oklab, var(--navy) 3%, transparent);
   backdrop-filter: blur(10px) saturate(130%);
@@ -2081,8 +2193,21 @@ nav[aria-label="Fil d'Ariane"] a {
  * empruntent exactement le même chemin — glissement continu, ralenti en fin
  * de course, fondu progressif, aucune cassure.
  */
+/* Descendant, et non enfant direct. Ce bloc ne ciblait que
+ * `& > [data-focal]` : il supposait que chaque entrée du menu soit fille
+ * immédiate de la liste. Le jour où les entrées sont passées dans une vraie
+ * liste ordonnée — pour porter la numérotation en chiffres romains —, elles
+ * se sont retrouvées un cran plus bas, et toute la chorégraphie du panneau a
+ * disparu d'un coup : plus de retrait des voisines, plus de mise en avant,
+ * plus de glissement du libellé. Rien ne se voyait à l'arrêt, tout manquait
+ * au doigt. Deux garde-fous l'ont vu, en comparant la signature de mouvement
+ * des entrées à celle de « Langue ».
+ *
+ * `[data-focal]` ne s'imbrique jamais dans `[data-focal]` : le combinateur
+ * descendant ne peut donc pas sur-cibler. `> *` reste, lui, un enfant direct
+ * de l'entrée — c'est le libellé, et lui seul doit glisser. */
 @utility focal-list {
-  & > [data-focal] {
+  & [data-focal] {
     transform-origin: left center;
     will-change: transform, opacity;
     transition:
@@ -2096,43 +2221,48 @@ nav[aria-label="Fil d'Ariane"] a {
   /* Seul le libellé glisse : le filet reste ancré à la capsule, sinon il
    * déborderait du cadre à droite. Il se révèle par échelle, pas par
    * déplacement. */
-  & > [data-focal] > * {
+  & [data-focal] > * {
     transition: translate var(--dur-menu) var(--ease-glide);
   }
 
-  /* Retrait des voisines : jamais un extinction sèche, un simple recul. */
-  &:focus-within > [data-focal] {
+  /* Retrait des voisines : jamais une extinction sèche, un simple recul. */
+  &:focus-within [data-focal] {
     opacity: 0.42;
     scale: 0.985;
   }
   /* Mise en avant — identique au doigt, au clavier et au pointeur fin. */
-  & > [data-focal]:focus-within,
-  & > [data-focal]:active {
+  & [data-focal]:focus-within,
+  & [data-focal]:active {
     opacity: 1;
     scale: 1.015;
   }
-  & > [data-focal]:focus-within > *,
-  & > [data-focal]:active > * {
+  & [data-focal]:focus-within > *,
+  & [data-focal]:active > * {
     translate: var(--cap-pad) 0;
   }
   @media (hover: hover) and (pointer: fine) {
-    &:hover > [data-focal] {
+    &:hover [data-focal] {
       opacity: 0.42;
       scale: 0.985;
     }
-    & > [data-focal]:hover {
+    & [data-focal]:hover {
       opacity: 1;
       scale: 1.015;
     }
-    & > [data-focal]:hover > * {
+    & [data-focal]:hover > * {
       translate: var(--cap-pad) 0;
     }
   }
 }
 
+/* Même combinateur descendant que le bloc ci-dessus, et pour la même raison :
+ * laissé en enfant direct, ce garde-fou cessait de couvrir « Langue » dès que
+ * le contrôle est passé dans le pied du panneau. Il gardait alors le mouvement
+ * complet sous mouvement réduit — pendant que les entrées, couvertes par
+ * ailleurs via `.nav-link-z`, étaient bien figées. */
 @media (prefers-reduced-motion: reduce) {
-  .focal-list > [data-focal],
-  .focal-list > [data-focal] > * {
+  .focal-list [data-focal],
+  .focal-list [data-focal] > * {
     transition-duration: 1ms !important;
     translate: none !important;
     scale: none !important;
@@ -3636,17 +3766,18 @@ nav[aria-label="Fil d'Ariane"] a {
   padding-inline: 1.25rem;
 }
 
-/* Le très grand corps n'existe qu'ici. Interligne 1,00, approche négative :
- * les deux constantes relevées sur tous les paliers d'affichage. */
+/* Le très grand corps n'existe qu'ici, et il est composé dans la grammaire
+ * d'affichage de la maison : capitales romaines pour le sens, bas-de-casse
+ * penché pour la liaison.
+ *
+ * Le corps descend de 7,5 rem à 6,5 : une ligne de capitales est environ un
+ * dixième plus large que la même ligne en bas-de-casse, et la mesure passait
+ * de 22 à 26 caractères apparents sans ce rattrapage. */
 @utility silence-line-z {
-  max-width: 22ch;
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 8.3vw, 7.5rem);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.008em;
+  @apply mixed-caps-z;
+  max-width: 20ch;
+  font-size: clamp(2.25rem, 7.4vw, 6.5rem);
   text-align: center;
-  text-wrap: balance;
 }
 
 /* ——— Le diptyque : 2,68 écrans, plans verticaux désalignés ——— */
@@ -4136,12 +4267,10 @@ nav[aria-label="Fil d'Ariane"] a {
 }
 
 @utility grid-title-z {
+  @apply mixed-caps-z;
   flex: 1 1 20rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.875rem, 4.7vw, 4.25rem);
-  font-weight: 300;
-  line-height: 1.04;
-  letter-spacing: -0.004em;
+  font-size: clamp(1.75rem, 4.2vw, 3.75rem);
+  text-align: left;
 }
 
 /* Vingt vignettes de 153 × 191 sur la référence : serrées, un seul rapport.
@@ -4270,12 +4399,10 @@ nav[aria-label="Fil d'Ariane"] a {
 }
 
 @utility closing-line-z {
-  max-width: 18ch;
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 6.5vw, 5.5rem);
-  font-weight: 300;
-  line-height: 1.02;
-  letter-spacing: -0.006em;
+  @apply mixed-caps-z;
+  max-width: 17ch;
+  font-size: clamp(2rem, 5.8vw, 4.75rem);
+  text-align: left;
 }
 
 @utility closing-foot-z {
@@ -4324,40 +4451,11 @@ nav[aria-label="Fil d'Ariane"] a {
   color: var(--color-muted-foreground);
 }
 
-/* ——— La signature : le mot-symbole seul, avant le pied de page ———
- *
- * Ni piste de défilement ni état multiple : un seul instant, largement
- * paddé. Le corps dépasse délibérément display-hero-z (10,5rem au maximum) —
- * la seule fois où le mot-symbole doit être le plus grand corps de toute la
- * page. Approche, casse et indentation reprennent exactement la convention
- * déjà en place pour le mot-symbole (en-tête, ouverture) : ce n'est pas une
- * nouvelle signature graphique, c'est la même, en grand. */
-@utility signature-track-z {
-  display: grid;
-  place-items: center;
-  min-height: 70svh;
-  padding-block: clamp(4rem, 14vh, 9rem);
-  padding-inline: clamp(1.25rem, 4vw, 2rem);
-  text-align: center;
-}
-
-@utility signature-word-z {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(3rem, 14vw, 13rem);
-  line-height: 1;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em;
-  text-transform: uppercase;
-  color: var(--color-foreground);
-}
-
-@media (max-width: 767px) {
-  .signature-track-z {
-    min-height: 42svh;
-    padding-block: clamp(3rem, 10vh, 5rem);
-  }
-}
+/* La scène de signature qui fermait la seule page d'accueil (70svh de piste
+ * pour un mot) a été retirée : le mot-symbole en très grand vit maintenant
+ * dans le pied de page — `footer-wordmark-z`, plus bas —, donc sur toutes les
+ * pages du site. Ses valeurs de corps, d'approche et d'indentation sont
+ * reprises telles quelles, elles avaient été mesurées. */
 
 /* ——— Emplacements et médias partagés ——— */
 
@@ -5275,5 +5373,208 @@ html:has(.ovt-track-z) header.header-motion-z {
 
   .ovt-editorial-z .word-body-z {
     translate: 0 0;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Le menu plein écran
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Relevé sur la référence : le panneau occupe l'écran entier — pas une
+ * feuille posée dessus avec deux millimètres de marge —, le bouton
+ * d'ouverture devient une croix exactement au même endroit et dans le même
+ * carré, et les six entrées sont numérotées en chiffres romains, en petit,
+ * à gauche du libellé.
+ *
+ * La numérotation n'est pas décorative : elle dit qu'il y a six destinations
+ * et pas davantage, et elle donne au regard un point d'entrée fixe alors que
+ * les libellés, eux, ont des longueurs très inégales. Un compteur CSS plutôt
+ * qu'un chiffre écrit dans le balisage — ajouter ou retirer une entrée ne
+ * doit pas demander de renuméroter à la main.
+ */
+@utility menu-index-list-z {
+  counter-reset: menu-entry;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  & > li {
+    counter-increment: menu-entry;
+    display: flex;
+    align-items: baseline;
+    gap: clamp(0.625rem, 2.6vw, 1.25rem);
+  }
+
+  /* Le chiffre est aligné à droite sur une chasse fixe : de I à VI la largeur
+   * varie du simple au triple, et sans cette réserve les libellés partaient
+   * en escalier. */
+  & > li::before {
+    content: counter(menu-entry, upper-roman) ".";
+    flex: 0 0 auto;
+    min-width: 2.5ch;
+    text-align: right;
+    font-family: var(--font-display);
+    font-size: clamp(0.6875rem, 2vw, 0.875rem);
+    letter-spacing: 0.06em;
+    opacity: 0.4;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Les entrées : le seul endroit du site, avec la signature, où le corps
+ * d'affichage sert à de la navigation. Capitales romaines, comme tous les
+ * titres depuis que la grammaire est posée. */
+@utility menu-entry-z {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2rem, 9.5vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: 0.004em;
+  text-transform: uppercase;
+}
+
+/* Le pied du menu : coordonnées à droite, mentions à gauche, comme sur la
+ * référence. En colonne sous 480px — deux blocs côte à côte y tenaient sur
+ * trois lignes chacun. */
+@utility menu-foot-z {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  margin-top: clamp(2rem, 7vh, 4rem);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Le champ au filet
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Un seul trait sous le texte, et une flèche à droite. Pas de capsule, pas de
+ * cadre, pas de bouton nommé : c'est la forme relevée sur le pied de page de
+ * la référence, et elle dit quelque chose de juste — on n'entoure pas d'un
+ * cadre ce qu'on demande poliment.
+ *
+ * Le filet s'épaissit et se colore à la saisie plutôt que de s'allumer : le
+ * champ répond, il ne signale pas.
+ */
+@utility field-rule-z {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding-block: 0.75rem;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 28%, transparent);
+  transition: border-color var(--dur-3) var(--ease-lux);
+
+  &:focus-within {
+    border-bottom-color: color-mix(in oklab, currentColor 70%, transparent);
+  }
+
+  & input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+    outline: none;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: inherit;
+  }
+
+  & input::placeholder {
+    color: color-mix(in oklab, currentColor 55%, transparent);
+  }
+}
+
+/* La flèche : cible tactile pleine, dessin discret. Elle avance au survol —
+ * le seul mouvement d'un pied de page par ailleurs immobile. */
+@utility field-arrow-z {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: inherit;
+  opacity: 0.7;
+  transition:
+    opacity var(--dur-2) var(--ease-lux),
+    translate var(--dur-3) var(--ease-lux);
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    translate: 3px 0;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-arrow-z:hover,
+  .field-arrow-z:focus-visible {
+    translate: none;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * La signature de pied de page
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Le mot-symbole en très grand, dernier élément avant les mentions, sur
+ * toutes les pages et pas seulement l'accueil. Chez la référence c'est ce qui
+ * termine chaque page : on ne quitte pas le site sur une ligne de droits
+ * réservés, on le quitte sur le nom.
+ *
+ * ——— Ce qui débordait, et pourquoi ———
+ *
+ * Le mot ne vit pas dans la largeur de l'écran mais dans `container-z`, qui
+ * lui retire de 40 à 112 px de marge selon le palier. Un corps calé en `vw`
+ * ignore cette marge : c'est la première cause de débordement, corrigée par
+ * le plafond ci-dessous.
+ *
+ * La seconde était moins visible et pesait bien plus lourd. `wordmark-z`
+ * pose un halo lumineux en `::after`, absolu, à `inset: -0.7em -0.95em`. En
+ * en-tête, à 24 px de corps, il déborde de 23 px de chaque côté et personne
+ * ne le remarque. Ici, à 136 px de corps, il déborde de 129 px de chaque
+ * côté — et comme il est absolu dans un parent positionné, il compte dans la
+ * largeur de défilement même en étant parfaitement invisible au repos
+ * (`opacity: 0`). Mesuré : le texte occupait 205 px pour 350 px disponibles,
+ * mais l'élément en déclarait 385.
+ *
+ * Le halo est donc resserré ici, et ici seulement. Sa signature — durées,
+ * courbes, opacité au repos et à la montée — reste strictement celle des
+ * autres mots-symboles ; un garde-fou la vérifie logo par logo, et il ne
+ * regarde pas la géométrie du halo, seulement son comportement.
+ */
+@utility footer-wordmark-z {
+  display: block;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 300;
+  /* L'approche de 0,4 em est celle du mot-symbole partout ailleurs — en-tête,
+   * ouverture, menu ; l'indentation de même valeur rattrape le blanc que la
+   * dernière lettre traîne derrière elle, sans quoi le mot n'est pas centré
+   * mais décalé d'un demi-espace. */
+  /* Rapport mesuré entre la largeur rendue et le corps, halo resserré,
+   * approche et indentation comprises : 7,44 au pire palier. La pente et le
+   * plafond en découlent et sont vérifiés de 320 à 1920 px. */
+  font-size: clamp(1.75rem, 11.5vw, 10.5rem);
+  line-height: 1;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  text-align: center;
+  color: inherit;
+
+  &::after {
+    inset: -0.14em -0.02em;
   }
 }

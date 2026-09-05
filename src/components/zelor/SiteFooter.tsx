@@ -63,9 +63,14 @@ export function SiteFooter() {
         aria-labelledby="footer-signature"
         className="container-z border-t border-navy-foreground/12 py-24 md:py-32"
       >
-        <p className="eyebrow text-navy-foreground/60">Maison ZELOR</p>
-        <LineReveal id="footer-signature" className="mt-6 max-w-5xl display-2-z">
-          L'élégance dans chaque détail, pour faire de chaque détail une <em>promesse</em>.
+        <p className="eyebrow-mixed-z text-navy-foreground">
+          MAISON <em>ZELOR</em>
+        </p>
+        <LineReveal
+          id="footer-signature"
+          className="mixed-caps-z mt-6 max-w-5xl text-left text-[clamp(1.75rem,4.2vw,3.75rem)]"
+        >
+          L'ÉLÉGANCE <em>dans chaque détail, pour faire de chaque détail une</em> PROMESSE.
         </LineReveal>
       </Reveal>
 
@@ -108,7 +113,23 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
-      <div className="container-z flex flex-col gap-3 border-t border-navy-foreground/12 pt-10 pb-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
+      {/* ————— Le nom, en dernier —————
+          On ne quitte pas une maison sur une ligne de droits réservés. Chez la
+          référence, chaque page se termine sur le mot-symbole en très grand,
+          pleine mesure. C'est un lien vers l'accueil, pas une image : il
+          répond au clavier et il se lit. */}
+      <div className="container-z border-t border-navy-foreground/12 pt-16 pb-4">
+        {/* `wordmark-z` en plus du corps : c'est bien un mot-symbole, il doit
+            porter la signature lumineuse partagée par tous les autres — et
+            deux garde-fous s'appuient dessus, l'un pour vérifier que les
+            logos se comportent à l'identique, l'autre pour les exclure du
+            recensement des capsules. */}
+        <BrandLink className="wordmark-z footer-wordmark-z text-navy-foreground">
+          {BRAND.name}
+        </BrandLink>
+      </div>
+
+      <div className="container-z flex flex-col gap-3 pt-10 pb-7 text-xs text-navy-foreground/60 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.
         </p>

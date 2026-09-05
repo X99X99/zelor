@@ -181,8 +181,13 @@ export function StageSequence() {
         {/* Le bouton appartient au dernier temps : il n'a pas à flotter
             au-dessus de la scène du début à la fin. */}
         <div className="stage-cta-z" data-visible={step === STAGES.length - 1}>
+          {/* Enveloppé : un conteneur flex — ce qu'est `btn-lux` — supprime
+              les nœuds de texte qui ne contiennent qu'une espace, et le
+              libellé se rendait soudé. */}
           <Link to="/collection" className="btn-lux whitespace-nowrap">
-            Découvrir la collection
+            <span>
+              Découvrir <em>la</em> collection
+            </span>
           </Link>
         </div>
       </div>

@@ -107,8 +107,13 @@ export function HeroScroll() {
 
         <div className="hero-foot-z">
           <p className="hero-promise-z">Pour faire de chaque détail une promesse.</p>
+          {/* Enveloppé : un conteneur flex — ce qu'est `btn-lux` — supprime
+              les nœuds de texte qui ne contiennent qu'une espace, et le
+              libellé se rendait soudé. */}
           <Link to="/collection" className="btn-lux whitespace-nowrap">
-            Découvrir la collection
+            <span>
+              Découvrir <em>la</em> collection
+            </span>
           </Link>
         </div>
       </div>

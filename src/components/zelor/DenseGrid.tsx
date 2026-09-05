@@ -75,9 +75,11 @@ export function DenseGrid({ catalogueVide }: { catalogueVide: boolean }) {
   return (
     <Reveal as="section" aria-labelledby="planche-title" className="grid-track-z">
       <div className="grid-head-z">
-        <p className="eyebrow">La sélection</p>
+        <p className="eyebrow-mixed-z">
+          <em>la</em> SÉLECTION
+        </p>
         <h2 id="planche-title" className="grid-title-z">
-          Douze pièces, pas davantage
+          DOUZE PIÈCES, <em>pas davantage</em>
         </h2>
         <Link to="/collection" className="link-underline text-sm">
           Voir la collection

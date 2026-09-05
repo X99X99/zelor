@@ -135,7 +135,13 @@ test.describe("menu mobile — contrat de motion", () => {
     const dialog = page.getByRole("dialog");
     const rows = dialog.locator(".menu-row");
     const count = await rows.count();
-    expect(count).toBeGreaterThanOrEqual(8);
+    // Sept, et non plus huit. Le panneau listait « Aide » parmi les entrées
+    // principales **et** « Aide et contact » dans un second bloc « Services » :
+    // deux libellés pour la même destination `/aide`. Le doublon est parti
+    // avec le passage à une liste unique et numérotée ; il reste six
+    // destinations plus le contrôle de langue. Le seuil garde son rôle —
+    // vérifier qu'on compare bien tout le panneau, pas deux rangées.
+    expect(count).toBeGreaterThanOrEqual(7);
     const styles = await rows.evaluateAll((els) =>
       els.map((el) => {
         const s = getComputedStyle(el);

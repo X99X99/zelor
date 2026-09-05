@@ -19,13 +19,22 @@ import { Reveal } from "./Reveal";
 export function ClosingScene() {
   return (
     <Reveal as="section" aria-labelledby="cloture-title" className="closing-track-z">
-      <p className="eyebrow closing-eyebrow-z">Pour finir</p>
+      <p className="eyebrow-mixed-z closing-eyebrow-z">
+        <em>pour</em> FINIR
+      </p>
       <LineReveal id="cloture-title" className="closing-line-z">
-        Rien ici n'a été retenu pour l'effet qu'il produit sur une image.
+        RIEN ICI <em>n'a été retenu pour</em> L'EFFET <em>qu'il produit sur une</em> IMAGE.
       </LineReveal>
       <div className="closing-foot-z">
+        {/* Le libellé est enveloppé dans un span : `btn-lux` est un conteneur
+            flex, et un conteneur flex supprime les nœuds de texte qui ne
+            contiennent qu'une espace. Sans cette enveloppe le bouton se
+            rendait « VOIRlaCOLLECTION » — constaté à l'image. Le même piège
+            avait déjà soudé les mots d'un titre ailleurs sur le site. */}
         <Link to="/collection" className="btn-lux whitespace-nowrap">
-          Voir la collection
+          <span>
+            Voir <em>la</em> collection
+          </span>
         </Link>
         <Link to="/univers" className="link-underline text-sm whitespace-nowrap">
           L'univers ZELOR

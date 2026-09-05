@@ -1,3 +1,4 @@
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 import { Reveal } from "./Reveal";
@@ -14,9 +15,11 @@ export function Newsletter() {
       className="container-z grid gap-x-8 gap-y-10 py-24 md:py-28 lg:grid-cols-2 lg:items-end"
     >
       <div>
-        <p className="eyebrow text-navy-foreground/60">La lettre</p>
-        <h2 id="newsletter-title" className="mt-3 font-display text-3xl md:text-4xl">
-          Entrez dans l'univers ZELOR.
+        <p className="eyebrow-mixed-z text-navy-foreground">
+          <em>la</em> LETTRE
+        </p>
+        <h2 id="newsletter-title" className="mixed-caps-z mt-3 text-3xl md:text-4xl">
+          ENTREZ <em>dans l'univers</em> ZELOR.
         </h2>
         <p className="mt-4 max-w-md text-sm text-navy-foreground/75">
           Le Journal, les nouveautés et nos sélections, réunis dans une lettre — pas plus souvent
@@ -38,25 +41,26 @@ export function Newsletter() {
           setDone(true);
         }}
       >
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="input-z flex min-h-12 flex-1 items-center px-5 text-navy-foreground">
-            <label htmlFor="newsletter-email" className="sr-only">
-              Votre adresse email
-            </label>
-            <input
-              id="newsletter-email"
-              type="email"
-              value={email}
-              autoComplete="email"
-              aria-invalid={error ? true : undefined}
-              aria-describedby={error ? "newsletter-error" : undefined}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="Votre adresse email"
-              className="w-full bg-transparent text-base text-navy-foreground outline-none placeholder:text-navy-foreground/60"
-            />
-          </div>
-          <button type="submit" className="btn-veil shrink-0 px-8">
-            Recevoir la lettre
+        {/* Un filet, pas un cadre — et la flèche pour tout bouton. Le libellé
+            « Recevoir la lettre » vit désormais dans le nom accessible du
+            bouton : il n'a jamais rien appris à qui voit le champ, et il
+            reste entier pour qui ne le voit pas. */}
+        <div className="field-rule-z text-navy-foreground">
+          <label htmlFor="newsletter-email" className="sr-only">
+            Votre adresse email
+          </label>
+          <input
+            id="newsletter-email"
+            type="email"
+            value={email}
+            autoComplete="email"
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? "newsletter-error" : undefined}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="Votre adresse email"
+          />
+          <button type="submit" className="field-arrow-z" aria-label="Recevoir la lettre">
+            <ArrowRight className="size-5" aria-hidden="true" />
           </button>
         </div>
         {error && (

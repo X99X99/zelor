@@ -12,7 +12,6 @@ import { ProcessScene } from "@/components/zelor/ProcessScene";
 import { DenseGrid } from "@/components/zelor/DenseGrid";
 import { ClosingScene } from "@/components/zelor/ClosingScene";
 import { Reassurance } from "@/components/zelor/Reassurance";
-import { BrandSignature } from "@/components/zelor/BrandSignature";
 import { absoluteUrl } from "@/lib/zelor/site";
 
 export const Route = createFileRoute("/")({
@@ -67,7 +66,9 @@ function Home() {
 
       {/* 4 — Première déclaration. Un tiers d'écran, et le seul très grand
           corps de la page. Il frappe parce qu'il arrive après du vide. */}
-      <SilenceBand id="declaration-un">Ce qui reste quand la nouveauté s'en va.</SilenceBand>
+      <SilenceBand id="declaration-un">
+        <em>ce qui</em> RESTE <em>quand la</em> NOUVEAUTÉ <em>s'en va.</em>
+      </SilenceBand>
 
       {/* 5 — Le diptyque. Des plans verticaux à des échelles sans rapport,
           délibérément désalignés : une grille régulière ferait un catalogue. */}
@@ -83,7 +84,9 @@ function Home() {
       <ProcessScene />
 
       {/* 8 — Seconde déclaration. */}
-      <SilenceBand id="declaration-deux">Peu de pièces, longuement regardées.</SilenceBand>
+      <SilenceBand id="declaration-deux">
+        PEU <em>de</em> PIÈCES, <em>longuement</em> REGARDÉES.
+      </SilenceBand>
 
       {/* 9 — La planche. Après trois écrans où il ne se passe presque rien, la
           page se remplit d'un coup. Un seul format, serré. */}
@@ -97,9 +100,10 @@ function Home() {
           range trois faits vérifiables et se tait. */}
       <Reassurance />
 
-      {/* 12 — La signature. Le mot-symbole seul, en grand, juste avant le
-          pied de page : un instant, pas une scène à plusieurs temps. */}
-      <BrandSignature />
+      {/* La signature — le mot-symbole seul, en très grand — a quitté cette
+          page pour le pied de page, où elle ferme désormais toutes les pages
+          du site et non la seule page d'accueil. Deux mots-symboles géants à
+          trois cents pixels l'un de l'autre n'en font pas un plus fort. */}
     </>
   );
 }

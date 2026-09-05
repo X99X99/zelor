@@ -571,75 +571,76 @@ export function SiteHeader() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className={`overlay-navy grain-z sheet-z fixed inset-2 z-70 overflow-y-auto lg:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
+          className={`overlay-navy grain-z fixed inset-0 z-70 overflow-y-auto lg:hidden ${menuClosing ? "overlay-out" : "overlay-in"}`}
         >
+          {/* La croix prend exactement la place du hamburger — même carré,
+              même colonne, même hauteur de ligne. Sur la référence c'est le
+              seul repère fixe entre les deux états : le bouton ne se déplace
+              pas, il change de signe. */}
           <div className="container-z flex items-center justify-between py-4">
+            <button
+              type="button"
+              onClick={closeMenu}
+              data-menu-close="true"
+              aria-label="Fermer le menu"
+              className="utility-z -ml-2 flex size-11 items-center justify-center opacity-80 hover:opacity-100"
+            >
+              <X className="size-5" aria-hidden="true" />
+            </button>
             <BrandLink
               onNavigate={closeMenu}
               className="wordmark-z font-display text-2xl tracking-[0.4em]"
             >
               {BRAND.name}
             </BrandLink>
-            <button
-              type="button"
-              onClick={closeMenu}
-              data-menu-close="true"
-              aria-label="Fermer le menu"
-              className="utility-z -mr-2 flex size-11 items-center justify-center opacity-80 hover:opacity-100"
-            >
-              <X className="size-5" aria-hidden="true" />
-            </button>
+            {/* Contrepoids de la largeur du bouton : sans lui le mot-symbole
+                n'est pas au centre de l'écran mais au centre de ce qu'il
+                reste. */}
+            <span aria-hidden="true" className="size-11 shrink-0" />
           </div>
+
           <nav
             aria-label="Navigation mobile"
-            className="focal-list container-z flex flex-col pt-6 pb-16"
+            className="focal-list container-z flex flex-col pt-8 pb-16"
           >
-            <p className="eyebrow mb-4 text-navy-foreground/60">Collection</p>
-            {MAIN_NAV.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                variant="sheet"
-                onNavigate={closeMenu}
-                data-focal=""
-                className="font-display text-3xl"
-              >
-                {/* Aucune animation d'entrée propre : chaque entrée réagit
-                 * exactement comme « Langue », sans montée parasite ni écart
-                 * de timing au retour. */}
-                <span>{item.label}</span>
-              </NavLink>
-            ))}
+            {/* Une seule liste, numérotée : six destinations, et le compteur
+                le dit. Le découpage en deux rubriques faisait passer « Compte
+                client » pour une autre espèce de lien alors que c'est une
+                destination comme les cinq autres. */}
+            <ol className="menu-index-list-z">
+              {[...MAIN_NAV, { to: "/compte", label: "Compte" } as const].map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    variant="sheet"
+                    onNavigate={closeMenu}
+                    data-focal=""
+                    className="menu-entry-z"
+                  >
+                    {/* Aucune animation d'entrée propre : chaque entrée réagit
+                     * exactement comme « Langue », sans montée parasite ni
+                     * écart de timing au retour. */}
+                    <span>{item.label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ol>
 
-            {/* Deuxième palier de navigation, pas une autre espèce de lien :
-                même famille que les entrées principales, un seul cran plus bas
-                (30 px → 20 px). Auparavant ces deux liens tombaient en Manrope
-                14 px, soit une autre police et moins de la moitié de la taille,
-                ce qui cassait la hiérarchie du panneau. « Langue » reste en
-                Manrope : c'est un contrôle, pas une entrée de navigation. */}
-            <p className="eyebrow mt-16 mb-4 text-navy-foreground/60">Services</p>
-            <NavLink
-              to="/compte"
-              variant="sheet"
-              onNavigate={closeMenu}
-              data-focal=""
-              className="font-display text-xl"
-            >
-              <span>Compte client</span>
-            </NavLink>
-            <NavLink
-              to="/aide"
-              variant="sheet"
-              onNavigate={closeMenu}
-              data-focal=""
-              className="font-display text-xl"
-            >
-              <span>Aide et contact</span>
-            </NavLink>
+            {/* La référence pose ici ses coordonnées — téléphone et courriel.
+                ZELOR n'en publie aucune, et on n'en invente pas ; un lien
+                « Contact » ferait par ailleurs doublon avec « Aide », déjà
+                cinquième entrée. Le pied du menu ne porte donc que le
+                contrôle de langue, comme avant.
 
-            <div data-focal="" className="menu-row text-sm tracking-[0.08em]">
-              <span>Langue</span>
-              <LanguageMenu />
+                Il doit rester le dernier `[data-focal]` du panneau : un
+                garde-fou prend le dernier d'entre eux comme référence de
+                signature de mouvement, et tout ce qu'on ajouterait après lui
+                changerait ce à quoi les six entrées sont comparées. */}
+            <div className="menu-foot-z text-navy-foreground/70">
+              <div data-focal="" className="menu-row text-sm tracking-[0.08em]">
+                <span>Langue</span>
+                <LanguageMenu />
+              </div>
             </div>
           </nav>
         </div>
