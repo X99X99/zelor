@@ -4549,9 +4549,15 @@ nav[aria-label="Fil d'Ariane"] a {
    * sa propre course. */
   height: 185svh;
 
-  --l: var(--load, 1);
+  /* Au repos, la scène est dans son état d'attente : la valeur par défaut
+   * doit être 0, pas 1. Avec 1, le rendu serveur peignait d'abord la scène
+   * achevée, puis l'horloge écrivait 0 à l'hydratation et la page semblait
+   * « charger à l'envers » — retour au compteur 0 % puis réouverture. Les
+   * régimes sans attente (mouvement réduit, sans JavaScript) forcent
+   * explicitement 1 plus bas. */
+  --l: var(--load, 0);
   /* La sortie ne commence pas avant que la scène soit ouverte. */
-  --p: var(--sp, 1);
+  --p: var(--sp, 0);
 
   /* La fente par laquelle la scène apparaît, et la place que les deux moitiés
    * de la déclaration lui laissent. Une seule paire de valeurs pour les deux :
