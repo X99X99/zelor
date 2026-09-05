@@ -1,6 +1,6 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Menu, Search, ShoppingBag, User, X, Check } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Search, ShoppingBag, User, X, Check } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { useFocusReturn } from "@/hooks/useFocusReturn";
 import { BrandLink, NavLink } from "@/components/zelor/NavLink";
@@ -458,7 +458,10 @@ export function SiteHeader() {
               aria-expanded={menuOpen}
               className="utility-z -ml-2 flex size-11 items-center justify-center opacity-90 hover:opacity-100"
             >
-              <Menu className="size-5" aria-hidden="true" />
+              {/* Deux barres, pas un pictogramme : elles pivotent en croix à
+                  l'ouverture et se remettent à plat à la fermeture, sans
+                  jamais disparaître. Le geste de la référence. */}
+              <span className="burger-z" data-open="false" aria-hidden="true" />
             </button>
           </div>
 
@@ -585,7 +588,9 @@ export function SiteHeader() {
               aria-label="Fermer le menu"
               className="utility-z -ml-2 flex size-11 items-center justify-center opacity-80 hover:opacity-100"
             >
-              <X className="size-5" aria-hidden="true" />
+              {/* Les mêmes deux barres, croisées : le bouton ne change pas
+                  d'objet en changeant d'état. */}
+              <span className="burger-z" data-open="true" aria-hidden="true" />
             </button>
             <BrandLink
               onNavigate={closeMenu}
@@ -608,8 +613,8 @@ export function SiteHeader() {
                 client » pour une autre espèce de lien alors que c'est une
                 destination comme les cinq autres. */}
             <ol className="menu-index-list-z">
-              {[...MAIN_NAV, { to: "/compte", label: "Compte" } as const].map((item) => (
-                <li key={item.to}>
+              {[...MAIN_NAV, { to: "/compte", label: "Compte" } as const].map((item, index) => (
+                <li key={item.to} style={{ "--i": index } as CSSProperties}>
                   <NavLink
                     to={item.to}
                     variant="sheet"

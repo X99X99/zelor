@@ -5747,3 +5747,125 @@ html:has(.ovt-track-z) header.header-motion-z {
     inset: -0.14em -0.02em;
   }
 }
+
+/* ————————————————————————————————————————————————————————————————————————
+ * L'ouverture du menu
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Deux gestes appariés, relevés dans la feuille de style de la référence :
+ *
+ *     .content { animation: slide-down .5s var(--ease-custom-1) forwards }
+ *     @keyframes slide-down { 0% { clip-path: inset(0 0 100%) }
+ *                             to { clip-path: inset(0 0 0%) } }
+ *
+ *     .item    { animation: reveal 1s var(--ease-out-quint) both;
+ *                animation-delay: calc(var(--i) * 50ms) }
+ *     @keyframes reveal { 0% { transform: translateY(calc((var(--i,0) + 1) * 60px)) }
+ *                         to { transform: translateY(0) } }
+ *
+ * Le panneau s'essuie vers le bas pendant qu'une demi-seconde plus tard les
+ * entrées montent — chacune depuis d'autant plus bas qu'elle est loin dans la
+ * liste, et non d'une distance égale. C'est ce qui fait que la liste se
+ * déploie au lieu de simplement apparaître : la dernière entrée parcourt six
+ * fois le chemin de la première.
+ *
+ * Leur `--ease-out-quint` vaut cubic-bezier(.22, 1, .36, 1), c'est-à-dire
+ * exactement `--ease-lux` ici. La courbe n'avait pas à être ajoutée.
+ *
+ * L'essuyage porte sur la liste et non sur chaque entrée : c'est lui qui
+ * masque la montée, sans quoi les entrées basses traverseraient l'écran à
+ * découvert.
+ */
+@keyframes zelor-menu-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes zelor-menu-rise {
+  from {
+    translate: 0 calc((var(--i, 0) + 1) * 60px);
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu-index-list-z {
+    animation: zelor-menu-wipe 0.5s var(--ease-glide) both;
+  }
+
+  .menu-index-list-z > li {
+    animation: zelor-menu-rise 1s var(--ease-lux) both;
+    animation-delay: calc(var(--i, 0) * 50ms);
+  }
+
+  /* Le pied du panneau arrive après la liste — 0,45 s chez la référence, la
+   * même valeur pour le contrôle de langue. */
+  .menu-foot-z {
+    animation: zelor-menu-rise 1s var(--ease-lux) 0.45s both;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————————————
+ * Le bouton de menu : deux barres, pas deux icônes
+ * ————————————————————————————————————————————————————————————————————————
+ *
+ * Il échangeait un pictogramme contre un autre. La référence ne change rien :
+ * elle garde ses deux barres de 19 × 3 px, écartées de 5 px, et les fait
+ * pivoter à plus et moins quarante-cinq degrés jusqu'à ce qu'elles se
+ * croisent. Le trait ne disparaît jamais, il tourne — et c'est pour ça que le
+ * bouton se lit comme un même objet dans deux états, pas comme deux boutons.
+ *
+ * Sa transition porte un retard de 0,6 s à la fermeture et aucun à
+ * l'ouverture : la croix se défait une fois le panneau parti, jamais pendant.
+ */
+@utility burger-z {
+  position: relative;
+  width: 24px;
+  height: 24px;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 19px;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: translate 0.3s 0.6s var(--ease-glide), rotate 0.3s 0.6s var(--ease-glide);
+  }
+
+  &::before {
+    translate: -50% calc(-50% - 2.5px);
+  }
+  &::after {
+    translate: -50% calc(-50% + 2.5px);
+  }
+
+  &[data-open="true"]::before,
+  &[data-open="true"]::after {
+    translate: -50% -50%;
+    transition-delay: 0s;
+  }
+  &[data-open="true"]::before {
+    rotate: 45deg;
+  }
+  &[data-open="true"]::after {
+    rotate: -45deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .burger-z::before,
+  .burger-z::after {
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+  }
+}
