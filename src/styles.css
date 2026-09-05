@@ -5630,18 +5630,23 @@ html:has(.ovt-track-z) header.header-motion-z {
  * Le filet s'épaissit et se colore à la saisie plutôt que de s'allumer : le
  * champ répond, il ne signale pas.
  */
+/* Construit d'après les captures, puis vérifié sur leur feuille de style.
+ * Il était juste dans son principe et approximatif dans ses chiffres ; les
+ * valeurs ci-dessous sont les leurs, relevées sur RootLayoutFooterEmailCapture :
+ *
+ *     max-width: 360px ; gap: 10px
+ *     .field  { border-bottom: 1px solid ; display: flex ; align-items: stretch }
+ *     .input  { font-size: 15px ; letter-spacing: .02em ; padding: 8px 0 }
+ *     .input::placeholder { color: currentColor ; opacity: .55 }
+ */
 @utility field-rule-z {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: stretch;
+  gap: 0;
   width: 100%;
-  padding-block: 0.75rem;
-  border-bottom: 1px solid color-mix(in oklab, currentColor 28%, transparent);
+  max-width: 22.5rem;
+  border-bottom: 1px solid currentColor;
   transition: border-color var(--dur-3) var(--ease-lux);
-
-  &:focus-within {
-    border-bottom-color: color-mix(in oklab, currentColor 70%, transparent);
-  }
 
   & input {
     flex: 1 1 auto;
@@ -5649,13 +5654,18 @@ html:has(.ovt-track-z) header.header-motion-z {
     background: transparent;
     border: 0;
     outline: none;
-    font-size: 1.0625rem;
-    line-height: 1.4;
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    padding-block: 0.5rem;
     color: inherit;
   }
 
+  /* `currentColor` à 55 % d'opacité, et non une couleur mêlée : le champ
+   * vit sur deux fonds — marine au pied de page, papier ailleurs — et
+   * l'opacité suit la couleur du texte sans avoir à être redéclarée. */
   & input::placeholder {
-    color: color-mix(in oklab, currentColor 55%, transparent);
+    color: currentColor;
+    opacity: 0.55;
   }
 }
 
@@ -5666,23 +5676,29 @@ html:has(.ovt-track-z) header.header-motion-z {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 2.75rem;
-  height: 2.75rem;
+  min-width: 2rem;
+  padding-inline: 0.25rem;
+  font-size: 1.125rem;
   color: inherit;
-  opacity: 0.7;
+  opacity: 1;
   transition:
-    opacity var(--dur-2) var(--ease-lux),
+    opacity 0.15s var(--ease-lux),
     translate var(--dur-3) var(--ease-lux);
 
+  /* 0,7 au survol, et non 1 : chez eux la flèche est pleine au repos et
+   * s'efface quand on la vise — l'inverse d'un bouton qui s'allume. Le
+   * déplacement de 3 px reste : il n'est pas d'eux, mais il ne contredit
+   * rien. */
   &:hover,
   &:focus-visible {
-    opacity: 1;
+    opacity: 0.7;
     translate: 3px 0;
   }
 
   &:disabled {
-    opacity: 0.35;
+    opacity: 0.5;
     translate: 0 0;
+    cursor: not-allowed;
   }
 }
 
@@ -5868,4 +5884,17 @@ html:has(.ovt-track-z) header.header-motion-z {
     transition-duration: 1ms !important;
     transition-delay: 0s !important;
   }
+}
+
+/* Le libellé d'un champ, dans leur mesure : sans-serif 12 px, capitales,
+ * 0,08 em d'approche. C'est le seul libellé du site qui ne soit pas composé
+ * dans la grammaire d'affichage — chez eux comme ici, ce qui étiquette un
+ * formulaire appartient à l'interface, pas à l'éditorial. */
+@utility field-label-z {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
 }
