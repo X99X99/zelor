@@ -160,7 +160,13 @@
    */
   --dur-touch: 300ms;
   --dur-move: 650ms;
-  --dur-reveal: 1200ms;
+  /* 1400 et non 1200 : la valeur n'était plus estimée dans une fourchette mais
+   * lue dans leur feuille de style, qui est du même domaine et donc lisible —
+   * `transition: 1.4s transform calc(var(--stagger) * .1s) var(--ease-out-expo)`
+   * sur la primitive de révélation de tous leurs titres. La courbe qui
+   * l'accompagne, `cubic-bezier(.19, 1, .22, 1)`, est déjà `--ease-out-expo`
+   * ici, au chiffre près. */
+  --dur-reveal: 1400ms;
   /* Le masque est le geste le plus lent du répertoire : là où une révélation
    * fait apparaître, un masque découvre, et le regard suit l'arête. Mesuré à
    * 1600 ms sur la référence, seule durée du relevé qui manquait ici. */
@@ -534,7 +540,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-size: 1rem;
-    line-height: 1.65;
+    line-height: 1.5;
     font-feature-settings:
       "kern" 1,
       "liga" 1,
@@ -625,10 +631,16 @@
  * changeait donc de famille d'une page à l'autre. Tout ce qui s'actionne —
  * boutons, navigation, prix, formulaires — était déjà en Manrope.
  */
+/* Interlignage 1,5, et non 1,7. C'est celui de `--font-body` sur la
+ * référence, et c'est la seule de ses valeurs typographiques qui ne bouge
+ * d'aucun palier : 18 px sur 1,5, du téléphone au grand écran. Les paliers
+ * d'affichage, eux, se resserrent à mesure qu'ils grandissent — 1,1 à 46 px,
+ * 1,0 à 120. La même correction est portée sur les sept blocs de texte
+ * courant du fichier, qui tenaient tous 1,7. */
 @utility prose-z {
   font-family: var(--font-sans);
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.5;
   font-weight: 400;
   letter-spacing: 0;
 }
@@ -805,16 +817,18 @@
   text-transform: uppercase;
 }
 
+/* Gouttière et mesure relevées sur la référence : 20 px de marge au mobile,
+ * 30 px au-delà de son palier structurant, et une mesure de 1728 px — pas
+ * 1408. Trois paliers de rembourrage (20 / 32 / 56) devenaient une marge de
+ * 56 px sur grand écran, presque le double de la sienne, ce qui resserre la
+ * page d'autant. */
 @utility container-z {
   width: 100%;
   margin-inline: auto;
-  max-width: 88rem;
+  max-width: 108rem;
   padding-inline: 1.25rem;
-  @media (width >= 768px) {
-    padding-inline: 2rem;
-  }
-  @media (width >= 1280px) {
-    padding-inline: 3.5rem;
+  @media (width >= 930px) {
+    padding-inline: 1.875rem;
   }
 }
 
@@ -3846,7 +3860,7 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility diptych-text-z {
   font-family: var(--font-sans);
   font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
-  line-height: 1.7;
+  line-height: 1.5;
   color: color-mix(in oklab, var(--color-foreground) 75%, transparent);
 }
 
@@ -4402,7 +4416,7 @@ nav[aria-label="Fil d'Ariane"] a {
   margin-top: clamp(2rem, 5vh, 3rem);
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  line-height: 1.7;
+  line-height: 1.5;
   color: var(--color-muted-foreground);
 }
 
@@ -4462,7 +4476,7 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility reassure-text-z {
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  line-height: 1.7;
+  line-height: 1.5;
   color: color-mix(in oklab, var(--color-foreground) 75%, transparent);
 }
 
@@ -4471,7 +4485,7 @@ nav[aria-label="Fil d'Ariane"] a {
   margin-top: clamp(2rem, 5vh, 3rem);
   font-family: var(--font-sans);
   font-size: 0.8125rem;
-  line-height: 1.7;
+  line-height: 1.5;
   color: var(--color-muted-foreground);
 }
 
@@ -5242,10 +5256,20 @@ nav[aria-label="Fil d'Ariane"] a {
 @utility word-mask-z {
   display: inline-block;
   overflow: hidden;
-  /* Marge de rognage : les jambages du serif descendent bas et seraient
-   * coupés par une fenêtre calée sur la ligne de base. */
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
+  /* Marge de rognage sur les quatre côtés, et non sur le seul bas.
+   *
+   * Elle ne protégeait que les jambages. Or le français met des accents
+   * au-dessus des capitales — ÉLÉGANCE, REGARDÉES, PIÈCES — et ils montent
+   * au-delà de la hauteur de capitale. Relevé sur la référence, sa fenêtre
+   * est rognée symétriquement :
+   *
+   *     margin: -.15em; padding: .15em; overflow: hidden;
+   *
+   * Le retrait négatif annule exactement le rembourrage : la boîte ne change
+   * pas de taille, ni en hauteur ni en largeur, seule la zone de rognage
+   * s'élargit. */
+  padding: 0.15em;
+  margin: -0.15em;
   vertical-align: bottom;
 
   /* La hiérarchie passe par le corps et la famille, jamais par la graisse.
@@ -5591,7 +5615,7 @@ html:has(.ovt-track-z) header.header-motion-z {
   gap: 1.5rem 2rem;
   margin-top: clamp(2rem, 7vh, 4rem);
   font-size: 0.8125rem;
-  line-height: 1.7;
+  line-height: 1.5;
 }
 
 /* ————————————————————————————————————————————————————————————————————————

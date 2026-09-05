@@ -68,7 +68,9 @@ export function WordReveal({
   text,
   as: Tag = "p",
   className = "",
-  step = 70,
+  // 100 ms, la valeur de la référence : son décalage s'écrit
+  // `calc(var(--stagger) * .1s)`, soit un dixième de seconde par rang.
+  step = 100,
   delay = 0,
   ...rest
 }: {
