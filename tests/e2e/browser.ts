@@ -47,3 +47,21 @@ tests/e2e/browser-lock.json **et** régénérer les baselines volontairement
 (bun run test:visual:update) — jamais l'un sans l'autre.`;
 
 export const BROWSER_LOCK = lock;
+
+/**
+ * Repli pour les parcours, quand le moteur verrouillé est absent.
+ *
+ * Sans verrou, Playwright lance le navigateur qu'il a téléchargé lui-même.
+ * Certains environnements — les sessions Claude Code sur le web — fournissent
+ * un Chromium préinstallé d'une autre version que celle attendue par
+ * `@playwright/test` : le binaire bundlé n'existe pas, et les parcours
+ * échouent au lancement au lieu de vérifier quoi que ce soit.
+ * `ZELOR_CHROMIUM_FALLBACK` désigne alors le binaire à utiliser.
+ *
+ * Ce repli ne sert jamais aux captures : le verrou ci-dessus reste seul juge
+ * du rendu, et la suite visuelle est écartée tant qu'il n'est pas satisfait.
+ */
+export function resolveFallbackChromium(): string | null {
+  const path = process.env["ZELOR_CHROMIUM_FALLBACK"];
+  return path && existsSync(path) ? path : null;
+}

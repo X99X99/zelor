@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-import { LOCK_MESSAGE, resolveLockedChromium } from "./tests/e2e/browser";
+import { LOCK_MESSAGE, resolveFallbackChromium, resolveLockedChromium } from "./tests/e2e/browser";
 
 /**
  * Tests navigateur ZELOR : non-régression visuelle et parcours critiques.
@@ -38,9 +38,14 @@ const RENDER_ARGS = [
   "--force-color-profile=srgb",
 ];
 
+// Sans verrou, les parcours tournent sur le navigateur que l'environnement
+// fournit — encore faut-il qu'il existe là où Playwright le cherche.
+const fallback = locked ? null : resolveFallbackChromium();
 const launchOptions = locked
   ? { executablePath: locked.executablePath, args: RENDER_ARGS }
-  : { args: RENDER_ARGS };
+  : fallback
+    ? { executablePath: fallback, args: RENDER_ARGS }
+    : { args: RENDER_ARGS };
 
 /** Les comparaisons de pixels n'ont lieu que sur le moteur de référence. */
 const testIgnore = locked ? [] : ["**/visual.spec.ts"];
@@ -85,9 +90,14 @@ export default defineConfig({
       use: { ...devices["Pixel 7"], launchOptions },
     },
   ],
+  // Le serveur de développement écoute sur `::`. Un environnement sans IPv6 —
+  // les sessions Claude Code sur le web, par exemple — le refuse
+  // (`EAFNOSUPPORT`) et emporte toute la suite avec lui. Ces deux variables
+  // laissent un tel environnement fournir la commande IPv4 équivalente, sans
+  // rien changer pour qui n'en a pas besoin.
   webServer: {
-    command: "bun run dev",
-    url: "http://localhost:8080",
+    command: process.env["ZELOR_DEV_COMMAND"] ?? "bun run dev",
+    url: process.env["ZELOR_DEV_URL"] ?? "http://localhost:8080",
     reuseExistingServer: true,
     timeout: 120_000,
   },
