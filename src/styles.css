@@ -3978,7 +3978,6 @@ nav[aria-label="Fil d'Ariane"] a {
  * désynchroniser la traduction de la géométrie réelle. */
 @utility hscene-track-z {
   position: relative;
-  height: 380svh;
 
   --panel-w: clamp(18rem, 32vw, 26rem);
   --panel-gap: clamp(1rem, 4vw, 2.5rem);
@@ -3995,6 +3994,12 @@ nav[aria-label="Fil d'Ariane"] a {
    * droite au lieu de rester en place. `max()` le fige tant qu'il n'y a rien
    * à parcourir. */
   --travel: max(0px, calc(var(--strip-w) - 100vw));
+  /* La hauteur de la piste se déduit de la course : un écran de scène, plus
+   * exactement la distance horizontale à parcourir. Quand le ruban tient
+   * dans l'écran (--travel = 0, deux panneaux sur un écran large), la piste
+   * ne réserve donc qu'un seul écran au lieu de près de quatre — il n'y a
+   * plus de défilement à vide où rien ne bouge. */
+  height: calc(100svh + var(--travel));
 }
 
 @utility hscene-scene-z {
